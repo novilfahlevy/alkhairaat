@@ -51,12 +51,22 @@ Pastikan semua kode mempertimbangkan role berikut:
 * `sekolah` → operator sekolah/pesantren
 * `wilayah` → monitoring rekap
 
-Aturan utama:
+Super Admin:
+1. Mengelola data Lembaga
+2. Mengelola akun User (pengelola) Sekolah
+3. Melihat semua laporan nasional
 
-* User **sekolah hanya boleh mengakses datanya sendiri**
-* User **tidak boleh mengakses data lembaga lain**
-* super_admin dapat mengakses semua data, namun tidak dapat menambah/mengubah/menghapus data lembaga
-* Semua query wajib memfilter berdasarkan `lembaga_id` jika user role = sekolah
+User Sekolah:
+1. Mengelola data Santri (di unit Sekolah masing-masing)
+2. Mengelola data Alumni (di unit Sekolah masing-masing)
+3. Melihat laporan internal unit Sekolah
+4. Tidak dapat melihat dan mengelola data unit Sekolah lain.
+
+User Wilayah:
+1. Dapat melihat data semua Sekolah di wilayahnya.
+2. Tidak dapat mengelola data Santi dan Alumni.
+
+Semua query wajib memfilter berdasarkan `lembaga_id` jika user role = sekolah
 
 ---
 
