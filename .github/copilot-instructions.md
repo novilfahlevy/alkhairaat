@@ -114,6 +114,7 @@ Gunakan penamaan konsisten berikut:
 * Gunakan **PSR-12 Coding Style**
 * Gunakan **type hint & return type**
 * Gunakan **strict validation** pada semua request
+* Mohon berhati-hati dengan __null safety__ pada setiap data maupun relasi, gunakan `?` jika perlu, dan gunakan falback default value jika memungkinkan
 
 ### Controller
 
