@@ -34,9 +34,12 @@ class RegisterController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
-            'role' => User::ROLE_SEKOLAH, // Default role for new registrations
+            'role' => User::ROLE_SEKOLAH, // Keep for backward compatibility
             'lembaga_id' => $request->lembaga_id,
         ]);
+
+        // Assign role using Spatie
+        $user->assignRole('sekolah');
 
         Auth::login($user);
 

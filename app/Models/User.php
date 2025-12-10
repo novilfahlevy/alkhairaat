@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * Role constants
@@ -30,6 +31,16 @@ class User extends Authenticatable
         self::ROLE_WILAYAH,
         self::ROLE_SEKOLAH,
     ];
+
+    /**
+     * Permission constants
+     */
+    public const PERMISSION_VIEW_ALL_DATA = 'view_all_data';
+    public const PERMISSION_MANAGE_SANTRI = 'manage_santri';
+    public const PERMISSION_MANAGE_ALUMNI = 'manage_alumni';
+    public const PERMISSION_MANAGE_LEMBAGA = 'manage_lembaga';
+    public const PERMISSION_VIEW_REPORTS = 'view_reports';
+    public const PERMISSION_EXPORT_DATA = 'export_data';
 
     /**
      * The attributes that are mass assignable.
@@ -80,7 +91,7 @@ class User extends Authenticatable
      */
     public function isSuperAdmin(): bool
     {
-        return $this->role === self::ROLE_SUPER_ADMIN;
+        return $this->hasRole(self::ROLE_SUPER_ADMIN);
     }
 
     /**
@@ -88,7 +99,7 @@ class User extends Authenticatable
      */
     public function isWilayah(): bool
     {
-        return $this->role === self::ROLE_WILAYAH;
+        return $this->hasRole(self::ROLE_WILAYAH);
     }
 
     /**
@@ -96,7 +107,7 @@ class User extends Authenticatable
      */
     public function isSekolah(): bool
     {
-        return $this->role === self::ROLE_SEKOLAH;
+        return $this->hasRole(self::ROLE_SEKOLAH);
     }
 
     /**
@@ -123,8 +134,8 @@ class User extends Authenticatable
      */
     public function canModifyLembagaData(): bool
     {
-        // Super admin cannot add/modify/delete lembaga data
-        return !$this->isSuperAdmin();
+        // Super admin cannot add/modify/delete lembaga data, only view
+        return !$this->isSuperAdmin() && $this->can(self::PERMISSION_MANAGE_LEMBAGA);
     }
 
     /**
@@ -132,7 +143,7 @@ class User extends Authenticatable
      */
     public function scopeByRole($query, string $role)
     {
-        return $query->where('role', $role);
+        return $query->role($role);
     }
 
     /**

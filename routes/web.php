@@ -115,6 +115,31 @@ Route::middleware(['auth', 'role:sekolah,super_admin,wilayah', 'lembaga.access']
     // Add sekolah specific routes here
 });
 
+/*
+|--------------------------------------------------------------------------
+| Test Routes for Role and Permission System
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->prefix('test')->name('test.')->group(function () {
+    // Test role and permission information
+    Route::get('/roles', [App\Http\Controllers\TestController::class, 'testRoles'])->name('roles');
+    
+    // Test role-based access
+    Route::get('/super-admin', [App\Http\Controllers\TestController::class, 'superAdminOnly'])
+        ->middleware('role:super_admin')
+        ->name('super-admin');
+    
+    Route::get('/sekolah', [App\Http\Controllers\TestController::class, 'sekolahOnly'])
+        ->middleware('role:sekolah')
+        ->name('sekolah');
+    
+    // Test permission-based access
+    Route::get('/manage-santri', [App\Http\Controllers\TestController::class, 'manageSantri'])
+        ->middleware('permission:manage_santri')
+        ->name('manage-santri');
+});
+
 // error pages (public)
 Route::get('/error-404', function () {
     return view('pages.errors.error-404', ['title' => 'Error 404']);
