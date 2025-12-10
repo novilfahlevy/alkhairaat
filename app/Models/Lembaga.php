@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Lembaga extends Model
 {
@@ -71,8 +72,7 @@ class Lembaga extends Model
         'nama',
         'jenjang',
         'status',
-        'provinsi',
-        'kabupaten',
+        'kabupaten_id',
         'kecamatan',
         'alamat',
         'telepon',
@@ -94,6 +94,22 @@ class Lembaga extends Model
     public function santri(): HasMany
     {
         return $this->hasMany(Santri::class);
+    }
+
+    /**
+     * Get the kabupaten that owns this lembaga.
+     */
+    public function kabupaten(): BelongsTo
+    {
+        return $this->belongsTo(Kabupaten::class);
+    }
+
+    /**
+     * Get the provinsi name through kabupaten relationship.
+     */
+    public function getProvinsiAttribute()
+    {
+        return $this->kabupaten?->provinsi?->nama_provinsi;
     }
 
     /**

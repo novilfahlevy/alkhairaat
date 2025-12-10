@@ -102,14 +102,9 @@ Route::middleware('auth')->group(function () {
 
 // Super Admin routes - can access and manage everything
 Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Lembaga management (access + manage)
-    Route::get('/lembaga', function () {
-        return 'Admin Lembaga List';
-    })->middleware('permission:access_lembaga')->name('lembaga.index');
-    
-    Route::post('/lembaga', function () {
-        return 'Admin Create Lembaga';
-    })->middleware('permission:manage_lembaga')->name('lembaga.store');
+    // Lembaga CRUD
+    Route::resource('lembaga', App\Http\Controllers\LembagaController::class);
+    Route::get('/lembaga/kabupaten/{provinsi_id}', [App\Http\Controllers\LembagaController::class, 'getKabupaten'])->name('lembaga.kabupaten');
     
     // User sekolah management
     Route::get('/users-sekolah', function () {

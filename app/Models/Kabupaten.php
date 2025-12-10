@@ -50,4 +50,12 @@ class Kabupaten extends Model
     {
         return $this->hasMany(Lembaga::class);
     }
+
+    /**
+     * Get the nama attribute as alias for nama_kabupaten.
+     */
+    public function getNamaAttribute(): ?string
+    {
+        return $this->nama_kabupaten;
+    }
 }
