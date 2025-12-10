@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -35,12 +36,15 @@ class User extends Authenticatable
     /**
      * Permission constants
      */
-    public const PERMISSION_VIEW_ALL_DATA = 'view_all_data';
-    public const PERMISSION_MANAGE_SANTRI = 'manage_santri';
-    public const PERMISSION_MANAGE_ALUMNI = 'manage_alumni';
+    public const PERMISSION_ACCESS_LEMBAGA = 'access_lembaga';
     public const PERMISSION_MANAGE_LEMBAGA = 'manage_lembaga';
+    public const PERMISSION_ACCESS_SANTRI = 'access_santri';
+    public const PERMISSION_MANAGE_SANTRI = 'manage_santri';
+    public const PERMISSION_ACCESS_ALUMNI = 'access_alumni';
+    public const PERMISSION_MANAGE_ALUMNI = 'manage_alumni';
     public const PERMISSION_VIEW_REPORTS = 'view_reports';
     public const PERMISSION_EXPORT_DATA = 'export_data';
+    public const PERMISSION_MANAGE_USER_SEKOLAH = 'manage_user_sekolah';
 
     /**
      * The attributes that are mass assignable.
@@ -87,6 +91,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the kabupaten that the user (wilayah) manages.
+     */
+    public function kabupaten(): BelongsToMany
+    {
+        return $this->belongsToMany(Kabupaten::class, 'user_kabupaten');
+    }
+
+    /**
      * Check if user is super admin (PB Alkhairaat)
      */
     public function isSuperAdmin(): bool
@@ -120,9 +132,15 @@ class User extends Authenticatable
             return true;
         }
 
-        // Wilayah can access data in their region (implemented later based on provinsi)
+        // Wilayah can access data in their managed kabupaten
         if ($this->isWilayah()) {
-            return true; // For now, allow all - can be refined later
+            $lembaga = Lembaga::find($lembagaId);
+            if (!$lembaga) {
+                return false;
+            }
+            
+            // Check if user manages the kabupaten where this lembaga is located
+            return $this->kabupaten()->where('kabupaten.id', $lembaga->kabupaten_id)->exists();
         }
 
         // Sekolah can only access their own lembaga

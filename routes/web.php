@@ -96,23 +96,83 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Role-based Routes Examples
+| Role-based Routes 
 |--------------------------------------------------------------------------
 */
 
-// Super Admin only routes
+// Super Admin routes - can access and manage everything
 Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Add super admin specific routes here
+    // Lembaga management (access + manage)
+    Route::get('/lembaga', function () {
+        return 'Admin Lembaga List';
+    })->middleware('permission:access_lembaga')->name('lembaga.index');
+    
+    Route::post('/lembaga', function () {
+        return 'Admin Create Lembaga';
+    })->middleware('permission:manage_lembaga')->name('lembaga.store');
+    
+    // User sekolah management
+    Route::get('/users-sekolah', function () {
+        return 'Manage User Sekolah';
+    })->middleware('permission:manage_user_sekolah')->name('users-sekolah.index');
+    
+    // Reports and export
+    Route::get('/reports', function () {
+        return 'Admin Reports';
+    })->middleware('permission:view_reports')->name('reports');
+    
+    Route::get('/export', function () {
+        return 'Admin Export Data';
+    })->middleware('permission:export_data')->name('export');
 });
 
-// Wilayah only routes
+// Wilayah routes - can view reports, export data, and manage user sekolah
 Route::middleware(['auth', 'role:wilayah,super_admin'])->prefix('wilayah')->name('wilayah.')->group(function () {
-    // Add wilayah specific routes here
+    // Reports (limited to their kabupaten)
+    Route::get('/reports', function () {
+        return 'Wilayah Reports';
+    })->middleware('permission:view_reports')->name('reports');
+    
+    // Export data (limited to their kabupaten)
+    Route::get('/export', function () {
+        return 'Wilayah Export Data';
+    })->middleware('permission:export_data')->name('export');
+    
+    // User sekolah management (in their kabupaten only)
+    Route::get('/users-sekolah', function () {
+        return 'Wilayah Manage User Sekolah';
+    })->middleware('permission:manage_user_sekolah')->name('users-sekolah.index');
 });
 
-// Sekolah only routes (with lembaga access check)
-Route::middleware(['auth', 'role:sekolah,super_admin,wilayah', 'lembaga.access'])->prefix('sekolah')->name('sekolah.')->group(function () {
-    // Add sekolah specific routes here
+// Sekolah routes - can access and manage santri/alumni, view reports, export data
+Route::middleware(['auth', 'role:sekolah,super_admin,wilayah'])->prefix('sekolah')->name('sekolah.')->group(function () {
+    // Santri management
+    Route::get('/santri', function () {
+        return 'Sekolah Santri List';
+    })->middleware('permission:access_santri')->name('santri.index');
+    
+    Route::post('/santri', function () {
+        return 'Sekolah Create Santri';
+    })->middleware('permission:manage_santri')->name('santri.store');
+    
+    // Alumni management
+    Route::get('/alumni', function () {
+        return 'Sekolah Alumni List';
+    })->middleware('permission:access_alumni')->name('alumni.index');
+    
+    Route::post('/alumni', function () {
+        return 'Sekolah Create Alumni';
+    })->middleware('permission:manage_alumni')->name('alumni.store');
+    
+    // Reports (limited to their lembaga)
+    Route::get('/reports', function () {
+        return 'Sekolah Reports';
+    })->middleware('permission:view_reports')->name('reports');
+    
+    // Export data (limited to their lembaga)
+    Route::get('/export', function () {
+        return 'Sekolah Export Data';
+    })->middleware('permission:export_data')->name('export');
 });
 
 /*
@@ -134,10 +194,42 @@ Route::middleware('auth')->prefix('test')->name('test.')->group(function () {
         ->middleware('role:sekolah')
         ->name('sekolah');
     
-    // Test permission-based access
-    Route::get('/manage-santri', [App\Http\Controllers\TestController::class, 'manageSantri'])
-        ->middleware('permission:manage_santri')
-        ->name('manage-santri');
+    // Test new permission-based access
+    Route::get('/access-lembaga', function () {
+        return 'Can access lembaga data';
+    })->middleware('permission:access_lembaga')->name('access-lembaga');
+    
+    Route::get('/manage-lembaga', function () {
+        return 'Can manage lembaga data';
+    })->middleware('permission:manage_lembaga')->name('manage-lembaga');
+    
+    Route::get('/access-santri', function () {
+        return 'Can access santri data';
+    })->middleware('permission:access_santri')->name('access-santri');
+    
+    Route::get('/manage-santri', function () {
+        return 'Can manage santri data';
+    })->middleware('permission:manage_santri')->name('manage-santri');
+    
+    Route::get('/access-alumni', function () {
+        return 'Can access alumni data';
+    })->middleware('permission:access_alumni')->name('access-alumni');
+    
+    Route::get('/manage-alumni', function () {
+        return 'Can manage alumni data';
+    })->middleware('permission:manage_alumni')->name('manage-alumni');
+    
+    Route::get('/view-reports', function () {
+        return 'Can view reports';
+    })->middleware('permission:view_reports')->name('view-reports');
+    
+    Route::get('/export-data', function () {
+        return 'Can export data';
+    })->middleware('permission:export_data')->name('export-data');
+    
+    Route::get('/manage-user-sekolah', function () {
+        return 'Can manage user sekolah';
+    })->middleware('permission:manage_user_sekolah')->name('manage-user-sekolah');
 });
 
 // error pages (public)
