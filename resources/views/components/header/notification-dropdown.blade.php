@@ -5,6 +5,38 @@
     toggleDropdown() {
         this.dropdownOpen = !this.dropdownOpen;
         this.notifying = false;
+        if (this.dropdownOpen) {
+            this.$nextTick(() => {
+                this.positionDropdown();
+            });
+        }
+    },
+    positionDropdown() {
+        const button = this.$refs.notificationButton;
+        const dropdown = this.$refs.dropdown;
+        if (button && dropdown) {
+            const rect = button.getBoundingClientRect();
+            const isMobile = window.innerWidth < 768; // md breakpoint
+            
+            dropdown.style.position = 'fixed';
+            dropdown.style.zIndex = '99999';
+            
+            if (isMobile) {
+                // Mobile: full width with margin, positioned near top
+                dropdown.style.top = (rect.bottom + 8) + 'px';
+                dropdown.style.left = '16px';
+                dropdown.style.right = '16px';
+                dropdown.style.width = 'auto';
+                dropdown.style.maxHeight = '70vh';
+            } else {
+                // Desktop: positioned relative to button
+                dropdown.style.top = (rect.bottom + 8) + 'px';
+                dropdown.style.right = (window.innerWidth - rect.right) + 'px';
+                dropdown.style.left = 'auto';
+                dropdown.style.width = '380px';
+                dropdown.style.maxHeight = '480px';
+            }
+        }
     },
     closeDropdown() {
         this.dropdownOpen = false;
@@ -17,9 +49,10 @@
         console.log('View All Notifications clicked');
         this.closeDropdown();
     }
-}" @click.away="closeDropdown()">
+}" @click.away="closeDropdown()" @resize.window="positionDropdown()">
     <!-- Notification Button -->
     <button
+        x-ref="notificationButton"
         class="relative flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full hover:text-dark-900 h-11 w-11 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
         @click="toggleDropdown()"
         type="button"
@@ -54,6 +87,7 @@
 
     <!-- Dropdown Start -->
     <div
+        x-ref="dropdown"
         x-show="dropdownOpen"
         x-transition:enter="transition ease-out duration-100"
         x-transition:enter-start="transform opacity-0 scale-95"
@@ -61,12 +95,12 @@
         x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="transform opacity-100 scale-100"
         x-transition:leave-end="transform opacity-0 scale-95"
-        class="absolute -right-[240px] mt-[17px] flex h-[480px] w-[350px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark sm:w-[361px] lg:right-0"
-        style="display: none;"
+        class="flex flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-2xl dark:border-gray-800 dark:bg-gray-900"
+        style="display: none; position: fixed; z-index: 99999;"
     >
         <!-- Dropdown Header -->
         <div class="flex items-center justify-between pb-3 mb-3 border-b border-gray-100 dark:border-gray-800">
-            <h5 class="text-lg font-semibold text-gray-800 dark:text-white/90">Notification</h5>
+            <h5 class="text-lg font-semibold text-gray-800 dark:text-white/90">Notifikasi</h5>
 
             <button @click="closeDropdown()" class="text-gray-500 dark:text-gray-400" type="button">
                 <svg
@@ -88,88 +122,53 @@
         </div>
 
         <!-- Notification List -->
-        <ul class="flex flex-col h-auto overflow-y-auto custom-scrollbar">
+        <ul class="flex flex-col flex-1 overflow-y-auto custom-scrollbar min-h-0">
             @php
                 $notifications = [
                     [
                         'id' => 1,
-                        'userName' => 'Terry Franci',
-                        'userImage' => '/images/user/user-02.jpg',
-                        'action' => 'requests permission to change',
-                        'project' => 'Project - Nganter App',
-                        'type' => 'Project',
-                        'time' => '5 min ago',
-                        'status' => 'online',
+                        'title' => 'Data Santri Baru',
+                        'message' => 'SDI Alkhairaat Palu menambahkan 25 santri baru untuk tahun ajaran 2025/2026',
+                        'type' => 'Santri',
+                        'time' => '5 menit lalu',
+                        'icon' => 'user-plus',
+                        'color' => 'bg-blue-500',
                     ],
                     [
                         'id' => 2,
-                        'userName' => 'Alex Johnson',
-                        'userImage' => '/images/user/user-03.jpg',
-                        'action' => 'requests permission to change',
-                        'project' => 'Project - Nganter App',
-                        'type' => 'Project',
-                        'time' => '10 min ago',
-                        'status' => 'offline',
+                        'title' => 'Update Data Alumni',
+                        'message' => 'MA Alkhairaat Pusat memperbarui data 15 alumni angkatan 2020',
+                        'type' => 'Alumni', 
+                        'time' => '15 menit lalu',
+                        'icon' => 'academic-cap',
+                        'color' => 'bg-green-500',
                     ],
                     [
                         'id' => 3,
-                        'userName' => 'Sarah Williams',
-                        'userImage' => '/images/user/user-04.jpg',
-                        'action' => 'requests permission to change',
-                        'project' => 'Project - Dashboard UI',
-                        'type' => 'Project',
-                        'time' => '15 min ago',
-                        'status' => 'online',
+                        'title' => 'Registrasi Lembaga',
+                        'message' => 'Pesantren Alkhairaat Kabonena mendaftar sebagai lembaga baru',
+                        'type' => 'Lembaga',
+                        'time' => '30 menit lalu',
+                        'icon' => 'building',
+                        'color' => 'bg-purple-500',
                     ],
                     [
                         'id' => 4,
-                        'userName' => 'Mike Brown',
-                        'userImage' => '/images/user/user-05.jpg',
-                        'action' => 'requests permission to change',
-                        'project' => 'Project - E-commerce',
-                        'type' => 'Project',
-                        'time' => '20 min ago',
-                        'status' => 'online',
+                        'title' => 'Laporan Bulanan',
+                        'message' => 'Laporan statistik santri dan alumni bulan November 2025 tersedia',
+                        'type' => 'Laporan',
+                        'time' => '1 jam lalu',
+                        'icon' => 'chart-bar',
+                        'color' => 'bg-orange-500',
                     ],
                     [
                         'id' => 5,
-                        'userName' => 'Emma Davis',
-                        'userImage' => '/images/user/user-06.jpg',
-                        'action' => 'requests permission to change',
-                        'project' => 'Project - Mobile App',
-                        'type' => 'Project',
-                        'time' => '25 min ago',
-                        'status' => 'offline',
-                    ],
-                    [
-                        'id' => 6,
-                        'userName' => 'John Smith',
-                        'userImage' => '/images/user/user-07.jpg',
-                        'action' => 'requests permission to change',
-                        'project' => 'Project - Landing Page',
-                        'type' => 'Project',
-                        'time' => '30 min ago',
-                        'status' => 'online',
-                    ],
-                    [
-                        'id' => 7,
-                        'userName' => 'Lisa Anderson',
-                        'userImage' => '/images/user/user-08.jpg',
-                        'action' => 'requests permission to change',
-                        'project' => 'Project - Blog System',
-                        'type' => 'Project',
-                        'time' => '35 min ago',
-                        'status' => 'online',
-                    ],
-                    [
-                        'id' => 8,
-                        'userName' => 'David Wilson',
-                        'userImage' => '/images/user/user-09.jpg',
-                        'action' => 'requests permission to change',
-                        'project' => 'Project - CRM Dashboard',
-                        'type' => 'Project',
-                        'time' => '40 min ago',
-                        'status' => 'online',
+                        'title' => 'Sinkronisasi Data',
+                        'message' => 'Proses sinkronisasi data dari 12 lembaga telah selesai',
+                        'type' => 'Sistem',
+                        'time' => '2 jam lalu',
+                        'icon' => 'refresh',
+                        'color' => 'bg-indigo-500',
                     ],
                 ];
             @endphp
@@ -177,28 +176,42 @@
             @foreach ($notifications as $notification)
                 <li @click="handleItemClick()">
                     <a
-                        class="flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5"
+                        class="flex gap-3 rounded-lg border-b border-gray-100 p-3 py-4 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5"
                         href="#"
                     >
-                        <span class="relative block w-full h-10 rounded-full z-1 max-w-10">
-                            <img src="{{ $notification['userImage'] }}" alt="User" class="overflow-hidden rounded-full" />
-                            <span
-                                class="absolute bottom-0 right-0 z-10 h-2.5 w-full max-w-2.5 rounded-full border-[1.5px] border-white dark:border-gray-900 {{ $notification['status'] === 'online' ? 'bg-success-500' : 'bg-error-500' }}"
-                            ></span>
+                        <span class="flex items-center justify-center w-10 h-10 rounded-full {{ $notification['color'] }} text-white flex-shrink-0">
+                            @if($notification['icon'] === 'user-plus')
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/>
+                                </svg>
+                            @elseif($notification['icon'] === 'academic-cap')
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                                </svg>
+                            @elseif($notification['icon'] === 'building')
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/>
+                                </svg>
+                            @elseif($notification['icon'] === 'chart-bar')
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                                </svg>
+                            @else
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                                </svg>
+                            @endif
                         </span>
 
-                        <span class="block">
-                            <span class="mb-1.5 block text-theme-sm text-gray-500 dark:text-gray-400">
-                                <span class="font-medium text-gray-800 dark:text-white/90">
-                                    {{ $notification['userName'] }}
-                                </span>
-                                {{ $notification['action'] }}
-                                <span class="font-medium text-gray-800 dark:text-white/90">
-                                    {{ $notification['project'] }}
-                                </span>
+                        <span class="block flex-1 min-w-0">
+                            <span class="mb-1 block text-sm font-medium text-gray-800 dark:text-white/90 leading-tight">
+                                {{ $notification['title'] }}
+                            </span>
+                            <span class="mb-2 block text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                                {{ $notification['message'] }}
                             </span>
 
-                            <span class="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
+                            <span class="flex items-center gap-2 text-gray-500 text-xs dark:text-gray-400">
                                 <span>{{ $notification['type'] }}</span>
                                 <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
                                 <span>{{ $notification['time'] }}</span>
@@ -212,10 +225,10 @@
         <!-- View All Button -->
         <a
             href="#"
-            class="mt-3 flex justify-center rounded-lg border border-gray-300 bg-white p-3 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+            class="mt-3 flex justify-center rounded-lg border border-gray-300 bg-white p-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
             @click.prevent="handleViewAllClick()"
         >
-            View All Notification
+            Lihat Semua Notifikasi
         </a>
     </div>
     <!-- Dropdown End -->

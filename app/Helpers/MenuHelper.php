@@ -6,92 +6,126 @@ class MenuHelper
 {
     public static function getMainNavItems()
     {
-        return [
+        $items = [
             [
                 'icon' => 'dashboard',
-                'name' => 'Dashboard',
-                'subItems' => [
-                    ['name' => 'Ecommerce', 'path' => '/'],
-                ],
-            ],
-            [
-                'icon' => 'calendar',
-                'name' => 'Calendar',
-                'path' => '/calendar',
+                'name' => 'Dasbor',
+                'path' => '/',
+                'roles' => ['super_admin', 'wilayah', 'sekolah'], // All roles
             ],
             [
                 'icon' => 'user-profile',
-                'name' => 'User Profile',
-                'path' => '/profile',
-            ],
-            [
-                'name' => 'Forms',
-                'icon' => 'forms',
+                'name' => 'Lembaga',
+                'roles' => ['super_admin'],
                 'subItems' => [
-                    ['name' => 'Form Elements', 'path' => '/form-elements', 'pro' => false],
+                    ['name' => 'Daftar Lembaga', 'path' => '/lembaga'],
+                    ['name' => 'Statistik Lembaga', 'path' => '/lembaga/statistik'],
                 ],
             ],
             [
-                'name' => 'Tables',
-                'icon' => 'tables',
+                'icon' => 'students',
+                'name' => 'Santri',
+                'roles' => ['super_admin', 'wilayah', 'sekolah'],
                 'subItems' => [
-                    ['name' => 'Basic Tables', 'path' => '/basic-tables', 'pro' => false]
+                    ['name' => 'Data Santri Aktif', 'path' => '/santri'],
+                    ['name' => 'Santri Non-Aktif', 'path' => '/santri/non-aktif'],
+                    ['name' => 'Tambah Santri', 'path' => '/santri/create'],
                 ],
             ],
             [
-                'name' => 'Pages',
-                'icon' => 'pages',
+                'icon' => 'graduates',
+                'name' => 'Alumni',
+                'roles' => ['super_admin', 'wilayah', 'sekolah'],
                 'subItems' => [
-                    ['name' => 'Blank Page', 'path' => '/blank', 'pro' => false],
-                    ['name' => '404 Error', 'path' => '/error-404', 'pro' => false]
+                    ['name' => 'Data Alumni', 'path' => '/alumni'],
+                    ['name' => 'Tracking Karir', 'path' => '/alumni/karir'],
+                    ['name' => 'Kontak Alumni', 'path' => '/alumni/kontak'],
+                ],
+            ],
+            [
+                'icon' => 'charts',
+                'name' => 'Laporan',
+                'roles' => ['super_admin', 'wilayah'],
+                'subItems' => [
+                    ['name' => 'Laporan Santri', 'path' => '/laporan/santri'],
+                    ['name' => 'Laporan Alumni', 'path' => '/laporan/alumni'],
+                    ['name' => 'Statistik Regional', 'path' => '/laporan/regional'],
                 ],
             ],
         ];
+
+        return self::filterItemsByRole($items);
     }
 
     public static function getOthersItems()
     {
-        return [
+        $items = [
             [
-                'icon' => 'charts',
-                'name' => 'Charts',
+                'icon' => 'export',
+                'name' => 'Ekspor Data',
+                'roles' => ['super_admin', 'wilayah', 'sekolah'], // All roles
                 'subItems' => [
-                    ['name' => 'Line Chart', 'path' => '/line-chart', 'pro' => false],
-                    ['name' => 'Bar Chart', 'path' => '/bar-chart', 'pro' => false]
+                    ['name' => 'Ekspor Santri', 'path' => '/export/santri'],
+                    ['name' => 'Ekspor Alumni', 'path' => '/export/alumni'],
                 ],
             ],
             [
-                'icon' => 'ui-elements',
-                'name' => 'UI Elements',
+                'icon' => 'users',
+                'name' => 'Pengguna',
+                'roles' => ['super_admin'],
                 'subItems' => [
-                    ['name' => 'Alerts', 'path' => '/alerts', 'pro' => false],
-                    ['name' => 'Avatar', 'path' => '/avatars', 'pro' => false],
-                    ['name' => 'Badge', 'path' => '/badge', 'pro' => false],
-                    ['name' => 'Buttons', 'path' => '/buttons', 'pro' => false],
-                    ['name' => 'Images', 'path' => '/image', 'pro' => false],
-                    ['name' => 'Videos', 'path' => '/videos', 'pro' => false],
+                    ['name' => 'Daftar Pengguna', 'path' => '/users'],
+                    ['name' => 'Role & Permission', 'path' => '/users/roles'],
                 ],
             ],
-            [
-                'icon' => 'authentication',
-                'name' => 'Authentication',
-                'subItems' => [
-                    ['name' => 'Sign In', 'path' => '/signin', 'pro' => false],
-                    ['name' => 'Sign Up', 'path' => '/signup', 'pro' => false],
-                ],
-            ],
+            // [
+            //     'icon' => 'support-ticket',
+            //     'name' => 'Bantuan',
+            //     'roles' => ['super_admin', 'wilayah', 'sekolah'], // All roles
+            //     'subItems' => [
+            //         ['name' => 'Panduan Penggunaan', 'path' => '/help/guide'],
+            //         ['name' => 'Kontak Support', 'path' => '/help/support'],
+            //     ],
+            // ],
         ];
+
+        return self::filterItemsByRole($items);
+    }
+
+    /**
+     * Filter menu items based on current user's role
+     */
+    public static function filterItemsByRole(array $items): array
+    {
+        $user = auth()->user();
+        
+        if (!$user) {
+            return [];
+        }
+
+        $userRole = null;
+        if ($user->isSuperAdmin()) {
+            $userRole = 'super_admin';
+        } elseif ($user->isWilayah()) {
+            $userRole = 'wilayah';
+        } elseif ($user->isSekolah()) {
+            $userRole = 'sekolah';
+        }
+
+        return array_filter($items, function ($item) use ($userRole) {
+            return isset($item['roles']) && in_array($userRole, $item['roles']);
+        });
     }
 
     public static function getMenuGroups()
     {
         return [
             [
-                'title' => 'Menu',
+                'title' => 'Menu Utama',
                 'items' => self::getMainNavItems()
             ],
             [
-                'title' => 'Others',
+                'title' => 'Pengaturan',
                 'items' => self::getOthersItems()
             ]
         ];
@@ -134,6 +168,14 @@ class MenuHelper
             'support-ticket' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 17.0518V12C20 7.58174 16.4183 4 12 4C7.58168 4 3.99994 7.58174 3.99994 12V17.0518M19.9998 14.041V19.75C19.9998 20.5784 19.3282 21.25 18.4998 21.25H13.9998M6.5 18.75H5.5C4.67157 18.75 4 18.0784 4 17.25V13.75C4 12.9216 4.67157 12.25 5.5 12.25H6.5C7.32843 12.25 8 12.9216 8 13.75V17.25C8 18.0784 7.32843 18.75 6.5 18.75ZM17.4999 18.75H18.4999C19.3284 18.75 19.9999 18.0784 19.9999 17.25V13.75C19.9999 12.9216 19.3284 12.25 18.4999 12.25H17.4999C16.6715 12.25 15.9999 12.9216 15.9999 13.75V17.25C15.9999 18.0784 16.6715 18.75 17.4999 18.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
 
             'email' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 8.187V17.25C3.5 17.6642 3.83579 18 4.25 18H19.75C20.1642 18 20.5 17.6642 20.5 17.25V8.18747L13.2873 13.2171C12.5141 13.7563 11.4866 13.7563 10.7134 13.2171L3.5 8.187ZM20.5 6.2286C20.5 6.23039 20.5 6.23218 20.5 6.23398V6.24336C20.4976 6.31753 20.4604 6.38643 20.3992 6.42905L12.4293 11.9867C12.1716 12.1664 11.8291 12.1664 11.5713 11.9867L3.60116 6.42885C3.538 6.38481 3.50035 6.31268 3.50032 6.23568C3.50028 6.10553 3.60577 6 3.73592 6H20.2644C20.3922 6 20.4963 6.10171 20.5 6.2286ZM22 6.25648V17.25C22 18.4926 20.9926 19.5 19.75 19.5H4.25C3.00736 19.5 2 18.4926 2 17.25V6.23398C2 6.22371 2.00021 6.2135 2.00061 6.20333C2.01781 5.25971 2.78812 4.5 3.73592 4.5H20.2644C21.2229 4.5 22 5.27697 22.0001 6.23549C22.0001 6.24249 22.0001 6.24949 22 6.25648Z" fill="currentColor"></path></svg>',
+
+            'users' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7ZM12 1C8.68629 1 6 3.68629 6 7C6 10.3137 8.68629 13 12 13C15.3137 13 18 10.3137 18 7C18 3.68629 15.3137 1 12 1ZM15.5 15.25C14.1193 15.25 13 16.3693 13 17.75V20C13 20.4142 13.3358 20.75 13.75 20.75C14.1642 20.75 14.5 20.4142 14.5 20V17.75C14.5 17.1977 14.9477 16.75 15.5 16.75H16.5C17.0523 16.75 17.5 17.1977 17.5 17.75V20C17.5 20.4142 17.8358 20.75 18.25 20.75C18.6642 20.75 19 20.4142 19 20V17.75C19 16.3693 17.8807 15.25 16.5 15.25H15.5ZM7.5 15.25C6.11929 15.25 5 16.3693 5 17.75V20C5 20.4142 5.33579 20.75 5.75 20.75C6.16421 20.75 6.5 20.4142 6.5 20V17.75C6.5 17.1977 6.94772 16.75 7.5 16.75H8.5C9.05228 16.75 9.5 17.1977 9.5 17.75V20C9.5 20.4142 9.83579 20.75 10.25 20.75C10.6642 20.75 11 20.4142 11 20V17.75C11 16.3693 9.88071 15.25 8.5 15.25H7.5Z" fill="currentColor"></path></svg>',
+
+            'students' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 14L21 9L12 4L3 9L12 14Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 9V16C3 16.5523 3.44772 17 4 17H20C20.5523 17 21 16.5523 21 16V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6 12L12 15L18 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
+
+            'graduates' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 6.25C8.96243 6.25 6.5 8.71243 6.5 11.75C6.5 14.7876 8.96243 17.25 12 17.25C15.0376 17.25 17.5 14.7876 17.5 11.75C17.5 8.71243 15.0376 6.25 12 6.25Z" stroke="currentColor" stroke-width="1.5"></path><path d="M5.75 19.75L6.75 16.25L9.25 18.75L12 16.25L14.75 18.75L17.25 16.25L18.25 19.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 2.75V5.25M8.5 3.75L9.5 5.25M15.5 3.75L14.5 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
+
+            'export' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3V15M12 3L8 7M12 3L16 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 15V18C21 19.6569 19.6569 21 18 21H6C4.34315 21 3 19.6569 3 18V15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
         ];
 
         return $icons[$iconName] ?? '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/></svg>';

@@ -874,3 +874,24 @@ pre[class*='language-'] {
         fill: none !important;
     }
 }
+
+/* Fix horizontal scrolling issues */
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Ensure main layout containers don't cause overflow */
+.min-h-screen {
+    max-width: 100vw;
+}
+
+/* Fix any potential width calculation issues */
+[class*="w-["], 
+[class*="max-w-["] {
+    max-width: 100%;
+}
