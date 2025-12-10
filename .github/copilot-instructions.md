@@ -9,9 +9,17 @@ Dokumen ini berfungsi sebagai pedoman perilaku dan gaya pengkodean GitHub Copilo
 
 ---
 
+## Latar Belakang dan Tujuan
+
+Perguruan Islam Alkhairaat memiliki ribuan unit pendidikan dan puluhan pesantren dengan puluhan ribu santri dan alumni yang tersebar di berbagai daerah, sehingga pengelolaan data secara manual sulit dan tidak terpusat. Diperlukan aplikasi database internal terintegrasi untuk mendata santri aktif/nonaktif, alumni, angkatan, dan profil lembaga pendidikan Alkhairaat secara nasional.
+
+---
+
 ## 🎯 Tujuan Utama Sistem
 
-* Menyediakan database terpusat santri, alumni, dan lembaga Alkhairaat.
+* Menyediakan database terpusat yang menyimpan data-data santri, alumni, dan lembaga Alkhairaat di bawah koordinasi PB Alkhairaat di Palu.
+* Memudahkan sekolah/pesantren Alkhairaat memperbarui data santri dan alumni secara berkala.
+* Menyajikan statistik jumlah santri, alumni, dan sebaran angkatan sebagai dasar perencanaan pendidikan.
 * Mendukung multi-role user (PB, wilayah, sekolah/pesantren).
 * Fokus pada stabilitas, keamanan data, dan kemudahan input operator sekolah.
 
