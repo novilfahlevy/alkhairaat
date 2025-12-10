@@ -36,7 +36,7 @@ class LembagaController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('kode_lembaga', 'like', "%{$search}%");
+                    ->orWhere('kode_lembaga', 'like', "%{$search}%");
             });
         }
 
@@ -56,7 +56,7 @@ class LembagaController extends Controller
             'title' => 'Data Lembaga',
             'lembaga' => $lembaga,
             'jenjangOptions' => Lembaga::JENJANG_OPTIONS,
-            'statusOptions' => Lembaga::STATUS_OPTIONS,
+            'statusOptions' => Lembaga::STATUS_LABELS,
         ]);
     }
 
@@ -66,7 +66,7 @@ class LembagaController extends Controller
     public function create(): View
     {
         $provinsi = Provinsi::orderBy('nama_provinsi')->get();
-        
+
         return view('pages.lembaga.create', [
             'title' => 'Tambah Lembaga',
             'provinsi' => $provinsi,
@@ -115,7 +115,7 @@ class LembagaController extends Controller
         }
 
         $provinsi = Provinsi::orderBy('nama_provinsi')->get();
-        $kabupaten = $lembaga->kabupaten?->provinsi_id 
+        $kabupaten = $lembaga->kabupaten?->provinsi_id
             ? Kabupaten::where('provinsi_id', $lembaga->kabupaten->provinsi_id)->orderBy('nama_kabupaten')->get()
             : collect();
 
