@@ -5,8 +5,8 @@
     <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
         <!-- Page Header -->
         <div class="mb-6">
-            <div class="flex items-center justify-between">
-                <div>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="mb-4 md:mb-0">
                     <h1 class="text-title-md mb-2 font-semibold text-gray-800 dark:text-white/90">
                         {{ $title }}
                     </h1>
@@ -84,9 +84,9 @@
                         <select name="status" 
                                 class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('status') border-red-500 @enderror">
                             <option value="">Pilih Status</option>
-                            @foreach($statusOptions as $status)
+                            @foreach($statusOptions as $status => $label)
                                 <option value="{{ $status }}" {{ old('status') == $status ? 'selected' : '' }}>
-                                    {{ ucfirst($status) }}
+                                    {{ $label }}
                                 </option>
                             @endforeach
                         </select>
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (provinsiId) {
             // Fetch kabupaten data
-            fetch(`{{ route('admin.lembaga.kabupaten') }}?provinsi_id=${provinsiId}`)
+            fetch(`{{ route('lembaga.get_kabupaten') }}?provinsi_id=${provinsiId}`)
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(kabupaten => {

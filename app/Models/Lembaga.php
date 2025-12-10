@@ -63,6 +63,16 @@ class Lembaga extends Model
     ];
 
     /**
+     * Status labels
+     *
+     * @var array<string, string>
+     */
+    public const STATUS_LABELS = [
+        self::STATUS_AKTIF => 'Aktif',
+        self::STATUS_TIDAK_AKTIF => 'Tidak Aktif',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>

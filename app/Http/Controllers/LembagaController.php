@@ -71,7 +71,7 @@ class LembagaController extends Controller
             'title' => 'Tambah Lembaga',
             'provinsi' => $provinsi,
             'jenjangOptions' => Lembaga::JENJANG_OPTIONS,
-            'statusOptions' => Lembaga::STATUS_OPTIONS,
+            'statusOptions' => Lembaga::STATUS_LABELS,
         ]);
     }
 
@@ -125,7 +125,7 @@ class LembagaController extends Controller
             'provinsi' => $provinsi,
             'kabupaten' => $kabupaten,
             'jenjangOptions' => Lembaga::JENJANG_OPTIONS,
-            'statusOptions' => Lembaga::STATUS_OPTIONS,
+            'statusOptions' => Lembaga::STATUS_LABELS,
         ]);
     }
 

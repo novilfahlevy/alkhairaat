@@ -106,11 +106,11 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::get('/lembaga', [App\Http\Controllers\LembagaController::class, 'index'])->middleware('permission:access_lembaga')->name('lembaga.index');
     Route::get('/lembaga/create', [App\Http\Controllers\LembagaController::class, 'create'])->middleware('permission:manage_lembaga')->name('lembaga.create');
     Route::post('/lembaga', [App\Http\Controllers\LembagaController::class, 'store'])->middleware('permission:manage_lembaga')->name('lembaga.store');
+    Route::get('/lembaga/kabupaten', [App\Http\Controllers\LembagaController::class, 'getKabupaten'])->name('lembaga.get_kabupaten');
     Route::get('/lembaga/{lembaga}', [App\Http\Controllers\LembagaController::class, 'show'])->middleware('permission:access_lembaga')->name('lembaga.show');
     Route::get('/lembaga/{lembaga}/edit', [App\Http\Controllers\LembagaController::class, 'edit'])->middleware('permission:manage_lembaga')->name('lembaga.edit');
     Route::put('/lembaga/{lembaga}', [App\Http\Controllers\LembagaController::class, 'update'])->middleware('permission:manage_lembaga')->name('lembaga.update');
     Route::delete('/lembaga/{lembaga}', [App\Http\Controllers\LembagaController::class, 'destroy'])->middleware('permission:manage_lembaga')->name('lembaga.destroy');
-    Route::get('/lembaga/kabupaten', [App\Http\Controllers\LembagaController::class, 'getKabupaten'])->name('admin.lembaga.kabupaten');
     
     // User sekolah management
     Route::get('/users-sekolah', function () {

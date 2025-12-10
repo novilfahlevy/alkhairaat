@@ -11,46 +11,31 @@ class MenuHelper
                 'icon' => 'dashboard',
                 'name' => 'Dasbor',
                 'path' => '/',
-                'roles' => ['super_admin', 'wilayah', 'sekolah'], // All roles
+                'roles' => ['super_admin', 'wilayah', 'sekolah'],
             ],
             [
                 'icon' => 'user-profile',
                 'name' => 'Lembaga',
                 'roles' => ['super_admin', 'wilayah'],
-                'subItems' => [
-                    ['name' => 'Daftar Lembaga', 'path' => '/lembaga'],
-                    ['name' => 'Tambah Lembaga', 'path' => '/lembaga/create', 'roles' => ['super_admin']],
-                ],
+                'path' => '/lembaga'
             ],
             [
                 'icon' => 'students',
                 'name' => 'Santri',
                 'roles' => ['super_admin', 'wilayah', 'sekolah'],
-                'subItems' => [
-                    ['name' => 'Data Santri Aktif', 'path' => '/santri'],
-                    ['name' => 'Santri Non-Aktif', 'path' => '/santri/non-aktif'],
-                    ['name' => 'Tambah Santri', 'path' => '/santri/create'],
-                ],
+                'path' => '/santri',
             ],
             [
                 'icon' => 'graduates',
                 'name' => 'Alumni',
                 'roles' => ['super_admin', 'wilayah', 'sekolah'],
-                'subItems' => [
-                    ['name' => 'Data Alumni', 'path' => '/alumni'],
-                    ['name' => 'Tracking Karir', 'path' => '/alumni/karir'],
-                    ['name' => 'Kontak Alumni', 'path' => '/alumni/kontak'],
-                ],
+                'path' => '/alumni'
             ],
             [
                 'icon' => 'charts',
                 'name' => 'Laporan',
                 'roles' => ['super_admin', 'wilayah'],
-                'subItems' => [
-                    ['name' => 'Laporan Santri', 'path' => '/laporan/santri'],
-                    ['name' => 'Laporan Alumni', 'path' => '/laporan/alumni'],
-                    ['name' => 'Statistik Regional', 'path' => '/laporan/regional'],
-                ],
+                'path' => '/laporan',
             ],
         ];
 
