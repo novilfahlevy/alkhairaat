@@ -13,13 +13,6 @@ use Illuminate\View\View;
 
 class LembagaController extends Controller
 {
-    public function __construct()
-    {
-        // Apply permission-based authorization
-        $this->middleware('permission:access_lembaga')->only(['index', 'show']);
-        $this->middleware('permission:manage_lembaga')->only(['create', 'store', 'edit', 'update', 'destroy']);
-    }
-
     /**
      * Display a listing of the resource.
      */
@@ -89,7 +82,7 @@ class LembagaController extends Controller
     {
         $lembaga = Lembaga::create($request->validated());
 
-        return redirect()->route('admin.lembaga.index')
+        return redirect()->route('lembaga.index')
             ->with('success', 'Lembaga berhasil ditambahkan.');
     }
 
@@ -148,7 +141,7 @@ class LembagaController extends Controller
 
         $lembaga->update($request->validated());
 
-        return redirect()->route('admin.lembaga.index')
+        return redirect()->route('lembaga.index')
             ->with('success', 'Lembaga berhasil diperbarui.');
     }
 
@@ -164,13 +157,13 @@ class LembagaController extends Controller
 
         // Check if lembaga has users or santri
         if ($lembaga->users()->count() > 0 || $lembaga->santri()->count() > 0) {
-            return redirect()->route('admin.lembaga.index')
+            return redirect()->route('lembaga.index')
                 ->with('error', 'Lembaga tidak dapat dihapus karena masih memiliki user atau santri.');
         }
 
         $lembaga->delete();
 
-        return redirect()->route('admin.lembaga.index')
+        return redirect()->route('lembaga.index')
             ->with('success', 'Lembaga berhasil dihapus.');
     }
 

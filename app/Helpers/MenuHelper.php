@@ -16,10 +16,10 @@ class MenuHelper
             [
                 'icon' => 'user-profile',
                 'name' => 'Lembaga',
-                'roles' => ['super_admin'],
+                'roles' => ['super_admin', 'wilayah'],
                 'subItems' => [
                     ['name' => 'Daftar Lembaga', 'path' => '/lembaga'],
-                    ['name' => 'Statistik Lembaga', 'path' => '/lembaga/statistik'],
+                    ['name' => 'Tambah Lembaga', 'path' => '/lembaga/create', 'roles' => ['super_admin']],
                 ],
             ],
             [
