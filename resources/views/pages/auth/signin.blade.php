@@ -8,6 +8,9 @@
                 <div class="mx-auto flex w-full max-w-md flex-1 flex-col justify-center">
                     <div>
                         <div class="mb-5 sm:mb-8">
+                            <div class="mb-10 lg:hidden">
+                                <img src="/images/logo_alkhairaat.png" alt="Logo Alkhairaat" width="150" height="150" class="drop-shadow-lg mx-auto" />
+                            </div>
                             <h1 class="text-title-sm sm:text-title-md mb-2 font-semibold text-gray-800 dark:text-white/90">
                                 Login ke Sistem Database Alkhairaat
                             </h1>
@@ -117,7 +120,8 @@
                 <div class="z-1 flex items-center justify-center">
                     <!-- ===== Common Grid Shape Start ===== -->
                     <x-common.common-grid-shape/>
-                    <div class="flex max-w-xs flex-col items-center">
+                    <div class="flex max-w-xs flex-col items-center gap-6">
+                        <img src="/images/logo_alkhairaat.png" alt="Logo Alkhairaat" width="200" height="200" class="drop-shadow-lg" />
                         <p class="text-center text-gray-400 dark:text-white/60">
                             Sistem Database Santri & Alumni<br>
                             Perguruan Islam Alkhairaat
