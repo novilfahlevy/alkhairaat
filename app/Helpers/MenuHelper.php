@@ -14,10 +14,22 @@ class MenuHelper
                 'roles' => ['super_admin', 'wilayah', 'sekolah'],
             ],
             [
-                'icon' => 'user-profile',
+                'icon' => 'tables',
                 'name' => 'Lembaga',
                 'roles' => ['super_admin', 'wilayah'],
                 'path' => '/lembaga'
+            ],
+            [
+                'icon' => 'pages',
+                'name' => 'Kabupaten',
+                'roles' => ['super_admin'],
+                'path' => '/kabupaten'
+            ],
+            [
+                'icon' => 'pages',
+                'name' => 'Provinsi',
+                'roles' => ['super_admin'],
+                'path' => '/provinsi'
             ],
             // [
             //     'icon' => 'students',

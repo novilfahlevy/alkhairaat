@@ -102,6 +102,24 @@ Route::middleware('auth')->group(function () {
 
 // Super Admin routes - can access and manage everything
 Route::middleware(['auth', 'role:super_admin'])->group(function () {
+    // Provinsi CRUD with specific permissions
+    Route::get('/provinsi', [App\Http\Controllers\ProvinsiController::class, 'index'])->middleware('permission:access_provinsi')->name('provinsi.index');
+    Route::get('/provinsi/create', [App\Http\Controllers\ProvinsiController::class, 'create'])->middleware('permission:manage_provinsi')->name('provinsi.create');
+    Route::post('/provinsi', [App\Http\Controllers\ProvinsiController::class, 'store'])->middleware('permission:manage_provinsi')->name('provinsi.store');
+    Route::get('/provinsi/{provinsi}', [App\Http\Controllers\ProvinsiController::class, 'show'])->middleware('permission:access_provinsi')->name('provinsi.show');
+    Route::get('/provinsi/{provinsi}/edit', [App\Http\Controllers\ProvinsiController::class, 'edit'])->middleware('permission:manage_provinsi')->name('provinsi.edit');
+    Route::put('/provinsi/{provinsi}', [App\Http\Controllers\ProvinsiController::class, 'update'])->middleware('permission:manage_provinsi')->name('provinsi.update');
+    Route::delete('/provinsi/{provinsi}', [App\Http\Controllers\ProvinsiController::class, 'destroy'])->middleware('permission:manage_provinsi')->name('provinsi.destroy');
+    
+    // Kabupaten CRUD with specific permissions
+    Route::get('/kabupaten', [App\Http\Controllers\KabupatenController::class, 'index'])->middleware('permission:access_kabupaten')->name('kabupaten.index');
+    Route::get('/kabupaten/create', [App\Http\Controllers\KabupatenController::class, 'create'])->middleware('permission:manage_kabupaten')->name('kabupaten.create');
+    Route::post('/kabupaten', [App\Http\Controllers\KabupatenController::class, 'store'])->middleware('permission:manage_kabupaten')->name('kabupaten.store');
+    Route::get('/kabupaten/{kabupaten}', [App\Http\Controllers\KabupatenController::class, 'show'])->middleware('permission:access_kabupaten')->name('kabupaten.show');
+    Route::get('/kabupaten/{kabupaten}/edit', [App\Http\Controllers\KabupatenController::class, 'edit'])->middleware('permission:manage_kabupaten')->name('kabupaten.edit');
+    Route::put('/kabupaten/{kabupaten}', [App\Http\Controllers\KabupatenController::class, 'update'])->middleware('permission:manage_kabupaten')->name('kabupaten.update');
+    Route::delete('/kabupaten/{kabupaten}', [App\Http\Controllers\KabupatenController::class, 'destroy'])->middleware('permission:manage_kabupaten')->name('kabupaten.destroy');
+    
     // Lembaga CRUD with specific permissions
     Route::get('/lembaga', [App\Http\Controllers\LembagaController::class, 'index'])->middleware('permission:access_lembaga')->name('lembaga.index');
     Route::get('/lembaga/create', [App\Http\Controllers\LembagaController::class, 'create'])->middleware('permission:manage_lembaga')->name('lembaga.create');

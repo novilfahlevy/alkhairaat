@@ -20,6 +20,10 @@ class RolePermissionSeeder extends Seeder
 
         // Create permissions
         $permissions = [
+            User::PERMISSION_ACCESS_PROVINSI => 'Mengakses data Provinsi',
+            User::PERMISSION_MANAGE_PROVINSI => 'Mengelola data Provinsi',
+            User::PERMISSION_ACCESS_KABUPATEN => 'Mengakses data Kabupaten',
+            User::PERMISSION_MANAGE_KABUPATEN => 'Mengelola data Kabupaten',
             User::PERMISSION_ACCESS_LEMBAGA => 'Mengakses data Lembaga',
             User::PERMISSION_MANAGE_LEMBAGA => 'Mengelola data Lembaga',
             User::PERMISSION_ACCESS_SANTRI => 'Mengakses data Santri',
@@ -48,6 +52,10 @@ class RolePermissionSeeder extends Seeder
 
         // Super Admin permissions (dapat melihat semua laporan)
         $superAdminRole->givePermissionTo([
+            User::PERMISSION_ACCESS_PROVINSI,
+            User::PERMISSION_MANAGE_PROVINSI,
+            User::PERMISSION_ACCESS_KABUPATEN,
+            User::PERMISSION_MANAGE_KABUPATEN,
             User::PERMISSION_ACCESS_LEMBAGA,
             User::PERMISSION_MANAGE_LEMBAGA,
             User::PERMISSION_ACCESS_SANTRI,

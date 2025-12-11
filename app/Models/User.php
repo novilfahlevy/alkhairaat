@@ -36,6 +36,10 @@ class User extends Authenticatable
     /**
      * Permission constants
      */
+    public const PERMISSION_ACCESS_PROVINSI = 'access_provinsi';
+    public const PERMISSION_MANAGE_PROVINSI = 'manage_provinsi';
+    public const PERMISSION_ACCESS_KABUPATEN = 'access_kabupaten';
+    public const PERMISSION_MANAGE_KABUPATEN = 'manage_kabupaten';
     public const PERMISSION_ACCESS_LEMBAGA = 'access_lembaga';
     public const PERMISSION_MANAGE_LEMBAGA = 'manage_lembaga';
     public const PERMISSION_ACCESS_SANTRI = 'access_santri';
