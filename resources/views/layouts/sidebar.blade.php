@@ -58,7 +58,7 @@
     @mouseenter="if (!$store.sidebar.isExpanded) $store.sidebar.setHovered(true)"
     @mouseleave="$store.sidebar.setHovered(false)">
     <!-- Logo Section -->
-    <div class="pt-2 pb-4 flex border-y mb-3 border-gray-200"
+    <div class="py-4 flex border-b mb-3 border-gray-200 dark:border-gray-800 items-center"
         :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ?
         'xl:justify-center' :
         'justify-start'">
