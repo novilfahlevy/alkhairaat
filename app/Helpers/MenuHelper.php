@@ -19,24 +19,24 @@ class MenuHelper
                 'roles' => ['super_admin', 'wilayah'],
                 'path' => '/lembaga'
             ],
-            [
-                'icon' => 'students',
-                'name' => 'Santri',
-                'roles' => ['super_admin', 'wilayah', 'sekolah'],
-                'path' => '/santri',
-            ],
-            [
-                'icon' => 'graduates',
-                'name' => 'Alumni',
-                'roles' => ['super_admin', 'wilayah', 'sekolah'],
-                'path' => '/alumni'
-            ],
-            [
-                'icon' => 'charts',
-                'name' => 'Laporan',
-                'roles' => ['super_admin', 'wilayah'],
-                'path' => '/laporan',
-            ],
+            // [
+            //     'icon' => 'students',
+            //     'name' => 'Santri',
+            //     'roles' => ['super_admin', 'wilayah', 'sekolah'],
+            //     'path' => '/santri',
+            // ],
+            // [
+            //     'icon' => 'graduates',
+            //     'name' => 'Alumni',
+            //     'roles' => ['super_admin', 'wilayah', 'sekolah'],
+            //     'path' => '/alumni'
+            // ],
+            // [
+            //     'icon' => 'charts',
+            //     'name' => 'Laporan',
+            //     'roles' => ['super_admin', 'wilayah'],
+            //     'path' => '/laporan',
+            // ],
         ];
 
         return self::filterItemsByRole($items);
@@ -109,10 +109,10 @@ class MenuHelper
                 'title' => 'Menu Utama',
                 'items' => self::getMainNavItems()
             ],
-            [
-                'title' => 'Pengaturan',
-                'items' => self::getOthersItems()
-            ]
+            // [
+            //     'title' => 'Pengaturan',
+            //     'items' => self::getOthersItems()
+            // ]
         ];
     }
 
