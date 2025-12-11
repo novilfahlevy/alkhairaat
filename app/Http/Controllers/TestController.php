@@ -36,7 +36,10 @@ class TestController extends Controller
                 'can_manage_lembaga' => $user->can('manage_lembaga'),
                 'can_manage_santri' => $user->can('manage_santri'),
                 'can_manage_alumni' => $user->can('manage_alumni'),
-                'can_view_reports' => $user->can('view_reports'),
+                'can_view_national_reports' => $user->can('view_national_reports'),
+                'can_view_province_reports' => $user->can('view_province_reports'),
+                'can_view_city_reports' => $user->can('view_city_reports'),
+                'can_view_sekolah_reports' => $user->can('view_sekolah_reports'),
                 'can_export_data' => $user->can('export_data'),
             ],
         ]);

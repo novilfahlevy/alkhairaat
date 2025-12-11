@@ -120,7 +120,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     // Reports and export
     Route::get('/reports', function () {
         return 'Admin Reports';
-    })->middleware('permission:view_reports')->name('reports');
+    })->middleware('permission:view_national_reports')->name('reports');
     
     Route::get('/export', function () {
         return 'Admin Export Data';
@@ -136,7 +136,7 @@ Route::middleware(['auth', 'role:wilayah,super_admin'])->prefix('wilayah')->name
     // Reports (limited to their kabupaten)
     Route::get('/reports', function () {
         return 'Wilayah Reports';
-    })->middleware('permission:view_reports')->name('reports');
+    })->middleware('permission:view_city_reports')->name('reports');
     
     // Export data (limited to their kabupaten)
     Route::get('/export', function () {
@@ -175,7 +175,7 @@ Route::middleware(['auth', 'role:sekolah,super_admin,wilayah'])->prefix('sekolah
     // Reports (limited to their lembaga)
     Route::get('/reports', function () {
         return 'Sekolah Reports';
-    })->middleware('permission:view_reports')->name('reports');
+    })->middleware('permission:view_sekolah_reports')->name('reports');
     
     // Export data (limited to their lembaga)
     Route::get('/export', function () {
@@ -229,7 +229,7 @@ Route::middleware('auth')->prefix('test')->name('test.')->group(function () {
     
     Route::get('/view-reports', function () {
         return 'Can view reports';
-    })->middleware('permission:view_reports')->name('view-reports');
+    })->middleware('permission:view_national_reports|view_province_reports|view_city_reports|view_sekolah_reports')->name('view-reports');
     
     Route::get('/export-data', function () {
         return 'Can export data';

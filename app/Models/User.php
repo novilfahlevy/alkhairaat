@@ -42,7 +42,10 @@ class User extends Authenticatable
     public const PERMISSION_MANAGE_SANTRI = 'manage_santri';
     public const PERMISSION_ACCESS_ALUMNI = 'access_alumni';
     public const PERMISSION_MANAGE_ALUMNI = 'manage_alumni';
-    public const PERMISSION_VIEW_REPORTS = 'view_reports';
+    public const PERMISSION_VIEW_NATIONAL_REPORTS = 'view_national_reports';
+    public const PERMISSION_VIEW_PROVINCE_REPORTS = 'view_province_reports';
+    public const PERMISSION_VIEW_CITY_REPORTS = 'view_city_reports';
+    public const PERMISSION_VIEW_SEKOLAH_REPORTS = 'view_sekolah_reports';
     public const PERMISSION_EXPORT_DATA = 'export_data';
     public const PERMISSION_MANAGE_USER_SEKOLAH = 'manage_user_sekolah';
 

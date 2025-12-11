@@ -26,7 +26,10 @@ class RolePermissionSeeder extends Seeder
             User::PERMISSION_MANAGE_SANTRI => 'Mengelola data Santri',
             User::PERMISSION_ACCESS_ALUMNI => 'Mengakses data Alumni',
             User::PERMISSION_MANAGE_ALUMNI => 'Mengelola data Alumni',
-            User::PERMISSION_VIEW_REPORTS => 'Melihat laporan',
+            User::PERMISSION_VIEW_NATIONAL_REPORTS => 'Melihat laporan nasional',
+            User::PERMISSION_VIEW_PROVINCE_REPORTS => 'Melihat laporan provinsi',
+            User::PERMISSION_VIEW_CITY_REPORTS => 'Melihat laporan kota/kabupaten',
+            User::PERMISSION_VIEW_SEKOLAH_REPORTS => 'Melihat laporan sekolah',
             User::PERMISSION_EXPORT_DATA => 'Export data',
             User::PERMISSION_MANAGE_USER_SEKOLAH => 'Mengelola akun user sekolah',
         ];
@@ -43,7 +46,7 @@ class RolePermissionSeeder extends Seeder
         $wilayahRole = Role::create(['name' => User::ROLE_WILAYAH]);
         $sekolahRole = Role::create(['name' => User::ROLE_SEKOLAH]);
 
-        // Super Admin permissions (semua permission: 1, 2, 3, 4, 5, 6, 7, 8, 9)
+        // Super Admin permissions (dapat melihat semua laporan)
         $superAdminRole->givePermissionTo([
             User::PERMISSION_ACCESS_LEMBAGA,
             User::PERMISSION_MANAGE_LEMBAGA,
@@ -51,25 +54,29 @@ class RolePermissionSeeder extends Seeder
             User::PERMISSION_MANAGE_SANTRI,
             User::PERMISSION_ACCESS_ALUMNI,
             User::PERMISSION_MANAGE_ALUMNI,
-            User::PERMISSION_VIEW_REPORTS,
+            User::PERMISSION_VIEW_NATIONAL_REPORTS,
+            User::PERMISSION_VIEW_PROVINCE_REPORTS,
+            User::PERMISSION_VIEW_CITY_REPORTS,
+            User::PERMISSION_VIEW_SEKOLAH_REPORTS,
             User::PERMISSION_EXPORT_DATA,
             User::PERMISSION_MANAGE_USER_SEKOLAH,
         ]);
 
-        // Wilayah permissions (permission: 7, 8, 9)
+        // Wilayah permissions (dapat melihat laporan provinsi dan kota/kabupaten)
         $wilayahRole->givePermissionTo([
-            User::PERMISSION_VIEW_REPORTS,
+            User::PERMISSION_VIEW_PROVINCE_REPORTS,
+            User::PERMISSION_VIEW_CITY_REPORTS,
             User::PERMISSION_EXPORT_DATA,
             User::PERMISSION_MANAGE_USER_SEKOLAH,
         ]);
 
-        // Sekolah permissions (permission: 3, 4, 5, 6, 7, 8)
+        // Sekolah permissions (dapat melihat laporan sekolah mereka sendiri)
         $sekolahRole->givePermissionTo([
             User::PERMISSION_ACCESS_SANTRI,
             User::PERMISSION_MANAGE_SANTRI,
             User::PERMISSION_ACCESS_ALUMNI,
             User::PERMISSION_MANAGE_ALUMNI,
-            User::PERMISSION_VIEW_REPORTS,
+            User::PERMISSION_VIEW_SEKOLAH_REPORTS,
             User::PERMISSION_EXPORT_DATA,
         ]);
     }
