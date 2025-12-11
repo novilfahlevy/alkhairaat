@@ -90,12 +90,17 @@
             }
         })();
     </script>
+
+    <!-- Prevent layout flash during Alpine initialization -->
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
     
 </head>
 
 <body
     class="overflow-x-hidden"
-    x-data="{ 'loaded': true}"
+    x-data="{}"
     x-init="$store.sidebar.isExpanded = window.innerWidth >= 1280;
     const checkMobile = () => {
         if (window.innerWidth < 1280) {
@@ -108,15 +113,11 @@
     };
     window.addEventListener('resize', checkMobile);">
 
-    {{-- preloader --}}
-    <x-common.preloader/>
-    {{-- preloader end --}}
-
-    <div class="min-h-screen overflow-x-hidden xl:flex">
+    <div class="min-h-screen overflow-x-hidden xl:flex" x-cloak>
         @include('layouts.backdrop')
         @include('layouts.sidebar')
 
-        <div class="flex-1 min-w-0 transition-all duration-300 ease-in-out"
+        <div class="flex-1 min-w-0"
             :class="{
                 'xl:ml-[290px]': $store.sidebar.isExpanded || $store.sidebar.isHovered,
                 'xl:ml-[90px]': !$store.sidebar.isExpanded && !$store.sidebar.isHovered,

@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Page Content -->
-    <div class="space-y-6">
+    <div class="space-y-6 pb-60">
         <!-- Page Header -->
         <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -225,11 +225,10 @@
         </div>
 
         <!-- Recent Activity or Additional Info -->
-        <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
+        {{-- <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-4">Informasi Tambahan</h3>
             
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <!-- Metadata -->
                 <div>
                     <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Metadata Sistem</h4>
                     <div class="space-y-2 text-sm">
@@ -248,13 +247,12 @@
                     </div>
                 </div>
 
-                <!-- Actions -->
                 @canany(['access_santri', 'access_alumni'])
                 <div>
                     <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Aksi Cepat</h4>
                     <div class="space-y-2">
                         @can('access_santri')
-                        <a href="{{ route('admin.santri.index', ['lembaga' => $lembaga->id]) }}" 
+                        <a href="{{ route('santri.index', ['lembaga' => $lembaga->id]) }}" 
                            class="block w-full rounded-lg border border-gray-200 p-3 text-left hover:border-brand-500 hover:bg-brand-50 dark:border-gray-700 dark:hover:border-brand-400 dark:hover:bg-brand-900/10">
                             <div class="flex items-center">
                                 <svg class="mr-3 h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -267,7 +265,7 @@
                         @endcan
 
                         @can('access_alumni')
-                        <a href="{{ route('admin.alumni.index', ['lembaga' => $lembaga->id]) }}" 
+                        <a href="{{ route('alumni.index', ['lembaga' => $lembaga->id]) }}" 
                            class="block w-full rounded-lg border border-gray-200 p-3 text-left hover:border-brand-500 hover:bg-brand-50 dark:border-gray-700 dark:hover:border-brand-400 dark:hover:bg-brand-900/10">
                             <div class="flex items-center">
                                 <svg class="mr-3 h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -282,6 +280,6 @@
                 </div>
                 @endcanany
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection
