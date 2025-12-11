@@ -22,6 +22,7 @@ Perguruan Islam Alkhairaat memiliki ribuan unit pendidikan dan puluhan pesantren
 * Menyajikan statistik jumlah santri, alumni, dan sebaran angkatan sebagai dasar perencanaan pendidikan.
 * Mendukung multi-role user (PB, wilayah, sekolah/pesantren).
 * Fokus pada stabilitas, keamanan data, dan kemudahan input operator sekolah.
+* Tujuan akhirnya adalah terdapat laporan berapa jumlah santri dan alumni di sekolah, di kabupaten, provinsi, dan seluruh indonesia, dalam periode waktu tertentu.
 
 ---
 
