@@ -27,7 +27,6 @@ class RegisterRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'confirmed', Password::min(8)],
-            'sekolah_id' => ['nullable', 'exists:sekolah,id'],
         ];
     }
 
@@ -47,7 +46,6 @@ class RegisterRequest extends FormRequest
             'password.required' => 'Password wajib diisi.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
             'password.min' => 'Password minimal 8 karakter.',
-            'sekolah_id.exists' => 'Sekolah tidak ditemukan.',
         ];
     }
 }

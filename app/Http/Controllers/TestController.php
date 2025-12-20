@@ -22,12 +22,12 @@ class TestController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'legacy_role' => $user->role,
-                'sekolah_id' => $user->sekolah_id,
             ],
             'spatie_roles' => $user->getRoleNames(),
             'role_checks' => [
                 'isSuperuser' => $user->isSuperuser(),
                 'isPengurusBesar' => $user->isPengurusBesar(),
+                'isKomisariatDaerah' => $user->isKomisariatDaerah(),
                 'isKomisariatWilayah' => $user->isKomisariatWilayah(),
                 'isGuru' => $user->isGuru(),
             ],
@@ -52,7 +52,7 @@ class TestController extends Controller
     {
         return response()->json([
             'message' => 'This endpoint is only accessible by sekolah users',
-            'user' => auth()->user()->only(['name', 'email', 'sekolah_id'])
+            'user' => auth()->user()->only(['name', 'email'])
         ]);
     }
 

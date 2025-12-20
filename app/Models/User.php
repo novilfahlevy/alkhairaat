@@ -21,6 +21,7 @@ class User extends Authenticatable
     public const ROLE_SUPERUSER = 'superuser';
     public const ROLE_PENGURUS_BESAR = 'pengurus_besar';
     public const ROLE_KOMISARIAT_WILAYAH = 'komisariat_wilayah';
+    public const ROLE_KOMISARIAT_DAERAH = 'komisariat_daerah';
     public const ROLE_GURU = 'guru';
 
     /**
@@ -32,6 +33,7 @@ class User extends Authenticatable
         self::ROLE_SUPERUSER,
         self::ROLE_PENGURUS_BESAR,
         self::ROLE_KOMISARIAT_WILAYAH,
+        self::ROLE_KOMISARIAT_DAERAH,
         self::ROLE_GURU,
     ];
 
@@ -45,7 +47,6 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'sekolah_id',
     ];
 
     /**
@@ -72,15 +73,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the sekolah that the user belongs to.
-     */
-    public function sekolah(): BelongsTo
-    {
-        return $this->belongsTo(Sekolah::class);
-    }
-
-    /**
-     * Get the kabupaten that the user (wilayah) manages.
+     * Get the kabupaten that the user manages.
      */
     public function kabupaten(): BelongsToMany
     {
@@ -109,6 +102,14 @@ class User extends Authenticatable
     public function isKomisariatWilayah(): bool
     {
         return $this->hasRole(self::ROLE_KOMISARIAT_WILAYAH);
+    }
+
+    /**
+     * Check if user is komisariat daerah
+     */
+    public function isKomisariatDaerah(): bool
+    {
+        return $this->hasRole(self::ROLE_KOMISARIAT_DAERAH);
     }
 
     /**
@@ -145,8 +146,19 @@ class User extends Authenticatable
             return $this->kabupaten()->where('kabupaten.id', $sekolah->kabupaten_id)->exists();
         }
 
-        // Guru can only access their own sekolah
-        return $this->sekolah_id === $sekolahId;
+        // Komisariat daerah can access data in their managed kabupaten
+        if ($this->isKomisariatDaerah()) {
+            $sekolah = Sekolah::find($sekolahId);
+            if (!$sekolah) {
+                return false;
+            }
+            
+            // Check if user manages the kabupaten where this sekolah is located
+            return $this->kabupaten()->where('kabupaten.id', $sekolah->kabupaten_id)->exists();
+        }
+
+        // Guru has no direct access via this method
+        return false;
     }
 
     /**
@@ -155,13 +167,5 @@ class User extends Authenticatable
     public function scopeByRole($query, string $role)
     {
         return $query->role($role);
-    }
-
-    /**
-     * Scope to filter users by sekolah
-     */
-    public function scopeBySekolah($query, int $sekolahId)
-    {
-        return $query->where('sekolah_id', $sekolahId);
     }
 }

@@ -34,12 +34,11 @@ class RegisterController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
-            'role' => User::ROLE_SEKOLAH, // Keep for backward compatibility
-            'sekolah_id' => $request->sekolah_id,
+            'role' => User::ROLE_GURU,
         ]);
 
         // Assign role using Spatie
-        $user->assignRole('sekolah');
+        $user->assignRole(User::ROLE_GURU);
 
         Auth::login($user);
 

@@ -16,7 +16,7 @@ class MenuHelper
             [
                 'icon' => 'tables',
                 'name' => 'Sekolah',
-                'roles' => ['superuser', 'pengurus_besar', 'komisariat_wilayah'],
+                'roles' => ['superuser', 'pengurus_besar', 'komisariat_daerah', 'komisariat_wilayah'],
                 'path' => '/sekolah'
             ],
             [
@@ -105,6 +105,8 @@ class MenuHelper
             $userRole = 'superuser';
         } elseif ($user->isPengurusBesar()) {
             $userRole = 'pengurus_besar';
+        } elseif ($user->isKomisariatDaerah()) {
+            $userRole = 'komisariat_daerah';
         } elseif ($user->isKomisariatWilayah()) {
             $userRole = 'komisariat_wilayah';
         } elseif ($user->isGuru()) {

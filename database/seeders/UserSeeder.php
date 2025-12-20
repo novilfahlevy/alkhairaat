@@ -21,7 +21,6 @@ class UserSeeder extends Seeder
                 'name' => 'Superuser PB Alkhairaat',
                 'password' => 'password', // Will be hashed automatically
                 'role' => User::ROLE_SUPERUSER,
-                'sekolah_id' => null,
             ]
         );
         
@@ -38,7 +37,6 @@ class UserSeeder extends Seeder
                 'name' => 'Admin Wilayah Sulawesi Tengah',
                 'password' => 'password',
                 'role' => User::ROLE_KOMISARIAT_WILAYAH,
-                'sekolah_id' => null,
             ]
         );
         
@@ -84,7 +82,6 @@ class UserSeeder extends Seeder
                     'name' => $wilayahData['name'],
                     'password' => 'password',
                     'role' => User::ROLE_KOMISARIAT_WILAYAH,
-                    'sekolah_id' => null,
                 ]
             );
             
@@ -104,6 +101,33 @@ class UserSeeder extends Seeder
             }
         }
 
+        // Create sample Komisariat Daerah users for specific kabupaten
+        $daerahKabupaten = Kabupaten::whereHas('provinsi', function ($query) {
+            $query->where('nama_provinsi', 'Sulawesi Tengah');
+        })->limit(2)->get();
+
+        foreach ($daerahKabupaten as $kabupaten) {
+            $email = 'daerah.' . strtolower(str_replace([' ', '-'], '', $kabupaten->nama_kabupaten)) . '@alkhairaat.or.id';
+            
+            $daerah = User::firstOrCreate(
+                ['email' => $email],
+                [
+                    'name' => 'Admin Daerah ' . $kabupaten->nama_kabupaten,
+                    'password' => 'password',
+                    'role' => User::ROLE_KOMISARIAT_DAERAH,
+                ]
+            );
+            
+            if (!$daerah->hasRole(User::ROLE_KOMISARIAT_DAERAH)) {
+                $daerah->assignRole(User::ROLE_KOMISARIAT_DAERAH);
+                $this->command->info('Daerah role assigned to: ' . $daerah->email);
+            }
+
+            // Assign single kabupaten to this daerah user
+            $daerah->kabupaten()->sync([$kabupaten->id]);
+            $this->command->info("Assigned kabupaten {$kabupaten->nama_kabupaten} to {$daerah->name}");
+        }
+
         // Create sample Guru users for each sekolah
         $sekolahList = Sekolah::all();
 
@@ -116,7 +140,6 @@ class UserSeeder extends Seeder
                     'name' => 'Operator ' . $sekolah->nama,
                     'password' => 'password',
                     'role' => User::ROLE_GURU,
-                    'sekolah_id' => $sekolah->id,
                 ]
             );
             
