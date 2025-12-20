@@ -2,6 +2,6 @@
 
 @section('content')
   <div>
-    <x-dashboard.counts :provinsiCount="$provinsiCount" :kabupatenCount="$kabupatenCount" :lembagaCount="$lembagaCount" />
+    <x-dashboard.counts :provinsiCount="$provinsiCount" :kabupatenCount="$kabupatenCount" :sekolahCount="$sekolahCount" :sekolahCount="$sekolahCount" />
   </div>
 @endsection

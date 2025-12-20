@@ -98,162 +98,48 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-// Super Admin routes - can access and manage everything
-Route::middleware(['auth', 'role:super_admin'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     // Provinsi CRUD with specific permissions
-    Route::get('/provinsi', [App\Http\Controllers\ProvinsiController::class, 'index'])->middleware('permission:access_provinsi')->name('provinsi.index');
-    Route::get('/provinsi/create', [App\Http\Controllers\ProvinsiController::class, 'create'])->middleware('permission:manage_provinsi')->name('provinsi.create');
-    Route::post('/provinsi', [App\Http\Controllers\ProvinsiController::class, 'store'])->middleware('permission:manage_provinsi')->name('provinsi.store');
-    Route::get('/provinsi/{provinsi}', [App\Http\Controllers\ProvinsiController::class, 'show'])->middleware('permission:access_provinsi')->name('provinsi.show');
-    Route::get('/provinsi/{provinsi}/edit', [App\Http\Controllers\ProvinsiController::class, 'edit'])->middleware('permission:manage_provinsi')->name('provinsi.edit');
-    Route::put('/provinsi/{provinsi}', [App\Http\Controllers\ProvinsiController::class, 'update'])->middleware('permission:manage_provinsi')->name('provinsi.update');
-    Route::delete('/provinsi/{provinsi}', [App\Http\Controllers\ProvinsiController::class, 'destroy'])->middleware('permission:manage_provinsi')->name('provinsi.destroy');
+    Route::get('/provinsi', [App\Http\Controllers\ProvinsiController::class, 'index'])->name('provinsi.index');
+    Route::get('/provinsi/create', [App\Http\Controllers\ProvinsiController::class, 'create'])->name('provinsi.create');
+    Route::post('/provinsi', [App\Http\Controllers\ProvinsiController::class, 'store'])->name('provinsi.store');
+    Route::get('/provinsi/{provinsi}', [App\Http\Controllers\ProvinsiController::class, 'show'])->name('provinsi.show');
+    Route::get('/provinsi/{provinsi}/edit', [App\Http\Controllers\ProvinsiController::class, 'edit'])->name('provinsi.edit');
+    Route::put('/provinsi/{provinsi}', [App\Http\Controllers\ProvinsiController::class, 'update'])->name('provinsi.update');
+    Route::delete('/provinsi/{provinsi}', [App\Http\Controllers\ProvinsiController::class, 'destroy'])->name('provinsi.destroy');
     
     // Kabupaten CRUD with specific permissions
-    Route::get('/kabupaten', [App\Http\Controllers\KabupatenController::class, 'index'])->middleware('permission:access_kabupaten')->name('kabupaten.index');
-    Route::get('/kabupaten/create', [App\Http\Controllers\KabupatenController::class, 'create'])->middleware('permission:manage_kabupaten')->name('kabupaten.create');
-    Route::post('/kabupaten', [App\Http\Controllers\KabupatenController::class, 'store'])->middleware('permission:manage_kabupaten')->name('kabupaten.store');
-    Route::get('/kabupaten/{kabupaten}', [App\Http\Controllers\KabupatenController::class, 'show'])->middleware('permission:access_kabupaten')->name('kabupaten.show');
-    Route::get('/kabupaten/{kabupaten}/edit', [App\Http\Controllers\KabupatenController::class, 'edit'])->middleware('permission:manage_kabupaten')->name('kabupaten.edit');
-    Route::put('/kabupaten/{kabupaten}', [App\Http\Controllers\KabupatenController::class, 'update'])->middleware('permission:manage_kabupaten')->name('kabupaten.update');
-    Route::delete('/kabupaten/{kabupaten}', [App\Http\Controllers\KabupatenController::class, 'destroy'])->middleware('permission:manage_kabupaten')->name('kabupaten.destroy');
+    Route::get('/kabupaten', [App\Http\Controllers\KabupatenController::class, 'index'])->name('kabupaten.index');
+    Route::get('/kabupaten/create', [App\Http\Controllers\KabupatenController::class, 'create'])->name('kabupaten.create');
+    Route::post('/kabupaten', [App\Http\Controllers\KabupatenController::class, 'store'])->name('kabupaten.store');
+    Route::get('/kabupaten/{kabupaten}', [App\Http\Controllers\KabupatenController::class, 'show'])->name('kabupaten.show');
+    Route::get('/kabupaten/{kabupaten}/edit', [App\Http\Controllers\KabupatenController::class, 'edit'])->name('kabupaten.edit');
+    Route::put('/kabupaten/{kabupaten}', [App\Http\Controllers\KabupatenController::class, 'update'])->name('kabupaten.update');
+    Route::delete('/kabupaten/{kabupaten}', [App\Http\Controllers\KabupatenController::class, 'destroy'])->name('kabupaten.destroy');
     
-    // Lembaga CRUD with specific permissions
-    Route::get('/lembaga', [App\Http\Controllers\LembagaController::class, 'index'])->middleware('permission:access_lembaga')->name('lembaga.index');
-    Route::get('/lembaga/create', [App\Http\Controllers\LembagaController::class, 'create'])->middleware('permission:manage_lembaga')->name('lembaga.create');
-    Route::post('/lembaga', [App\Http\Controllers\LembagaController::class, 'store'])->middleware('permission:manage_lembaga')->name('lembaga.store');
-    Route::get('/lembaga/kabupaten', [App\Http\Controllers\LembagaController::class, 'getKabupaten'])->name('lembaga.get_kabupaten');
-    Route::get('/lembaga/{lembaga}', [App\Http\Controllers\LembagaController::class, 'show'])->middleware('permission:access_lembaga')->name('lembaga.show');
-    Route::get('/lembaga/{lembaga}/edit', [App\Http\Controllers\LembagaController::class, 'edit'])->middleware('permission:manage_lembaga')->name('lembaga.edit');
-    Route::put('/lembaga/{lembaga}', [App\Http\Controllers\LembagaController::class, 'update'])->middleware('permission:manage_lembaga')->name('lembaga.update');
-    Route::delete('/lembaga/{lembaga}', [App\Http\Controllers\LembagaController::class, 'destroy'])->middleware('permission:manage_lembaga')->name('lembaga.destroy');
+    // Sekolah CRUD
+    Route::get('/sekolah', [App\Http\Controllers\SekolahController::class, 'index'])->name('sekolah.index');
+    Route::get('/sekolah/create', [App\Http\Controllers\SekolahController::class, 'create'])->name('sekolah.create');
+    Route::post('/sekolah', [App\Http\Controllers\SekolahController::class, 'store'])->name('sekolah.store');
+    Route::get('/sekolah/kabupaten', [App\Http\Controllers\SekolahController::class, 'getKabupaten'])->name('sekolah.get_kabupaten');
+    Route::get('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'show'])->name('sekolah.show');
+    Route::get('/sekolah/{sekolah}/edit', [App\Http\Controllers\SekolahController::class, 'edit'])->name('sekolah.edit');
+    Route::put('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'update'])->name('sekolah.update');
+    Route::delete('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'destroy'])->name('sekolah.destroy');
     
     // User sekolah management
     Route::get('/users-sekolah', function () {
         return 'Manage User Sekolah';
-    })->middleware('permission:manage_user_sekolah')->name('users-sekolah.index');
+    })->name('users-sekolah.index');
     
     // Reports and export
     Route::get('/reports', function () {
         return 'Admin Reports';
-    })->middleware('permission:view_national_reports')->name('reports');
+    })->name('reports');
     
     Route::get('/export', function () {
         return 'Admin Export Data';
-    })->middleware('permission:export_data')->name('export');
-});
-
-// Wilayah routes - can view reports, export data, and manage user sekolah
-Route::middleware(['auth', 'role:wilayah,super_admin'])->prefix('wilayah')->name('wilayah.')->group(function () {
-    // Lembaga access (read-only for their kabupaten)
-    Route::get('/lembaga', [App\Http\Controllers\LembagaController::class, 'index'])->middleware('permission:access_lembaga')->name('lembaga.index');
-    Route::get('/lembaga/{lembaga}', [App\Http\Controllers\LembagaController::class, 'show'])->middleware('permission:access_lembaga')->name('lembaga.show');
-    
-    // Reports (limited to their kabupaten)
-    Route::get('/reports', function () {
-        return 'Wilayah Reports';
-    })->middleware('permission:view_city_reports')->name('reports');
-    
-    // Export data (limited to their kabupaten)
-    Route::get('/export', function () {
-        return 'Wilayah Export Data';
-    })->middleware('permission:export_data')->name('export');
-    
-    // User sekolah management (in their kabupaten only)
-    Route::get('/users-sekolah', function () {
-        return 'Wilayah Manage User Sekolah';
-    })->middleware('permission:manage_user_sekolah')->name('users-sekolah.index');
-});
-
-// Sekolah routes - can access and manage santri/alumni, view reports, export data
-Route::middleware(['auth', 'role:sekolah,super_admin,wilayah'])->prefix('sekolah')->name('sekolah.')->group(function () {
-    // Lembaga access (read-only for their own lembaga)
-    Route::get('/lembaga/{lembaga}', [App\Http\Controllers\LembagaController::class, 'show'])->middleware('permission:access_lembaga')->name('lembaga.show');
-    
-    // Santri management
-    Route::get('/santri', function () {
-        return 'Sekolah Santri List';
-    })->middleware('permission:access_santri')->name('santri.index');
-    
-    Route::post('/santri', function () {
-        return 'Sekolah Create Santri';
-    })->middleware('permission:manage_santri')->name('santri.store');
-    
-    // Alumni management
-    Route::get('/alumni', function () {
-        return 'Sekolah Alumni List';
-    })->middleware('permission:access_alumni')->name('alumni.index');
-    
-    Route::post('/alumni', function () {
-        return 'Sekolah Create Alumni';
-    })->middleware('permission:manage_alumni')->name('alumni.store');
-    
-    // Reports (limited to their lembaga)
-    Route::get('/reports', function () {
-        return 'Sekolah Reports';
-    })->middleware('permission:view_sekolah_reports')->name('reports');
-    
-    // Export data (limited to their lembaga)
-    Route::get('/export', function () {
-        return 'Sekolah Export Data';
-    })->middleware('permission:export_data')->name('export');
-});
-
-/*
-|--------------------------------------------------------------------------
-| Test Routes for Role and Permission System
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware('auth')->prefix('test')->name('test.')->group(function () {
-    // Test role and permission information
-    Route::get('/roles', [App\Http\Controllers\TestController::class, 'testRoles'])->name('roles');
-    
-    // Test role-based access
-    Route::get('/super-admin', [App\Http\Controllers\TestController::class, 'superAdminOnly'])
-        ->middleware('role:super_admin')
-        ->name('super-admin');
-    
-    Route::get('/sekolah', [App\Http\Controllers\TestController::class, 'sekolahOnly'])
-        ->middleware('role:sekolah')
-        ->name('sekolah');
-    
-    // Test new permission-based access
-    Route::get('/access-lembaga', function () {
-        return 'Can access lembaga data';
-    })->middleware('permission:access_lembaga')->name('access-lembaga');
-    
-    Route::get('/manage-lembaga', function () {
-        return 'Can manage lembaga data';
-    })->middleware('permission:manage_lembaga')->name('manage-lembaga');
-    
-    Route::get('/access-santri', function () {
-        return 'Can access santri data';
-    })->middleware('permission:access_santri')->name('access-santri');
-    
-    Route::get('/manage-santri', function () {
-        return 'Can manage santri data';
-    })->middleware('permission:manage_santri')->name('manage-santri');
-    
-    Route::get('/access-alumni', function () {
-        return 'Can access alumni data';
-    })->middleware('permission:access_alumni')->name('access-alumni');
-    
-    Route::get('/manage-alumni', function () {
-        return 'Can manage alumni data';
-    })->middleware('permission:manage_alumni')->name('manage-alumni');
-    
-    Route::get('/view-reports', function () {
-        return 'Can view reports';
-    })->middleware('permission:view_national_reports|view_province_reports|view_city_reports|view_sekolah_reports')->name('view-reports');
-    
-    Route::get('/export-data', function () {
-        return 'Can export data';
-    })->middleware('permission:export_data')->name('export-data');
-    
-    Route::get('/manage-user-sekolah', function () {
-        return 'Can manage user sekolah';
-    })->middleware('permission:manage_user_sekolah')->name('manage-user-sekolah');
+    })->name('export');
 });
 
 // error pages (public)

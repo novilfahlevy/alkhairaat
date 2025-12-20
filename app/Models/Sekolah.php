@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Lembaga extends Model
+class Sekolah extends Model
 {
     use HasFactory;
 
@@ -16,7 +16,7 @@ class Lembaga extends Model
      *
      * @var string
      */
-    protected $table = 'lembaga';
+    protected $table = 'sekolah';
 
     /**
      * Jenjang constants
@@ -78,7 +78,7 @@ class Lembaga extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'kode_lembaga',
+        'kode_sekolah',
         'nama',
         'jenjang',
         'status',
@@ -91,7 +91,7 @@ class Lembaga extends Model
     ];
 
     /**
-     * Get the users that belong to this lembaga.
+     * Get the users that belong to this sekolah.
      */
     public function users(): HasMany
     {
@@ -99,7 +99,7 @@ class Lembaga extends Model
     }
 
     /**
-     * Get the santri that belong to this lembaga.
+     * Get the santri that belong to this sekolah.
      */
     public function santri(): HasMany
     {
@@ -107,7 +107,7 @@ class Lembaga extends Model
     }
 
     /**
-     * Get the kabupaten that owns this lembaga.
+     * Get the kabupaten that owns this sekolah.
      */
     public function kabupaten(): BelongsTo
     {
@@ -123,7 +123,7 @@ class Lembaga extends Model
     }
 
     /**
-     * Scope to filter active lembaga
+     * Scope to filter active sekolah
      */
     public function scopeAktif($query)
     {
@@ -155,7 +155,7 @@ class Lembaga extends Model
     }
 
     /**
-     * Check if lembaga is active
+     * Check if sekolah is active
      */
     public function isAktif(): bool
     {

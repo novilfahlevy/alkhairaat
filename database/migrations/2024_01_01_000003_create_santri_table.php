@@ -29,14 +29,14 @@ return new class extends Migration
             $table->year('tahun_masuk');
             $table->year('tahun_lulus')->nullable();
             $table->string('foto')->nullable();
-            $table->foreignId('lembaga_id')->constrained('lembaga')->onDelete('cascade');
+            $table->foreignId('sekolah_id')->constrained('sekolah')->onDelete('cascade');
             $table->timestamps();
 
             // Indexes for common queries
             $table->index('status');
             $table->index('tahun_masuk');
             $table->index('kelas');
-            $table->index(['lembaga_id', 'status']);
+            $table->index(['sekolah_id', 'status']);
         });
     }
 

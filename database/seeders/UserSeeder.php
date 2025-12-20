@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Lembaga;
+use App\Models\Sekolah;
 use App\Models\User;
 use App\Models\Kabupaten;
 use Illuminate\Database\Seeder;
@@ -14,36 +14,36 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Super Admin (PB Alkhairaat) if not exists
-        $superAdmin = User::firstOrCreate(
+        // Create Superuser if not exists
+        $superUser = User::firstOrCreate(
             ['email' => 'admin@alkhairaat.or.id'],
             [
-                'name' => 'Super Admin PB Alkhairaat',
+                'name' => 'Superuser PB Alkhairaat',
                 'password' => 'password', // Will be hashed automatically
-                'role' => User::ROLE_SUPER_ADMIN,
-                'lembaga_id' => null,
+                'role' => User::ROLE_SUPERUSER,
+                'sekolah_id' => null,
             ]
         );
         
         // Assign role using Spatie (won't duplicate if already exists)
-        if (!$superAdmin->hasRole(User::ROLE_SUPER_ADMIN)) {
-            $superAdmin->assignRole(User::ROLE_SUPER_ADMIN);
-            $this->command->info('Super Admin role assigned to: ' . $superAdmin->email);
+        if (!$superUser->hasRole(User::ROLE_SUPERUSER)) {
+            $superUser->assignRole(User::ROLE_SUPERUSER);
+            $this->command->info('Superuser role assigned to: ' . $superUser->email);
         }
 
-        // Create Wilayah Admin for Sulawesi Tengah
+        // Create Komisariat Wilayah Admin for Sulawesi Tengah
         $wilayahSulteng = User::firstOrCreate(
             ['email' => 'wilayah.sulteng@alkhairaat.or.id'],
             [
                 'name' => 'Admin Wilayah Sulawesi Tengah',
                 'password' => 'password',
-                'role' => User::ROLE_WILAYAH,
-                'lembaga_id' => null,
+                'role' => User::ROLE_KOMISARIAT_WILAYAH,
+                'sekolah_id' => null,
             ]
         );
         
-        if (!$wilayahSulteng->hasRole(User::ROLE_WILAYAH)) {
-            $wilayahSulteng->assignRole(User::ROLE_WILAYAH);
+        if (!$wilayahSulteng->hasRole(User::ROLE_KOMISARIAT_WILAYAH)) {
+            $wilayahSulteng->assignRole(User::ROLE_KOMISARIAT_WILAYAH);
             $this->command->info('Wilayah role assigned to: ' . $wilayahSulteng->email);
         }
 
@@ -83,13 +83,13 @@ class UserSeeder extends Seeder
                 [
                     'name' => $wilayahData['name'],
                     'password' => 'password',
-                    'role' => User::ROLE_WILAYAH,
-                    'lembaga_id' => null,
+                    'role' => User::ROLE_KOMISARIAT_WILAYAH,
+                    'sekolah_id' => null,
                 ]
             );
             
-            if (!$wilayah->hasRole(User::ROLE_WILAYAH)) {
-                $wilayah->assignRole(User::ROLE_WILAYAH);
+            if (!$wilayah->hasRole(User::ROLE_KOMISARIAT_WILAYAH)) {
+                $wilayah->assignRole(User::ROLE_KOMISARIAT_WILAYAH);
                 $this->command->info('Wilayah role assigned to: ' . $wilayah->email);
             }
 
@@ -104,25 +104,25 @@ class UserSeeder extends Seeder
             }
         }
 
-        // Create sample Sekolah users for each lembaga
-        $lembagaList = Lembaga::all();
+        // Create sample Guru users for each sekolah
+        $sekolahList = Sekolah::all();
 
-        foreach ($lembagaList as $lembaga) {
-            $email = 'operator.' . strtolower(str_replace([' ', '-'], '', $lembaga->kode_lembaga)) . '@alkhairaat.or.id';
+        foreach ($sekolahList as $sekolah) {
+            $email = 'operator.' . strtolower(str_replace([' ', '-'], '', $sekolah->kode_sekolah)) . '@alkhairaat.or.id';
             
-            $sekolah = User::firstOrCreate(
+            $guru = User::firstOrCreate(
                 ['email' => $email],
                 [
-                    'name' => 'Operator ' . $lembaga->nama,
+                    'name' => 'Operator ' . $sekolah->nama,
                     'password' => 'password',
-                    'role' => User::ROLE_SEKOLAH,
-                    'lembaga_id' => $lembaga->id,
+                    'role' => User::ROLE_GURU,
+                    'sekolah_id' => $sekolah->id,
                 ]
             );
             
-            if (!$sekolah->hasRole(User::ROLE_SEKOLAH)) {
-                $sekolah->assignRole(User::ROLE_SEKOLAH);
-                $this->command->info('Sekolah role assigned to: ' . $sekolah->email);
+            if (!$guru->hasRole(User::ROLE_GURU)) {
+                $guru->assignRole(User::ROLE_GURU);
+                $this->command->info('Guru role assigned to: ' . $guru->email);
             }
         }
 

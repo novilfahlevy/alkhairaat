@@ -33,10 +33,10 @@ class Provinsi extends Model
     }
 
     /**
-     * Get all lembaga in this provinsi.
+     * Get all sekolah in this provinsi.
      */
-    public function lembaga(): HasMany
+    public function sekolah(): HasMany
     {
-        return $this->hasMany(Lembaga::class);
+        return $this->hasMany(Sekolah::class);
     }
 }

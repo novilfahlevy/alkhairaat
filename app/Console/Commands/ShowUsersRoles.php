@@ -35,7 +35,7 @@ class ShowUsersRoles extends Command
         $users = User::with('roles')->get();
 
         $this->table(
-            ['ID', 'Name', 'Email', 'Legacy Role', 'Spatie Roles', 'Lembaga ID'],
+            ['ID', 'Name', 'Email', 'Legacy Role', 'Spatie Roles', 'Sekolah ID'],
             $users->map(function ($user) {
                 return [
                     $user->id,
@@ -43,7 +43,7 @@ class ShowUsersRoles extends Command
                     $user->email,
                     $user->role ?? 'N/A',
                     $user->getRoleNames()->implode(', ') ?: 'No roles',
-                    $user->lembaga_id ?? 'N/A'
+                    $user->sekolah_id ?? 'N/A'
                 ];
             })
         );

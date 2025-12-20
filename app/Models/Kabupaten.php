@@ -44,11 +44,11 @@ class Kabupaten extends Model
     }
 
     /**
-     * Get all lembaga in this kabupaten.
+     * Get all sekolah in this kabupaten.
      */
-    public function lembaga(): HasMany
+    public function sekolah(): HasMany
     {
-        return $this->hasMany(Lembaga::class);
+        return $this->hasMany(Sekolah::class);
     }
 
     /**

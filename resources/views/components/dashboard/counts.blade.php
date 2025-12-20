@@ -44,12 +44,12 @@
         </div>
     </div>
 
-    <!-- Lembaga Card -->
+    <!-- Sekolah Card -->
     <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div class="flex items-end justify-between">
             <div>
-                <span class="text-sm text-gray-500 dark:text-gray-400">Lembaga</span>
-                <h4 class="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">{{ $lembagaCount ?? 0 }}</h4>
+                <span class="text-sm text-gray-500 dark:text-gray-400">Sekolah</span>
+                <h4 class="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">{{ $sekolahCount ?? $sekolahCount ?? 0 }}</h4>
             </div>
 
             <span

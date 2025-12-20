@@ -145,9 +145,9 @@
                     ],
                     [
                         'id' => 3,
-                        'title' => 'Registrasi Lembaga',
-                        'message' => 'Pesantren Alkhairaat Kabonena mendaftar sebagai lembaga baru',
-                        'type' => 'Lembaga',
+                        'title' => 'Registrasi Sekolah',
+                        'message' => 'Pesantren Alkhairaat Kabonena mendaftar sebagai sekolah baru',
+                        'type' => 'Sekolah',
                         'time' => '30 menit lalu',
                         'icon' => 'building',
                         'color' => 'bg-purple-500',
@@ -164,7 +164,7 @@
                     [
                         'id' => 5,
                         'title' => 'Sinkronisasi Data',
-                        'message' => 'Proses sinkronisasi data dari 12 lembaga telah selesai',
+                        'message' => 'Proses sinkronisasi data dari 12 sekolah telah selesai',
                         'type' => 'Sistem',
                         'time' => '2 jam lalu',
                         'icon' => 'refresh',

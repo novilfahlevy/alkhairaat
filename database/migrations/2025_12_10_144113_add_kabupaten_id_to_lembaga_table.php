@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('lembaga', function (Blueprint $table) {
+        Schema::table('sekolah', function (Blueprint $table) {
             // Add kabupaten_id foreign key
             $table->foreignId('kabupaten_id')->nullable()->after('status')->constrained('kabupaten')->onDelete('set null');
             
@@ -25,7 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('lembaga', function (Blueprint $table) {
+        Schema::table('sekolah', function (Blueprint $table) {
             // Re-add old string columns
             $table->string('provinsi')->nullable()->after('status');
             $table->string('kabupaten')->nullable()->after('provinsi');

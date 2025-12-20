@@ -11,24 +11,24 @@ class MenuHelper
                 'icon' => 'dashboard',
                 'name' => 'Dasbor',
                 'path' => '/',
-                'roles' => ['super_admin', 'wilayah', 'sekolah'],
+                'roles' => ['superuser', 'pengurus_besar', 'komisariat_wilayah', 'guru'],
             ],
             [
                 'icon' => 'tables',
-                'name' => 'Lembaga',
-                'roles' => ['super_admin', 'wilayah'],
-                'path' => '/lembaga'
+                'name' => 'Sekolah',
+                'roles' => ['superuser', 'pengurus_besar', 'komisariat_wilayah'],
+                'path' => '/sekolah'
             ],
             [
                 'icon' => 'pages',
                 'name' => 'Kabupaten',
-                'roles' => ['super_admin'],
+                'roles' => ['superuser', 'pengurus_besar'],
                 'path' => '/kabupaten'
             ],
             [
                 'icon' => 'pages',
                 'name' => 'Provinsi',
-                'roles' => ['super_admin'],
+                'roles' => ['superuser', 'pengurus_besar'],
                 'path' => '/provinsi'
             ],
             // [
@@ -60,7 +60,7 @@ class MenuHelper
             [
                 'icon' => 'export',
                 'name' => 'Ekspor Data',
-                'roles' => ['super_admin', 'wilayah', 'sekolah'], // All roles
+                'roles' => ['superuser', 'pengurus_besar', 'komisariat_wilayah', 'guru'], // All roles
                 'subItems' => [
                     ['name' => 'Ekspor Santri', 'path' => '/export/santri'],
                     ['name' => 'Ekspor Alumni', 'path' => '/export/alumni'],
@@ -69,7 +69,7 @@ class MenuHelper
             [
                 'icon' => 'users',
                 'name' => 'Pengguna',
-                'roles' => ['super_admin'],
+                'roles' => ['superuser', 'pengurus_besar'],
                 'subItems' => [
                     ['name' => 'Daftar Pengguna', 'path' => '/users'],
                     ['name' => 'Role & Permission', 'path' => '/users/roles'],
@@ -101,12 +101,14 @@ class MenuHelper
         }
 
         $userRole = null;
-        if ($user->isSuperAdmin()) {
-            $userRole = 'super_admin';
-        } elseif ($user->isWilayah()) {
-            $userRole = 'wilayah';
-        } elseif ($user->isSekolah()) {
-            $userRole = 'sekolah';
+        if ($user->isSuperuser()) {
+            $userRole = 'superuser';
+        } elseif ($user->isPengurusBesar()) {
+            $userRole = 'pengurus_besar';
+        } elseif ($user->isKomisariatWilayah()) {
+            $userRole = 'komisariat_wilayah';
+        } elseif ($user->isGuru()) {
+            $userRole = 'guru';
         }
 
         return array_filter($items, function ($item) use ($userRole) {

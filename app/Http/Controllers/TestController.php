@@ -22,25 +22,14 @@ class TestController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'legacy_role' => $user->role,
-                'lembaga_id' => $user->lembaga_id,
+                'sekolah_id' => $user->sekolah_id,
             ],
             'spatie_roles' => $user->getRoleNames(),
-            'spatie_permissions' => $user->getPermissionNames(),
             'role_checks' => [
-                'isSuperAdmin' => $user->isSuperAdmin(),
-                'isWilayah' => $user->isWilayah(),
-                'isSekolah' => $user->isSekolah(),
-            ],
-            'permission_checks' => [
-                'can_manage_users' => $user->can('manage_users'),
-                'can_manage_lembaga' => $user->can('manage_lembaga'),
-                'can_manage_santri' => $user->can('manage_santri'),
-                'can_manage_alumni' => $user->can('manage_alumni'),
-                'can_view_national_reports' => $user->can('view_national_reports'),
-                'can_view_province_reports' => $user->can('view_province_reports'),
-                'can_view_city_reports' => $user->can('view_city_reports'),
-                'can_view_sekolah_reports' => $user->can('view_sekolah_reports'),
-                'can_export_data' => $user->can('export_data'),
+                'isSuperuser' => $user->isSuperuser(),
+                'isPengurusBesar' => $user->isPengurusBesar(),
+                'isKomisariatWilayah' => $user->isKomisariatWilayah(),
+                'isGuru' => $user->isGuru(),
             ],
         ]);
     }
@@ -63,7 +52,7 @@ class TestController extends Controller
     {
         return response()->json([
             'message' => 'This endpoint is only accessible by sekolah users',
-            'user' => auth()->user()->only(['name', 'email', 'lembaga_id'])
+            'user' => auth()->user()->only(['name', 'email', 'sekolah_id'])
         ]);
     }
 

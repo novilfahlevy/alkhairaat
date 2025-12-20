@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Models\Lembaga;
+use App\Models\Sekolah;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -17,11 +17,11 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm(): View
     {
-        $lembagaList = Lembaga::aktif()->orderBy('nama')->get();
+        $sekolahList = Sekolah::aktif()->orderBy('nama')->get();
 
         return view('pages.auth.signup', [
             'title' => 'Sign Up',
-            'lembagaList' => $lembagaList,
+            'sekolahList' => $sekolahList,
         ]);
     }
 
@@ -35,7 +35,7 @@ class RegisterController extends Controller
             'email' => $request->email,
             'password' => $request->password,
             'role' => User::ROLE_SEKOLAH, // Keep for backward compatibility
-            'lembaga_id' => $request->lembaga_id,
+            'sekolah_id' => $request->sekolah_id,
         ]);
 
         // Assign role using Spatie

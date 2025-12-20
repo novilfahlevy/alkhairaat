@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lembaga', function (Blueprint $table) {
+        Schema::create('sekolah', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_lembaga')->unique();
+            $table->string('kode_sekolah')->unique();
             $table->string('nama');
             $table->enum('jenjang', ['TK', 'SD', 'SMP', 'SMA', 'SMK', 'MA', 'Pesantren', 'Lainnya'])->default('Lainnya');
             $table->enum('status', ['aktif', 'tidak_aktif'])->default('aktif');
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lembaga');
+        Schema::dropIfExists('sekolah');
     }
 };

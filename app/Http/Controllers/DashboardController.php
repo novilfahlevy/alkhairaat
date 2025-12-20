@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
-use App\Models\Lembaga;
+use App\Models\Sekolah;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -13,13 +13,14 @@ class DashboardController extends Controller
     {
         $provinsiCount = Provinsi::count();
         $kabupatenCount = Kabupaten::count();
-        $lembagaCount = Lembaga::count();
+        $sekolahCount = Sekolah::count();
 
         return view('pages.dashboard', [
             'title' => 'E-commerce Dashboard',
             'provinsiCount' => $provinsiCount,
             'kabupatenCount' => $kabupatenCount,
-            'lembagaCount' => $lembagaCount,
+            'sekolahCount' => $sekolahCount,
+            'sekolahCount' => $sekolahCount, // backward compatibility
         ]);
     }
 }

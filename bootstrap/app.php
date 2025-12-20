@@ -14,7 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
             'permission' => \App\Http\Middleware\CheckPermission::class,
-            'lembaga.access' => \App\Http\Middleware\EnsureLembagaAccess::class,
+            'sekolah.access' => \App\Http\Middleware\EnsureSekolahAccess::class,
+            'sekolah.access' => \App\Http\Middleware\EnsureSekolahAccess::class,
             'prevent.superadmin.modification' => \App\Http\Middleware\PreventSuperAdminModification::class,
         ]);
     })

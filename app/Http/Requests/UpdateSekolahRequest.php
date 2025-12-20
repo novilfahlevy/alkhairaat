@@ -6,14 +6,15 @@ use App\Models\Sekolah;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreSekolahRequest extends FormRequest
+class UpdateSekolahRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->user()->can('manage_sekolah');
+        return auth()->user()->hasRole(['superuser', 'pengurus_besar', 'komisariat_wilayah']) && 
+               auth()->user()->canAccessSekolah($this->route('sekolah')->id);
     }
 
     /**
@@ -23,8 +24,10 @@ class StoreSekolahRequest extends FormRequest
      */
     public function rules(): array
     {
+        $sekolahId = $this->route('sekolah')->id;
+
         return [
-            'kode_sekolah' => ['required', 'string', 'max:20', 'unique:sekolah,kode_sekolah'],
+            'kode_sekolah' => ['required', 'string', 'max:20', Rule::unique('sekolah', 'kode_sekolah')->ignore($sekolahId)],
             'nama' => ['required', 'string', 'max:255'],
             'jenjang' => ['required', Rule::in(Sekolah::JENJANG_OPTIONS)],
             'status' => ['required', Rule::in(Sekolah::STATUS_OPTIONS)],

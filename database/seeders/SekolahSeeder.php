@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Lembaga;
+use App\Models\Sekolah;
 use App\Models\Kabupaten;
 use Illuminate\Database\Seeder;
 
-class LembagaSeeder extends Seeder
+class SekolahSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -21,12 +21,12 @@ class LembagaSeeder extends Seeder
             return;
         }
 
-        $lembagaData = [
+        $sekolahData = [
             [
-                'kode_lembaga' => 'ALK-001',
+                'kode_sekolah' => 'ALK-001',
                 'nama' => 'Pesantren Alkhairaat Pusat Palu',
-                'jenjang' => Lembaga::JENJANG_PESANTREN,
-                'status' => Lembaga::STATUS_AKTIF,
+                'jenjang' => Sekolah::JENJANG_PESANTREN,
+                'status' => Sekolah::STATUS_AKTIF,
                 'kabupaten_id' => $kotaPalu->id,
                 'kecamatan' => 'Palu Barat',
                 'alamat' => 'Jl. Alkhairaat No. 1, Palu',
@@ -35,10 +35,10 @@ class LembagaSeeder extends Seeder
                 'keterangan' => 'Pesantren pusat Alkhairaat dengan santri dari berbagai daerah',
             ],
             [
-                'kode_lembaga' => 'ALK-002',
+                'kode_sekolah' => 'ALK-002',
                 'nama' => 'SMA Alkhairaat Palu',
-                'jenjang' => Lembaga::JENJANG_SMA,
-                'status' => Lembaga::STATUS_AKTIF,
+                'jenjang' => Sekolah::JENJANG_SMA,
+                'status' => Sekolah::STATUS_AKTIF,
                 'kabupaten_id' => $kotaPalu->id,
                 'kecamatan' => 'Palu Selatan',
                 'alamat' => 'Jl. Alkhairaat No. 2, Palu',
@@ -47,10 +47,10 @@ class LembagaSeeder extends Seeder
                 'keterangan' => 'Sekolah Menengah Atas dengan kurikulum nasional dan keislaman',
             ],
             [
-                'kode_lembaga' => 'ALK-003',
+                'kode_sekolah' => 'ALK-003',
                 'nama' => 'SMP Alkhairaat Palu',
-                'jenjang' => Lembaga::JENJANG_SMP,
-                'status' => Lembaga::STATUS_AKTIF,
+                'jenjang' => Sekolah::JENJANG_SMP,
+                'status' => Sekolah::STATUS_AKTIF,
                 'kabupaten_id' => $kotaPalu->id,
                 'kecamatan' => 'Palu Timur',
                 'alamat' => 'Jl. Alkhairaat No. 3, Palu',
@@ -59,10 +59,10 @@ class LembagaSeeder extends Seeder
                 'keterangan' => 'Sekolah Menengah Pertama dengan pendidikan karakter islami',
             ],
             [
-                'kode_lembaga' => 'ALK-004',
+                'kode_sekolah' => 'ALK-004',
                 'nama' => 'Madrasah Aliyah Alkhairaat Palu',
-                'jenjang' => Lembaga::JENJANG_MA,
-                'status' => Lembaga::STATUS_AKTIF,
+                'jenjang' => Sekolah::JENJANG_MA,
+                'status' => Sekolah::STATUS_AKTIF,
                 'kabupaten_id' => $kotaPalu->id,
                 'kecamatan' => 'Palu Utara',
                 'alamat' => 'Jl. Alkhairaat No. 4, Palu',
@@ -71,10 +71,10 @@ class LembagaSeeder extends Seeder
                 'keterangan' => 'Madrasah Aliyah dengan fokus pendidikan agama Islam',
             ],
             [
-                'kode_lembaga' => 'ALK-005',
+                'kode_sekolah' => 'ALK-005',
                 'nama' => 'SD Alkhairaat Palu',
-                'jenjang' => Lembaga::JENJANG_SD,
-                'status' => Lembaga::STATUS_AKTIF,
+                'jenjang' => Sekolah::JENJANG_SD,
+                'status' => Sekolah::STATUS_AKTIF,
                 'kabupaten_id' => $kotaPalu->id,
                 'kecamatan' => 'Palu Barat',
                 'alamat' => 'Jl. Alkhairaat No. 5, Palu',
@@ -84,16 +84,16 @@ class LembagaSeeder extends Seeder
             ],
         ];
 
-        foreach ($lembagaData as $data) {
-            // Check if lembaga already exists
-            if (!Lembaga::where('kode_lembaga', $data['kode_lembaga'])->exists()) {
-                Lembaga::create($data);
-                $this->command->info("Created lembaga: {$data['nama']}");
+        foreach ($sekolahData as $data) {
+            // Check if sekolah already exists
+            if (!Sekolah::where('kode_sekolah', $data['kode_sekolah'])->exists()) {
+                Sekolah::create($data);
+                $this->command->info("Created sekolah: {$data['nama']}");
             } else {
-                $this->command->info("Lembaga {$data['kode_lembaga']} already exists, skipping...");
+                $this->command->info("Sekolah {$data['kode_sekolah']} already exists, skipping...");
             }
         }
         
-        $this->command->info('Lembaga seeder completed successfully.');
+        $this->command->info('Sekolah seeder completed successfully.');
     }
 }

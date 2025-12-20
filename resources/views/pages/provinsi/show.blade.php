@@ -11,18 +11,16 @@
                 Detail informasi provinsi {{ $provinsi->nama_provinsi }}
             </p>
         </div>
-        @can('manage_provinsi')
-            <div class="flex items-center gap-2">
-                <a href="{{ route('provinsi.edit', $provinsi) }}"
-                    class="bg-blue-500 hover:bg-blue-600 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition">
-                    Edit
-                </a>
-                <a href="{{ route('provinsi.index') }}"
-                    class="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800 transition">
-                    Kembali
-                </a>
-            </div>
-        @endcan
+        <div class="flex items-center gap-2">
+            <a href="{{ route('provinsi.edit', $provinsi) }}"
+                class="bg-blue-500 hover:bg-blue-600 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition">
+                Edit
+            </a>
+            <a href="{{ route('provinsi.index') }}"
+                class="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800 transition">
+                Kembali
+            </a>
+        </div>
     </div>
 
     <!-- Detail Card -->

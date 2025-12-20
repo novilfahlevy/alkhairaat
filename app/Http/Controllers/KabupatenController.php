@@ -66,7 +66,7 @@ class KabupatenController extends Controller
      */
     public function show(Kabupaten $kabupaten)
     {
-        $kabupaten->load('provinsi', 'lembaga');
+        $kabupaten->load('provinsi', 'sekolah');
 
         return view('pages.kabupaten.show', [
             'title' => 'Detail Kabupaten',
@@ -117,10 +117,10 @@ class KabupatenController extends Controller
      */
     public function destroy(Kabupaten $kabupaten)
     {
-        // Check if kabupaten has related lembaga
-        if ($kabupaten->lembaga()->count() > 0) {
+        // Check if kabupaten has related sekolah
+        if ($kabupaten->sekolah()->count() > 0) {
             return redirect()->route('kabupaten.index')
-                ->with('error', 'Tidak dapat menghapus kabupaten yang memiliki lembaga');
+                ->with('error', 'Tidak dapat menghapus kabupaten yang memiliki sekolah');
         }
 
         $kabupaten->delete();

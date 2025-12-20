@@ -2,19 +2,19 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Lembaga;
+use App\Models\Sekolah;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateLembagaRequest extends FormRequest
+class UpdateSekolahRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->user()->can('manage_lembaga') && 
-               auth()->user()->canAccessLembaga($this->route('lembaga')->id);
+        return auth()->user()->can('manage_sekolah') && 
+               auth()->user()->canAccessSekolah($this->route('sekolah')->id);
     }
 
     /**
@@ -24,13 +24,13 @@ class UpdateLembagaRequest extends FormRequest
      */
     public function rules(): array
     {
-        $lembagaId = $this->route('lembaga')->id;
+        $sekolahId = $this->route('sekolah')->id;
 
         return [
-            'kode_lembaga' => ['required', 'string', 'max:20', Rule::unique('lembaga', 'kode_lembaga')->ignore($lembagaId)],
+            'kode_sekolah' => ['required', 'string', 'max:20', Rule::unique('sekolah', 'kode_sekolah')->ignore($sekolahId)],
             'nama' => ['required', 'string', 'max:255'],
-            'jenjang' => ['required', Rule::in(Lembaga::JENJANG_OPTIONS)],
-            'status' => ['required', Rule::in(Lembaga::STATUS_OPTIONS)],
+            'jenjang' => ['required', Rule::in(Sekolah::JENJANG_OPTIONS)],
+            'status' => ['required', Rule::in(Sekolah::STATUS_OPTIONS)],
             'kabupaten_id' => ['required', 'exists:kabupaten,id'],
             'kecamatan' => ['nullable', 'string', 'max:100'],
             'alamat' => ['nullable', 'string'],
@@ -48,9 +48,9 @@ class UpdateLembagaRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'kode_lembaga.required' => 'Kode lembaga harus diisi.',
-            'kode_lembaga.unique' => 'Kode lembaga sudah digunakan.',
-            'nama.required' => 'Nama lembaga harus diisi.',
+            'kode_sekolah.required' => 'Kode sekolah harus diisi.',
+            'kode_sekolah.unique' => 'Kode sekolah sudah digunakan.',
+            'nama.required' => 'Nama sekolah harus diisi.',
             'jenjang.required' => 'Jenjang harus dipilih.',
             'jenjang.in' => 'Jenjang yang dipilih tidak valid.',
             'status.required' => 'Status harus dipilih.',
@@ -69,8 +69,8 @@ class UpdateLembagaRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'kode_lembaga' => 'kode lembaga',
-            'nama' => 'nama lembaga',
+            'kode_sekolah' => 'kode sekolah',
+            'nama' => 'nama sekolah',
             'jenjang' => 'jenjang',
             'status' => 'status',
             'kabupaten_id' => 'kabupaten',

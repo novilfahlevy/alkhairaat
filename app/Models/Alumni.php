@@ -59,17 +59,17 @@ class Alumni extends Model
     }
 
     /**
-     * Get the lembaga through santri relationship.
+     * Get the sekolah through santri relationship.
      */
-    public function lembaga()
+    public function sekolah()
     {
         return $this->hasOneThrough(
-            Lembaga::class,
+            Sekolah::class,
             Santri::class,
             'id',           // Foreign key on santri table
-            'id',           // Foreign key on lembaga table
+            'id',           // Foreign key on sekolah table
             'santri_id',    // Local key on alumni table
-            'lembaga_id'    // Local key on santri table
+            'sekolah_id'    // Local key on santri table
         );
     }
 
@@ -106,12 +106,12 @@ class Alumni extends Model
     }
 
     /**
-     * Scope to filter by lembaga (through santri)
+     * Scope to filter by sekolah (through santri)
      */
-    public function scopeByLembaga($query, int $lembagaId)
+    public function scopeBySekolah($query, int $sekolahId)
     {
-        return $query->whereHas('santri', function ($q) use ($lembagaId) {
-            $q->where('lembaga_id', $lembagaId);
+        return $query->whereHas('santri', function ($q) use ($sekolahId) {
+            $q->where('sekolah_id', $sekolahId);
         });
     }
 

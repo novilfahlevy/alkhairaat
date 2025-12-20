@@ -55,9 +55,9 @@
                 <span class="mt-1 inline-flex items-center rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700 dark:bg-brand-900/30 dark:text-brand-400">
                     {{ ucfirst(str_replace('_', ' ', auth()->user()->role)) }}
                 </span>
-                @if(auth()->user()->lembaga)
+                @if(auth()->user()->sekolah)
                     <span class="mt-1 block text-theme-xs text-gray-500 dark:text-gray-400">
-                        {{ auth()->user()->lembaga->nama }}
+                        {{ auth()->user()->sekolah->nama }}
                     </span>
                 @endif
             @endauth

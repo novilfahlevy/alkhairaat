@@ -18,9 +18,10 @@ class User extends Authenticatable
     /**
      * Role constants
      */
-    public const ROLE_SUPER_ADMIN = 'super_admin';
-    public const ROLE_WILAYAH = 'wilayah';
-    public const ROLE_SEKOLAH = 'sekolah';
+    public const ROLE_SUPERUSER = 'superuser';
+    public const ROLE_PENGURUS_BESAR = 'pengurus_besar';
+    public const ROLE_KOMISARIAT_WILAYAH = 'komisariat_wilayah';
+    public const ROLE_GURU = 'guru';
 
     /**
      * Available roles
@@ -28,30 +29,11 @@ class User extends Authenticatable
      * @var array<string>
      */
     public const ROLES = [
-        self::ROLE_SUPER_ADMIN,
-        self::ROLE_WILAYAH,
-        self::ROLE_SEKOLAH,
+        self::ROLE_SUPERUSER,
+        self::ROLE_PENGURUS_BESAR,
+        self::ROLE_KOMISARIAT_WILAYAH,
+        self::ROLE_GURU,
     ];
-
-    /**
-     * Permission constants
-     */
-    public const PERMISSION_ACCESS_PROVINSI = 'access_provinsi';
-    public const PERMISSION_MANAGE_PROVINSI = 'manage_provinsi';
-    public const PERMISSION_ACCESS_KABUPATEN = 'access_kabupaten';
-    public const PERMISSION_MANAGE_KABUPATEN = 'manage_kabupaten';
-    public const PERMISSION_ACCESS_LEMBAGA = 'access_lembaga';
-    public const PERMISSION_MANAGE_LEMBAGA = 'manage_lembaga';
-    public const PERMISSION_ACCESS_SANTRI = 'access_santri';
-    public const PERMISSION_MANAGE_SANTRI = 'manage_santri';
-    public const PERMISSION_ACCESS_ALUMNI = 'access_alumni';
-    public const PERMISSION_MANAGE_ALUMNI = 'manage_alumni';
-    public const PERMISSION_VIEW_NATIONAL_REPORTS = 'view_national_reports';
-    public const PERMISSION_VIEW_PROVINCE_REPORTS = 'view_province_reports';
-    public const PERMISSION_VIEW_CITY_REPORTS = 'view_city_reports';
-    public const PERMISSION_VIEW_SEKOLAH_REPORTS = 'view_sekolah_reports';
-    public const PERMISSION_EXPORT_DATA = 'export_data';
-    public const PERMISSION_MANAGE_USER_SEKOLAH = 'manage_user_sekolah';
 
     /**
      * The attributes that are mass assignable.
@@ -63,7 +45,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'lembaga_id',
+        'sekolah_id',
     ];
 
     /**
@@ -90,11 +72,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the lembaga that the user belongs to.
+     * Get the sekolah that the user belongs to.
      */
-    public function lembaga(): BelongsTo
+    public function sekolah(): BelongsTo
     {
-        return $this->belongsTo(Lembaga::class);
+        return $this->belongsTo(Sekolah::class);
     }
 
     /**
@@ -106,61 +88,65 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is super admin (PB Alkhairaat)
+     * Check if user is superuser
      */
-    public function isSuperAdmin(): bool
+    public function isSuperuser(): bool
     {
-        return $this->hasRole(self::ROLE_SUPER_ADMIN);
+        return $this->hasRole(self::ROLE_SUPERUSER);
     }
 
     /**
-     * Check if user is wilayah
+     * Check if user is pengurus besar
      */
-    public function isWilayah(): bool
+    public function isPengurusBesar(): bool
     {
-        return $this->hasRole(self::ROLE_WILAYAH);
+        return $this->hasRole(self::ROLE_PENGURUS_BESAR);
     }
 
     /**
-     * Check if user is sekolah
+     * Check if user is komisariat wilayah
      */
-    public function isSekolah(): bool
+    public function isKomisariatWilayah(): bool
     {
-        return $this->hasRole(self::ROLE_SEKOLAH);
+        return $this->hasRole(self::ROLE_KOMISARIAT_WILAYAH);
     }
 
     /**
-     * Check if user can access a specific lembaga
+     * Check if user is guru
      */
-    public function canAccessLembaga(int $lembagaId): bool
+    public function isGuru(): bool
     {
-        // Super admin can access all data (read-only)
-        if ($this->isSuperAdmin()) {
+        return $this->hasRole(self::ROLE_GURU);
+    }
+
+    /**
+     * Check if user can access a specific sekolah
+     */
+    public function canAccessSekolah(int $sekolahId): bool
+    {
+        // Superuser can access all data
+        if ($this->isSuperuser()) {
             return true;
         }
 
-        // Wilayah can access data in their managed kabupaten
-        if ($this->isWilayah()) {
-            $lembaga = Lembaga::find($lembagaId);
-            if (!$lembaga) {
+        // Pengurus besar can access all data
+        if ($this->isPengurusBesar()) {
+            return true;
+        }
+
+        // Komisariat wilayah can access data in their managed kabupaten
+        if ($this->isKomisariatWilayah()) {
+            $sekolah = Sekolah::find($sekolahId);
+            if (!$sekolah) {
                 return false;
             }
             
-            // Check if user manages the kabupaten where this lembaga is located
-            return $this->kabupaten()->where('kabupaten.id', $lembaga->kabupaten_id)->exists();
+            // Check if user manages the kabupaten where this sekolah is located
+            return $this->kabupaten()->where('kabupaten.id', $sekolah->kabupaten_id)->exists();
         }
 
-        // Sekolah can only access their own lembaga
-        return $this->lembaga_id === $lembagaId;
-    }
-
-    /**
-     * Check if user can modify data (not super_admin for certain operations)
-     */
-    public function canModifyLembagaData(): bool
-    {
-        // Super admin cannot add/modify/delete lembaga data, only view
-        return !$this->isSuperAdmin() && $this->can(self::PERMISSION_MANAGE_LEMBAGA);
+        // Guru can only access their own sekolah
+        return $this->sekolah_id === $sekolahId;
     }
 
     /**
@@ -172,10 +158,10 @@ class User extends Authenticatable
     }
 
     /**
-     * Scope to filter users by lembaga
+     * Scope to filter users by sekolah
      */
-    public function scopeByLembaga($query, int $lembagaId)
+    public function scopeBySekolah($query, int $sekolahId)
     {
-        return $query->where('lembaga_id', $lembagaId);
+        return $query->where('sekolah_id', $sekolahId);
     }
 }

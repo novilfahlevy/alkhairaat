@@ -76,7 +76,7 @@ class Santri extends Model
         'tahun_masuk',
         'tahun_lulus',
         'foto',
-        'lembaga_id',
+        'sekolah_id',
     ];
 
     /**
@@ -94,11 +94,11 @@ class Santri extends Model
     }
 
     /**
-     * Get the lembaga that the santri belongs to.
+     * Get the sekolah that the santri belongs to.
      */
-    public function lembaga(): BelongsTo
+    public function sekolah(): BelongsTo
     {
-        return $this->belongsTo(Lembaga::class);
+        return $this->belongsTo(Sekolah::class);
     }
 
     /**
@@ -126,11 +126,11 @@ class Santri extends Model
     }
 
     /**
-     * Scope to filter by lembaga
+     * Scope to filter by sekolah (backward compatibility)
      */
-    public function scopeByLembaga($query, int $lembagaId)
+    public function scopeBySekolah($query, int $sekolahId)
     {
-        return $query->where('lembaga_id', $lembagaId);
+        return $query->where('sekolah_id', $sekolahId);
     }
 
     /**

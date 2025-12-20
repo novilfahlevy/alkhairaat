@@ -13,7 +13,7 @@ class StoreSekolahRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->can('manage_sekolah');
+        return auth()->user()->hasRole(['superuser', 'pengurus_besar', 'komisariat_wilayah']);
     }
 
     /**

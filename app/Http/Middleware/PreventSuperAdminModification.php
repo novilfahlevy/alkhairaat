@@ -12,8 +12,8 @@ class PreventSuperAdminModification
     /**
      * Handle an incoming request.
      * 
-     * This middleware prevents super admin from modifying lembaga data.
-     * Super admin can only view data, not add/edit/delete.
+     * This middleware prevents superuser from modifying sekolah data.
+     * Superuser can only view data, not add/edit/delete.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
@@ -26,9 +26,9 @@ class PreventSuperAdminModification
                 ->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        // Block modification requests for super admin
-        if ($user->isSuperAdmin() && in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
-            abort(403, 'Super Admin tidak dapat menambah, mengubah, atau menghapus data lembaga.');
+        // Block modification requests for superuser
+        if ($user->isSuperuser() && in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+            abort(403, 'Superuser tidak dapat menambah, mengubah, atau menghapus data sekolah.');
         }
 
         return $next($request);

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['super_admin', 'wilayah', 'sekolah'])->default('sekolah')->after('email');
-            $table->foreignId('lembaga_id')->nullable()->after('role')->constrained('lembaga')->onDelete('set null');
+            $table->enum('role', ['superuser', 'pengurus_besar', 'komisariat_wilayah', 'guru'])->default('guru')->after('email');
+            $table->foreignId('sekolah_id')->nullable()->after('role')->constrained('sekolah')->onDelete('set null');
         });
     }
 
@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['lembaga_id']);
-            $table->dropColumn(['role', 'lembaga_id']);
+            $table->dropForeign(['sekolah_id']);
+            $table->dropColumn(['role', 'sekolah_id']);
         });
     }
 };

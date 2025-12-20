@@ -6,14 +6,14 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureLembagaAccess
+class EnsureSekolahAccess
 {
     /**
      * Handle an incoming request.
      * 
-     * This middleware ensures that users can only access data from their own lembaga.
-     * Super admin can access all data (read-only).
-     * Sekolah users can only access their own lembaga data.
+     * This middleware ensures that users can only access data from their own sekolah.
+     * Superuser can access all data (read-only).
+     * Guru users can only access their own sekolah data.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
@@ -26,18 +26,21 @@ class EnsureLembagaAccess
                 ->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        // Super admin can access all (read-only mode handled in controller)
-        if ($user->isSuperAdmin()) {
+        // Superuser can access all (read-only mode handled in controller)
+        if ($user->isSuperuser()) {
             return $next($request);
         }
 
-        // Get lembaga_id from route parameter or request
-        $lembagaId = $request->route('lembaga') 
-            ?? $request->route('lembaga_id') 
-            ?? $request->input('lembaga_id');
+        // Get sekolah_id from route parameter or request (backward compatible with sekolah parameter)
+        $sekolahId = $request->route('sekolah') 
+            ?? $request->route('sekolah')
+            ?? $request->route('sekolah_id') 
+            ?? $request->route('sekolah_id')
+            ?? $request->input('sekolah_id')
+            ?? $request->input('sekolah_id');
 
-        if ($lembagaId && !$user->canAccessLembaga((int) $lembagaId)) {
-            abort(403, 'Anda tidak memiliki akses ke data lembaga ini.');
+        if ($sekolahId && !$user->canAccessSekolah((int) $sekolahId)) {
+            abort(403, 'Anda tidak memiliki akses ke data sekolah ini.');
         }
 
         return $next($request);
