@@ -34,7 +34,9 @@ class UserController extends Controller
 
         // Apply role filter
         if ($request->filled('role')) {
-            $query->where('role', $request->input('role'));
+            $query->whereHas('roles', function ($q) use ($request) {
+                $q->where('name', $request->input('role'));
+            });
         }
 
         $users = $query->paginate(20);
