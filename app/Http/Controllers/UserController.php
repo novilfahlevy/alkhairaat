@@ -11,6 +11,7 @@ use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -20,7 +21,7 @@ class UserController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = User::query()->orderBy('name');
+        $query = User::where('id', '!=', Auth::id())->orderBy('name');
 
         // Apply search filter
         if ($request->filled('search')) {
