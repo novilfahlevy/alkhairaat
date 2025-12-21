@@ -16,7 +16,7 @@ class DashboardController extends Controller
         $sekolahCount = Sekolah::count();
 
         return view('pages.dashboard', [
-            'title' => 'E-commerce Dashboard',
+            'title' => 'Dasbor',
             'provinsiCount' => $provinsiCount,
             'kabupatenCount' => $kabupatenCount,
             'sekolahCount' => $sekolahCount,
