@@ -12,6 +12,7 @@ use App\Models\Kabupaten;
 use App\Models\Provinsi;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class KomdaController extends Controller
@@ -43,32 +44,16 @@ class KomdaController extends Controller
 
     public function create(): View
     {
-        $provinsi = Provinsi::whereHas('kabupaten', function ($query) {
-            $query->whereHas('sekolah', function ($query) {
-                $query->whereHas('editorLists', function ($q) {
-                    $q->where('id_user', auth()->user()->id);
-                });
-            });
-        })
+        $provinsi = Provinsi::naungan()
             ->orderBy('nama_provinsi')
             ->get();
 
         // Get sekolah grouped by kabupaten and provinsi
         $sekolahByProvinsi = [];
         foreach ($provinsi as $prov) {
-            $kabupaten = Kabupaten::where('id_provinsi', $prov->id)
-                ->whereHas('sekolah', function ($query) {
-                    $query->whereHas('editorLists', function ($q) {
-                        $q->where('id_user', auth()->user()->id);
-                    });
-                })
-                ->with(['sekolah' => function ($query) {
-                    $query->where('status', Sekolah::STATUS_AKTIF)
-                        ->whereHas('editorLists', function ($q) {
-                            $q->where('id_user', auth()->user()->id);
-                        })
-                        ->orderBy('nama');
-                }])
+            $kabupaten = Kabupaten::naungan()
+                ->where('id_provinsi', $prov->id)
+                ->with(['sekolah' => fn ($query) => $query->naungan()])
                 ->orderBy('nama_kabupaten')
                 ->get();
 
@@ -109,32 +94,16 @@ class KomdaController extends Controller
 
     public function edit(User $komda): View
     {
-        $provinsi = Provinsi::whereHas('kabupaten', function ($query) {
-            $query->whereHas('sekolah', function ($query) {
-                $query->whereHas('editorLists', function ($q) {
-                    $q->where('id_user', auth()->user()->id);
-                });
-            });
-        })
+        $provinsi = Provinsi::naungan()
             ->orderBy('nama_provinsi')
             ->get();
 
         // Get sekolah grouped by kabupaten and provinsi
         $sekolahByProvinsi = [];
         foreach ($provinsi as $prov) {
-            $kabupaten = Kabupaten::where('id_provinsi', $prov->id)
-                ->whereHas('sekolah', function ($query) {
-                    $query->whereHas('editorLists', function ($q) {
-                        $q->where('id_user', auth()->user()->id);
-                    });
-                })
-                ->with(['sekolah' => function ($query) {
-                    $query->where('status', Sekolah::STATUS_AKTIF)
-                        ->whereHas('editorLists', function ($q) {
-                            $q->where('id_user', auth()->user()->id);
-                        })
-                        ->orderBy('nama');
-                }])
+            $kabupaten = Kabupaten::naungan()
+                ->where('id_provinsi', $prov->id)
+                ->with(['sekolah' => fn ($query) => $query->naungan()])
                 ->orderBy('nama_kabupaten')
                 ->get();
 

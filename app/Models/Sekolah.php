@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class Sekolah extends Model
 {
@@ -120,5 +121,15 @@ class Sekolah extends Model
     public function editorLists()
     {
         return $this->hasMany(EditorList::class, 'id_sekolah');
+    }
+
+    /**
+     * Scope to filter sekolah under the current user's naungan.
+     */
+    public function scopeNaungan($query)
+    {
+        return $query->whereHas('editorLists', function ($q) {
+            $q->where('id_user', Auth::id());
+        });
     }
 }

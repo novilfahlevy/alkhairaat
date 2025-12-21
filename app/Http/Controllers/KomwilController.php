@@ -53,11 +53,10 @@ class KomwilController extends Controller
         $sekolahByProvinsi = [];
         foreach ($provinsi as $prov) {
             $kabupaten = Kabupaten::where('id_provinsi', $prov->id)
-                ->whereHas('sekolah', function ($query) {
-                    $query->orderBy('id_jenis_sekolah');
-                })
+                ->whereHas('sekolah')
                 ->with(['sekolah' => function ($query) {
-                    $query->where('status', Sekolah::STATUS_AKTIF)->orderBy('nama');
+                    $query->where('status', Sekolah::STATUS_AKTIF)
+                        ->orderBy('id_jenis_sekolah');
                 }])
                 ->orderBy('nama_kabupaten')
                 ->get();
@@ -109,12 +108,11 @@ class KomwilController extends Controller
         $sekolahByProvinsi = [];
         foreach ($provinsi as $prov) {
             $kabupaten = Kabupaten::where('id_provinsi', $prov->id)
-                ->whereHas('sekolah', function ($query) {
-                    $query->orderBy('id_jenis_sekolah');
-                })
-                ->whereHas('sekolah', function ($query) {
-                    $query->where('status', Sekolah::STATUS_AKTIF);
-                })
+                ->whereHas('sekolah')
+                ->with(['sekolah' => function ($query) {
+                    $query->where('status', Sekolah::STATUS_AKTIF)
+                        ->orderBy('id_jenis_sekolah');
+                }])
                 ->orderBy('nama_kabupaten')
                 ->get();
 

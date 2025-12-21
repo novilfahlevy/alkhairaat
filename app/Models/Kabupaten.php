@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 
 class Kabupaten extends Model
 {
@@ -49,5 +50,17 @@ class Kabupaten extends Model
     public function getNamaAttribute(): ?string
     {
         return $this->nama_kabupaten;
+    }
+
+    /**
+     * Scope a query to only include kabupaten that have sekolah edited by the current user.
+     */
+    public function scopeNaungan($query)
+    {
+        return $query->whereHas('sekolah', function ($query) {
+            $query->whereHas('editorLists', function ($q) {
+                $q->where('id_user', Auth::id());
+            });
+        });
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 
 class Provinsi extends Model
 {
@@ -30,5 +31,19 @@ class Provinsi extends Model
     public function kabupaten(): HasMany
     {
         return $this->hasMany(Kabupaten::class, 'id_provinsi');
+    }
+
+    /**
+     * Scope a query to only include provinsi that have kabupaten with sekolah edited by the current user.
+     */
+    public function scopeNaungan($query)
+    {
+        return $query->whereHas('kabupaten', function ($query) {
+            $query->whereHas('sekolah', function ($query) {
+                $query->whereHas('editorLists', function ($q) {
+                    $q->where('id_user', Auth::id());
+                });
+            });
+        });
     }
 }
