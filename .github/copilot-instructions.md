@@ -2,7 +2,7 @@
 
 ## 📌 Proyek
 
-**Aplikasi Database Santri & Alumni Perguruan Islam Alkhairaat**
+**Aplikasi Database Murid & Alumni Perguruan Islam Alkhairaat**
 Teknologi utama: **Laravel + Tailwind CSS + MySQL/PostgreSQL**
 
 Dokumen ini berfungsi sebagai pedoman perilaku dan gaya pengkodean GitHub Copilot agar sesuai dengan kebutuhan proyek.
@@ -11,18 +11,18 @@ Dokumen ini berfungsi sebagai pedoman perilaku dan gaya pengkodean GitHub Copilo
 
 ## Latar Belakang dan Tujuan
 
-Perguruan Islam Alkhairaat memiliki ribuan unit pendidikan dan puluhan pesantren dengan puluhan ribu santri dan alumni yang tersebar di berbagai daerah, sehingga pengelolaan data secara manual sulit dan tidak terpusat. Diperlukan aplikasi database internal terintegrasi untuk mendata santri aktif/nonaktif, alumni, angkatan, dan profil lembaga pendidikan Alkhairaat secara nasional.
+Perguruan Islam Alkhairaat memiliki ribuan unit pendidikan dan puluhan pesantren dengan puluhan ribu murid dan alumni yang tersebar di berbagai daerah, sehingga pengelolaan data secara manual sulit dan tidak terpusat. Diperlukan aplikasi database internal terintegrasi untuk mendata murid aktif/nonaktif, alumni, angkatan, dan profil lembaga pendidikan Alkhairaat secara nasional.
 
 ---
 
 ## 🎯 Tujuan Utama Sistem
 
-* Menyediakan database terpusat yang menyimpan data-data santri, alumni, dan lembaga Alkhairaat di bawah koordinasi PB Alkhairaat di Palu.
-* Memudahkan sekolah/pesantren Alkhairaat memperbarui data santri dan alumni secara berkala.
-* Menyajikan statistik jumlah santri, alumni, dan sebaran angkatan sebagai dasar perencanaan pendidikan.
+* Menyediakan database terpusat yang menyimpan data-data murid, alumni, dan lembaga Alkhairaat di bawah koordinasi PB Alkhairaat di Palu.
+* Memudahkan sekolah/pesantren Alkhairaat memperbarui data murid dan alumni secara berkala.
+* Menyajikan statistik jumlah murid, alumni, dan sebaran angkatan sebagai dasar perencanaan pendidikan.
 * Mendukung multi-role user (PB, wilayah, sekolah/pesantren).
 * Fokus pada stabilitas, keamanan data, dan kemudahan input operator sekolah.
-* Tujuan akhirnya adalah terdapat laporan berapa jumlah santri dan alumni di sekolah, di kabupaten, provinsi, dan seluruh indonesia, dalam periode waktu tertentu.
+* Tujuan akhirnya adalah terdapat laporan berapa jumlah murid dan alumni di sekolah, di kabupaten, provinsi, dan seluruh indonesia, dalam periode waktu tertentu.
 
 ---
 
@@ -58,7 +58,7 @@ Super Admin:
 3. Melihat semua laporan nasional
 
 User Sekolah:
-1. Mengelola data Santri (di unit Sekolah masing-masing)
+1. Mengelola data Murid (di unit Sekolah masing-masing)
 2. Mengelola data Alumni (di unit Sekolah masing-masing)
 3. Melihat laporan internal unit Sekolah
 4. Tidak dapat melihat dan mengelola data unit Sekolah lain.
@@ -88,9 +88,9 @@ Gunakan penamaan konsisten berikut:
   * `provinsi`
   * `kabupaten`
 
-### 2. Santri
+### 2. Murid
 
-* Table: `santri`
+* Table: `murid`
 * Field utama:
 
   * `id`
@@ -109,7 +109,7 @@ Gunakan penamaan konsisten berikut:
 * Field utama:
 
   * `id`
-  * `santri_id`
+  * `murid_id`
   * `tahun_lulus`
   * `angkatan`
   * `kontak`
@@ -188,7 +188,7 @@ Gunakan penamaan konsisten berikut:
   * Excel
 * Data yang diekspor:
 
-  * Santri
+  * Murid
   * Alumni
   * Rekap nasional
 
@@ -218,7 +218,7 @@ Pastikan:
 * Minimal testing untuk:
 
   * Login
-  * CRUD santri
+  * CRUD murid
   * CRUD alumni
   * Hak akses user
 
@@ -228,7 +228,7 @@ Pastikan:
 
 GitHub Copilot harus:
 
-* Mengutamakan **keamanan data santri & alumni**
+* Mengutamakan **keamanan data murid & alumni**
 * Menghasilkan kode **clean, readable, dan scalable**
 * Menghindari:
 
@@ -240,8 +240,8 @@ GitHub Copilot harus:
 
 ## ✅ Prinsip Akhir
 
-> "Aplikasi ini bersifat **amanah**, karena mengelola data santri dan alumni secara nasional. Setiap baris kode harus mengutamakan **keamanan, kejujuran data, dan kemudahan operator sekolah."*
+> "Aplikasi ini bersifat **amanah**, karena mengelola data murid dan alumni secara nasional. Setiap baris kode harus mengutamakan **keamanan, kejujuran data, dan kemudahan operator sekolah."*
 
 ---
 
-Dokumen ini menjadi standar perilaku pengkodean selama pengembangan aplikasi Database Santri & Alumni Perguruan Islam Alkhairaat.
+Dokumen ini menjadi standar perilaku pengkodean selama pengembangan aplikasi Database Murid & Alumni Perguruan Islam Alkhairaat.

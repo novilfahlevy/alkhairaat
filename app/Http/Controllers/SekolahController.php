@@ -104,7 +104,7 @@ class SekolahController extends Controller
             abort(403, 'Anda tidak memiliki akses ke sekolah ini.');
         }
 
-        $sekolah->load(['kabupaten.provinsi', 'jenisSekolah', 'santri', 'users']);
+        $sekolah->load(['kabupaten.provinsi', 'jenisSekolah', 'murid', 'users']);
 
         return view('pages.sekolah.show', [
             'title' => 'Detail Sekolah',
@@ -164,10 +164,10 @@ class SekolahController extends Controller
             abort(403, 'Anda tidak memiliki akses ke sekolah ini.');
         }
 
-        // Check if sekolah has users or santri
-        if ($sekolah->users()->count() > 0 || $sekolah->santri()->count() > 0) {
+        // Check if sekolah has users or murid
+        if ($sekolah->users()->count() > 0 || $sekolah->murid()->count() > 0) {
             return redirect()->route('sekolah.index')
-                ->with('error', 'Sekolah tidak dapat dihapus karena masih memiliki user atau santri.');
+                ->with('error', 'Sekolah tidak dapat dihapus karena masih memiliki user atau murid.');
         }
 
         $sekolah->delete();

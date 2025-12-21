@@ -59,10 +59,10 @@ class TestController extends Controller
     /**
      * Test permission-based access
      */
-    public function manageSantri()
+    public function manageMurid()
     {
         return response()->json([
-            'message' => 'You have permission to manage santri',
+            'message' => 'You have permission to manage murid',
             'user' => auth()->user()->only(['name', 'email'])
         ]);
     }

@@ -40,7 +40,7 @@ class SekolahSeeder extends Seeder
                 'alamat' => 'Jl. Alkhairaat No. 1, Palu',
                 'telepon' => '0451-123456',
                 'email' => 'pesantren.pusat@alkhairaat.or.id',
-                'keterangan' => 'Pesantren pusat Alkhairaat dengan santri dari berbagai daerah',
+                'keterangan' => 'Pesantren pusat Alkhairaat dengan murid dari berbagai daerah',
             ],
             [
                 'kode_sekolah' => 'ALK-002',

@@ -76,11 +76,11 @@ class Sekolah extends Model
      */
 
     /**
-     * Get the santri that belong to this sekolah.
+     * Get the murid that belong to this sekolah.
      */
-    public function santri(): HasMany
+    public function murid(): HasMany
     {
-        return $this->hasMany(Santri::class);
+        return $this->hasMany(Murid::class);
     }
 
     /**

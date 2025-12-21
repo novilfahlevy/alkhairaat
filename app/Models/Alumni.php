@@ -23,7 +23,7 @@ class Alumni extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'santri_id',
+        'murid_id',
         'tahun_lulus',
         'angkatan',
         'kontak',
@@ -51,25 +51,25 @@ class Alumni extends Model
     }
 
     /**
-     * Get the santri record for this alumni.
+     * Get the murid record for this alumni.
      */
-    public function santri(): BelongsTo
+    public function murid(): BelongsTo
     {
-        return $this->belongsTo(Santri::class);
+        return $this->belongsTo(Murid::class);
     }
 
     /**
-     * Get the sekolah through santri relationship.
+     * Get the sekolah through murid relationship.
      */
     public function sekolah()
     {
         return $this->hasOneThrough(
             Sekolah::class,
-            Santri::class,
-            'id',           // Foreign key on santri table
+            Murid::class,
+            'id',           // Foreign key on murid table
             'id',           // Foreign key on sekolah table
-            'santri_id',    // Local key on alumni table
-            'sekolah_id'    // Local key on santri table
+            'murid_id',    // Local key on alumni table
+            'sekolah_id'    // Local key on murid table
         );
     }
 
@@ -106,11 +106,11 @@ class Alumni extends Model
     }
 
     /**
-     * Scope to filter by sekolah (through santri)
+     * Scope to filter by sekolah (through murid)
      */
     public function scopeBySekolah($query, int $sekolahId)
     {
-        return $query->whereHas('santri', function ($q) use ($sekolahId) {
+        return $query->whereHas('murid', function ($q) use ($sekolahId) {
             $q->where('sekolah_id', $sekolahId);
         });
     }
@@ -132,18 +132,18 @@ class Alumni extends Model
     }
 
     /**
-     * Get nama from santri relationship
+     * Get nama from murid relationship
      */
     public function getNamaAttribute(): ?string
     {
-        return $this->santri?->nama;
+        return $this->murid?->nama;
     }
 
     /**
-     * Get NIS from santri relationship
+     * Get NIS from murid relationship
      */
     public function getNisAttribute(): ?string
     {
-        return $this->santri?->nis;
+        return $this->murid?->nis;
     }
 }

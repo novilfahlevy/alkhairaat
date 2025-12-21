@@ -146,14 +146,14 @@
 
         <!-- Statistics Cards -->
         @php
-            $santriCount = $sekolah->santri()->count();
+            $muridCount = $sekolah->murid()->count();
             $userCount = $sekolah->users()->count();
-            $santriAktif = $sekolah->santri()->where('status', 'aktif')->count();
-            $santriNonAktif = $sekolah->santri()->where('status', 'non_aktif')->count();
+            $muridAktif = $sekolah->murid()->where('status', 'aktif')->count();
+            $muridNonAktif = $sekolah->murid()->where('status', 'non_aktif')->count();
         @endphp
 
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <!-- Total Santri -->
+            <!-- Total Murid -->
             <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -164,13 +164,13 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Santri</p>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ number_format($santriCount) }}</p>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Murid</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ number_format($muridCount) }}</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Santri Aktif -->
+            <!-- Murid Aktif -->
             <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -181,13 +181,13 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Santri Aktif</p>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ number_format($santriAktif) }}</p>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Murid Aktif</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ number_format($muridAktif) }}</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Santri Non-Aktif -->
+            <!-- Murid Non-Aktif -->
             <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -198,8 +198,8 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Santri Non-Aktif</p>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ number_format($santriNonAktif) }}</p>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Murid Non-Aktif</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ number_format($muridNonAktif) }}</p>
                     </div>
                 </div>
             </div>
@@ -245,19 +245,19 @@
                     </div>
                 </div>
 
-                @canany(['access_santri', 'access_alumni'])
+                @canany(['access_murid', 'access_alumni'])
                 <div>
                     <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Aksi Cepat</h4>
                     <div class="space-y-2">
-                        <a href="{{ route('santri.index', ['sekolah' => $sekolah->id]) }}" 
+                        <a href="{{ route('murid.index', ['sekolah' => $sekolah->id]) }}" 
                            class="block w-full rounded-lg border border-gray-200 p-3 text-left hover:border-brand-500 hover:bg-brand-50 dark:border-gray-700 dark:hover:border-brand-400 dark:hover:bg-brand-900/10">
                             <div class="flex items-center">
                                 <svg class="mr-3 h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
                                 </svg>
-                                <span class="text-sm font-medium text-gray-900 dark:text-white">Kelola Data Santri</span>
+                                <span class="text-sm font-medium text-gray-900 dark:text-white">Kelola Data Murid</span>
                             </div>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Melihat dan mengelola data santri sekolah ini</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Melihat dan mengelola data murid sekolah ini</p>
                         </a>
                         
                         <a href="{{ route('alumni.index', ['sekolah' => $sekolah->id]) }}" 

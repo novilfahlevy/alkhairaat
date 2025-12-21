@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Santri extends Model
+class Murid extends Model
 {
     use HasFactory;
 
@@ -16,7 +16,7 @@ class Santri extends Model
      *
      * @var string
      */
-    protected $table = 'santri';
+    protected $table = 'murid';
 
     /**
      * Jenis kelamin constants
@@ -94,7 +94,7 @@ class Santri extends Model
     }
 
     /**
-     * Get the sekolah that the santri belongs to.
+     * Get the sekolah that the murid belongs to.
      */
     public function sekolah(): BelongsTo
     {
@@ -102,7 +102,7 @@ class Santri extends Model
     }
 
     /**
-     * Get the alumni record for this santri.
+     * Get the alumni record for this murid.
      */
     public function alumni(): HasOne
     {
@@ -110,7 +110,7 @@ class Santri extends Model
     }
 
     /**
-     * Scope to filter active santri
+     * Scope to filter active murid
      */
     public function scopeAktif($query)
     {
@@ -158,7 +158,7 @@ class Santri extends Model
     }
 
     /**
-     * Check if santri is active
+     * Check if murid is active
      */
     public function isAktif(): bool
     {
@@ -166,7 +166,7 @@ class Santri extends Model
     }
 
     /**
-     * Check if santri has graduated
+     * Check if murid has graduated
      */
     public function isLulus(): bool
     {

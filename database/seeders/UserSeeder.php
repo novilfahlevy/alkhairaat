@@ -20,7 +20,6 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Superuser PB Alkhairaat',
                 'password' => 'password', // Will be hashed automatically
-                'role' => User::ROLE_SUPERUSER,
             ]
         );
         
@@ -35,8 +34,7 @@ class UserSeeder extends Seeder
             ['email' => 'wilayah.sulteng@alkhairaat.or.id'],
             [
                 'name' => 'Admin Wilayah Sulawesi Tengah',
-                'password' => 'password',
-                'role' => User::ROLE_KOMISARIAT_WILAYAH,
+                'password' => 'password'
             ]
         );
         
@@ -69,8 +67,7 @@ class UserSeeder extends Seeder
                 ['email' => $wilayahData['email']],
                 [
                     'name' => $wilayahData['name'],
-                    'password' => 'password',
-                    'role' => User::ROLE_KOMISARIAT_WILAYAH,
+                    'password' => 'password'
                 ]
             );
             
@@ -92,8 +89,7 @@ class UserSeeder extends Seeder
                 ['email' => $email],
                 [
                     'name' => 'Admin Daerah ' . $kabupaten->nama_kabupaten,
-                    'password' => 'password',
-                    'role' => User::ROLE_KOMISARIAT_DAERAH,
+                    'password' => 'password'
                 ]
             );
             
@@ -113,8 +109,7 @@ class UserSeeder extends Seeder
                 ['email' => $email],
                 [
                     'name' => 'Operator ' . $sekolah->nama,
-                    'password' => 'password',
-                    'role' => User::ROLE_GURU,
+                    'password' => 'password'
                 ]
             );
             

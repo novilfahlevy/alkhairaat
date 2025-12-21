@@ -3,7 +3,7 @@
         Sistem Database Alkhairaat
     </h3>
     <p class="mb-4 text-gray-500 text-theme-sm dark:text-gray-400">
-        Sistem pengelolaan data santri dan alumni Perguruan Islam Alkhairaat secara terpusat.
+        Sistem pengelolaan data murid dan alumni Perguruan Islam Alkhairaat secara terpusat.
     </p>
     <div class="text-xs text-gray-400 dark:text-gray-500">
         © {{ date('Y') }} Alkhairaat<br>

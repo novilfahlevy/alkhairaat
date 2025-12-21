@@ -15,7 +15,7 @@
                                 Login ke Sistem Database Alkhairaat
                             </h1>
                             <p class="text-sm text-gray-500 dark:text-gray-400">
-                                Masukkan email dan password untuk mengakses sistem database santri dan alumni Alkhairaat.
+                                Masukkan email dan password untuk mengakses sistem database murid dan alumni Alkhairaat.
                             </p>
                         </div>
                         <div>
@@ -123,7 +123,7 @@
                     <div class="flex max-w-xs flex-col items-center gap-6">
                         <img src="/images/logo_alkhairaat.png" alt="Logo Alkhairaat" width="200" height="200" class="drop-shadow-lg" />
                         <p class="text-center text-gray-400 dark:text-white/60">
-                            Sistem Database Santri & Alumni<br>
+                            Sistem Database Murid & Alumni<br>
                             Perguruan Islam Alkhairaat
                         </p>
                     </div>

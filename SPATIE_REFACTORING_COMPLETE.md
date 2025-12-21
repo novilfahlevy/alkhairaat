@@ -28,12 +28,12 @@ Successfully refactored the Alkhairaat database application from a custom role/p
 
 ### 4. 🌱 Seeders Created
 **RolePermissionSeeder (`database/seeders/RolePermissionSeeder.php`):**
-- Creates permissions: `view_all_data`, `manage_santri`, `manage_alumni`, `manage_lembaga`, `view_reports`, `export_data`
+- Creates permissions: `view_all_data`, `manage_murid`, `manage_alumni`, `manage_lembaga`, `view_reports`, `export_data`
 - Creates roles: `super_admin`, `wilayah`, `sekolah`  
 - Assigns appropriate permissions to each role:
   - `super_admin`: view_all_data, view_reports, export_data
   - `wilayah`: view_reports, export_data
-  - `sekolah`: manage_santri, manage_alumni, manage_lembaga, view_reports, export_data
+  - `sekolah`: manage_murid, manage_alumni, manage_lembaga, view_reports, export_data
 
 **UserSeeder Updated:**
 - Uses `firstOrCreate()` to avoid duplicate users
@@ -63,7 +63,7 @@ Successfully refactored the Alkhairaat database application from a custom role/p
 - `/test/roles` - displays user role and permission information
 - `/test/super-admin` - tests super admin only access
 - `/test/sekolah` - tests sekolah role access  
-- `/test/manage-santri` - tests permission-based access
+- `/test/manage-murid` - tests permission-based access
 
 **Custom Artisan Command:**
 - `php artisan users:show-roles` - displays all users and their roles
@@ -91,7 +91,7 @@ Successfully refactored the Alkhairaat database application from a custom role/p
 - Regional oversight role
 
 **Sekolah (`sekolah`):**
-- Can manage santri data for their lembaga
+- Can manage murid data for their lembaga
 - Can manage alumni data for their lembaga  
 - Can update their lembaga information
 - Can view reports and export data for their institution

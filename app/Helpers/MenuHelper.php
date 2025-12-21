@@ -62,9 +62,9 @@ class MenuHelper
             ],
             // [
             //     'icon' => 'students',
-            //     'name' => 'Santri',
+            //     'name' => 'Murid',
             //     'roles' => ['super_admin', 'wilayah', 'sekolah'],
-            //     'path' => '/santri',
+            //     'path' => '/murid',
             // ],
             // [
             //     'icon' => 'graduates',
@@ -91,7 +91,7 @@ class MenuHelper
                 'name' => 'Ekspor Data',
                 'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH, User::ROLE_GURU], // All roles
                 'subItems' => [
-                    ['name' => 'Ekspor Santri', 'path' => '/export/santri'],
+                    ['name' => 'Ekspor Murid', 'path' => '/export/murid'],
                     ['name' => 'Ekspor Alumni', 'path' => '/export/alumni'],
                 ],
             ],

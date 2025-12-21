@@ -127,9 +127,9 @@
                 $notifications = [
                     [
                         'id' => 1,
-                        'title' => 'Data Santri Baru',
-                        'message' => 'SDI Alkhairaat Palu menambahkan 25 santri baru untuk tahun ajaran 2025/2026',
-                        'type' => 'Santri',
+                        'title' => 'Data Murid Baru',
+                        'message' => 'SDI Alkhairaat Palu menambahkan 25 murid baru untuk tahun ajaran 2025/2026',
+                        'type' => 'Murid',
                         'time' => '5 menit lalu',
                         'icon' => 'user-plus',
                         'color' => 'bg-blue-500',
@@ -155,7 +155,7 @@
                     [
                         'id' => 4,
                         'title' => 'Laporan Bulanan',
-                        'message' => 'Laporan statistik santri dan alumni bulan November 2025 tersedia',
+                        'message' => 'Laporan statistik murid dan alumni bulan November 2025 tersedia',
                         'type' => 'Laporan',
                         'time' => '1 jam lalu',
                         'icon' => 'chart-bar',
