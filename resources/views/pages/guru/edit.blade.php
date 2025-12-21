@@ -84,7 +84,7 @@
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
-                </div
+                </div>
             </div>
 
             <!-- Sekolah Section -->
