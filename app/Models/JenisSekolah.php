@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Provinsi extends Model
+class JenisSekolah extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'provinsi';
+    protected $table = 'jenis_sekolah';
 
     /**
      * The attributes that are mass assignable.
@@ -20,15 +20,16 @@ class Provinsi extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'kode_provinsi',
-        'nama_provinsi',
+        'kode_jenis',
+        'nama_jenis',
+        'deskripsi',
     ];
 
     /**
-     * Get all kabupaten in this provinsi.
+     * Get all sekolah of this jenis.
      */
-    public function kabupaten(): HasMany
+    public function sekolah(): HasMany
     {
-        return $this->hasMany(Kabupaten::class, 'id_provinsi');
+        return $this->hasMany(Sekolah::class);
     }
 }

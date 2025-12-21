@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kabupaten', function (Blueprint $table) {
-            $table->id();
-            $table->string('kode_kabupaten', 4)->unique();
-            $table->string('nama_kabupaten');
-            $table->foreignId('id_provinsi')->constrained('provinsi')->onDelete('cascade');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('username')->unique()->after('name')->nullable();
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kabupaten');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('username');
+        });
     }
 };

@@ -47,19 +47,19 @@
 
             <!-- Provinsi -->
             <div class="mb-6">
-                <label for="provinsi_id" class="mb-2.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                <label for="id_provinsi" class="mb-2.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Provinsi
                 </label>
-                <select id="provinsi_id" name="provinsi_id"
+                <select id="id_provinsi" name="id_provinsi"
                     class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                     <option value="">Pilih Provinsi</option>
                     @foreach ($provinsi as $prov)
-                        <option value="{{ $prov->id }}" {{ old('provinsi_id', $kabupaten->provinsi_id) == $prov->id ? 'selected' : '' }}>
+                        <option value="{{ $prov->id }}" {{ old('id_provinsi', $kabupaten->id_provinsi) == $prov->id ? 'selected' : '' }}>
                             {{ $prov->nama_provinsi }}
                         </option>
                     @endforeach
                 </select>
-                @error('provinsi_id')
+                @error('id_provinsi')
                     <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                 @enderror
             </div>

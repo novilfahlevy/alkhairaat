@@ -127,10 +127,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'update'])->name('sekolah.update');
     Route::delete('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'destroy'])->name('sekolah.destroy');
     
-    // User sekolah management
-    Route::get('/users-sekolah', function () {
-        return 'Manage User Sekolah';
-    })->name('users-sekolah.index');
+    // User management (superuser only)
+    Route::middleware('role:superuser')->group(function () {
+        Route::resource('user', App\Http\Controllers\UserController::class);
+    });
     
     // Reports and export
     Route::get('/reports', function () {

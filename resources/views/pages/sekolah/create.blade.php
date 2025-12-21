@@ -57,21 +57,21 @@
                         @enderror
                     </div>
 
-                    <!-- Jenjang -->
+                    <!-- Jenis Sekolah -->
                     <div>
                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                            Jenjang Pendidikan<span class="text-red-500">*</span>
+                            Jenis Sekolah<span class="text-red-500">*</span>
                         </label>
-                        <select name="jenjang"
-                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('jenjang') border-red-500 @enderror">
-                            <option value="">Pilih Jenjang</option>
-                            @foreach ($jenjangOptions as $jenjang)
-                                <option value="{{ $jenjang }}" {{ old('jenjang') == $jenjang ? 'selected' : '' }}>
-                                    {{ $jenjang }}
+                        <select name="jenis_sekolah_id"
+                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('jenis_sekolah_id') border-red-500 @enderror">
+                            <option value="">Pilih Jenis Sekolah</option>
+                            @foreach ($jenisSekolah as $jenis)
+                                <option value="{{ $jenis->id }}" {{ old('jenis_sekolah_id') == $jenis->id ? 'selected' : '' }}>
+                                    {{ $jenis->nama_jenis }}
                                 </option>
                             @endforeach
                         </select>
-                        @error('jenjang')
+                        @error('jenis_sekolah_id')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
@@ -103,17 +103,17 @@
                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                             Provinsi<span class="text-red-500">*</span>
                         </label>
-                        <select name="provinsi_id" id="provinsi"
-                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('provinsi_id') border-red-500 @enderror">
+                        <select name="id_provinsi" id="provinsi"
+                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('id_provinsi') border-red-500 @enderror">
                             <option value="">Pilih Provinsi</option>
                             @foreach ($provinsi as $prov)
                                 <option value="{{ $prov->id }}"
-                                    {{ old('provinsi_id') == $prov->id ? 'selected' : '' }}>
+                                    {{ old('id_provinsi') == $prov->id ? 'selected' : '' }}>
                                     {{ $prov->nama_provinsi }}
                                 </option>
                             @endforeach
                         </select>
-                        @error('provinsi_id')
+                        @error('id_provinsi')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
@@ -123,11 +123,11 @@
                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                             Kabupaten/Kota<span class="text-red-500">*</span>
                         </label>
-                        <select name="kabupaten_id" id="kabupaten" disabled
-                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 disabled:opacity-50 disabled:cursor-not-allowed @error('kabupaten_id') border-red-500 @enderror">
+                        <select name="id_kabupaten" id="kabupaten" disabled
+                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 disabled:opacity-50 disabled:cursor-not-allowed @error('id_kabupaten') border-red-500 @enderror">
                             <option value="">Pilih Kabupaten/Kota</option>
                         </select>
-                        @error('kabupaten_id')
+                        @error('id_kabupaten')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
@@ -221,7 +221,7 @@
 
                 if (provinsiId) {
                     // Fetch kabupaten data
-                    fetch(`{{ route('sekolah.get_kabupaten') }}?provinsi_id=${provinsiId}`)
+                    fetch(`{{ route('sekolah.get_kabupaten') }}?id_provinsi=${provinsiId}`)
                         .then(response => response.json())
                         .then(data => {
                             data.forEach(kabupaten => {

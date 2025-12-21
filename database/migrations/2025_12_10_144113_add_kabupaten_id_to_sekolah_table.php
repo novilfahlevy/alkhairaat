@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('sekolah', function (Blueprint $table) {
-            // Add kabupaten_id foreign key
-            $table->foreignId('kabupaten_id')->nullable()->after('status')->constrained('kabupaten')->onDelete('set null');
+            // Add id_kabupaten foreign key
+            $table->foreignId('id_kabupaten')->nullable()->after('status')->constrained('kabupaten')->onDelete('set null');
             
             // Drop old provinsi and kabupaten string columns
             $table->dropColumn(['provinsi', 'kabupaten']);
@@ -31,8 +31,8 @@ return new class extends Migration
             $table->string('kabupaten')->nullable()->after('provinsi');
             
             // Drop foreign key and column
-            $table->dropForeign(['kabupaten_id']);
-            $table->dropColumn('kabupaten_id');
+            $table->dropForeign(['id_kabupaten']);
+            $table->dropColumn('id_kabupaten');
         });
     }
 };

@@ -44,6 +44,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'role',
@@ -143,7 +144,7 @@ class User extends Authenticatable
             }
             
             // Check if user manages the kabupaten where this sekolah is located
-            return $this->kabupaten()->where('kabupaten.id', $sekolah->kabupaten_id)->exists();
+            return $this->kabupaten()->where('kabupaten.id', $sekolah->id_kabupaten)->exists();
         }
 
         // Komisariat daerah can access data in their managed kabupaten
@@ -154,7 +155,7 @@ class User extends Authenticatable
             }
             
             // Check if user manages the kabupaten where this sekolah is located
-            return $this->kabupaten()->where('kabupaten.id', $sekolah->kabupaten_id)->exists();
+            return $this->kabupaten()->where('kabupaten.id', $sekolah->id_kabupaten)->exists();
         }
 
         // Guru has no direct access via this method
@@ -167,5 +168,13 @@ class User extends Authenticatable
     public function scopeByRole($query, string $role)
     {
         return $query->role($role);
+    }
+
+    /**
+     * Get the editor lists associated with the user.
+     */
+    public function editorLists()
+    {
+        return $this->hasMany(EditorList::class, 'id_user');
     }
 }

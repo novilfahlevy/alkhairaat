@@ -45,17 +45,6 @@ class UserSeeder extends Seeder
             $this->command->info('Wilayah role assigned to: ' . $wilayahSulteng->email);
         }
 
-        // Assign kabupaten to wilayah user (all kabupaten in Sulawesi Tengah)
-        $kabupatenSulteng = Kabupaten::whereHas('provinsi', function ($query) {
-            $query->where('nama_provinsi', 'Sulawesi Tengah');
-        })->get();
-
-        if ($kabupatenSulteng->isNotEmpty()) {
-            // Sync kabupaten (will not duplicate)
-            $wilayahSulteng->kabupaten()->sync($kabupatenSulteng->pluck('id'));
-            $this->command->info('Assigned ' . $kabupatenSulteng->count() . ' kabupaten to wilayah user');
-        }
-
         // Create additional wilayah users for other provinces
         $additionalWilayahUsers = [
             [
@@ -89,16 +78,6 @@ class UserSeeder extends Seeder
                 $wilayah->assignRole(User::ROLE_KOMISARIAT_WILAYAH);
                 $this->command->info('Wilayah role assigned to: ' . $wilayah->email);
             }
-
-            // Assign kabupaten for this provinsi
-            $kabupatenProvinsi = Kabupaten::whereHas('provinsi', function ($query) use ($wilayahData) {
-                $query->where('nama_provinsi', $wilayahData['provinsi_name']);
-            })->get();
-
-            if ($kabupatenProvinsi->isNotEmpty()) {
-                $wilayah->kabupaten()->sync($kabupatenProvinsi->pluck('id'));
-                $this->command->info("Assigned {$kabupatenProvinsi->count()} kabupaten to {$wilayah->name}");
-            }
         }
 
         // Create sample Komisariat Daerah users for specific kabupaten
@@ -122,10 +101,6 @@ class UserSeeder extends Seeder
                 $daerah->assignRole(User::ROLE_KOMISARIAT_DAERAH);
                 $this->command->info('Daerah role assigned to: ' . $daerah->email);
             }
-
-            // Assign single kabupaten to this daerah user
-            $daerah->kabupaten()->sync([$kabupaten->id]);
-            $this->command->info("Assigned kabupaten {$kabupaten->nama_kabupaten} to {$daerah->name}");
         }
 
         // Create sample Guru users for each sekolah

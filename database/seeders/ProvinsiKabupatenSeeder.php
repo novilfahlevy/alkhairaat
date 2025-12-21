@@ -162,7 +162,7 @@ class ProvinsiKabupatenSeeder extends Seeder
                 Kabupaten::create([
                     'kode_kabupaten' => $kabupatenData['kode_kabupaten'],
                     'nama_kabupaten' => $kabupatenData['nama_kabupaten'],
-                    'provinsi_id' => $provinsi->id,
+                    'id_provinsi' => $provinsi->id,
                 ]);
             }
         }

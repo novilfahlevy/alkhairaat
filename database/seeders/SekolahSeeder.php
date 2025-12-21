@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Sekolah;
 use App\Models\Kabupaten;
+use App\Models\JenisSekolah;
 use Illuminate\Database\Seeder;
 
 class SekolahSeeder extends Seeder
@@ -21,13 +22,20 @@ class SekolahSeeder extends Seeder
             return;
         }
 
+        // Get all jenis_sekolah for reference
+        $raKurnia = JenisSekolah::where('kode_jenis', 'RA-TK')->first()?->id;
+        $miSd = JenisSekolah::where('kode_jenis', 'MI-SD')->first()?->id;
+        $mtsSmp = JenisSekolah::where('kode_jenis', 'MTS-SMP')->first()?->id;
+        $maSma = JenisSekolah::where('kode_jenis', 'MA-SMA')->first()?->id;
+        $pt = JenisSekolah::where('kode_jenis', 'PT')->first()?->id;
+
         $sekolahData = [
             [
                 'kode_sekolah' => 'ALK-001',
                 'nama' => 'Pesantren Alkhairaat Pusat Palu',
-                'jenjang' => Sekolah::JENJANG_PESANTREN,
+                'id_jenis_sekolah' => $pt,
                 'status' => Sekolah::STATUS_AKTIF,
-                'kabupaten_id' => $kotaPalu->id,
+                'id_kabupaten' => $kotaPalu->id,
                 'kecamatan' => 'Palu Barat',
                 'alamat' => 'Jl. Alkhairaat No. 1, Palu',
                 'telepon' => '0451-123456',
@@ -37,9 +45,9 @@ class SekolahSeeder extends Seeder
             [
                 'kode_sekolah' => 'ALK-002',
                 'nama' => 'SMA Alkhairaat Palu',
-                'jenjang' => Sekolah::JENJANG_SMA,
+                'id_jenis_sekolah' => $maSma,
                 'status' => Sekolah::STATUS_AKTIF,
-                'kabupaten_id' => $kotaPalu->id,
+                'id_kabupaten' => $kotaPalu->id,
                 'kecamatan' => 'Palu Selatan',
                 'alamat' => 'Jl. Alkhairaat No. 2, Palu',
                 'telepon' => '0451-234567',
@@ -49,9 +57,9 @@ class SekolahSeeder extends Seeder
             [
                 'kode_sekolah' => 'ALK-003',
                 'nama' => 'SMP Alkhairaat Palu',
-                'jenjang' => Sekolah::JENJANG_SMP,
+                'id_jenis_sekolah' => $mtsSmp,
                 'status' => Sekolah::STATUS_AKTIF,
-                'kabupaten_id' => $kotaPalu->id,
+                'id_kabupaten' => $kotaPalu->id,
                 'kecamatan' => 'Palu Timur',
                 'alamat' => 'Jl. Alkhairaat No. 3, Palu',
                 'telepon' => '0451-345678',
@@ -61,9 +69,9 @@ class SekolahSeeder extends Seeder
             [
                 'kode_sekolah' => 'ALK-004',
                 'nama' => 'Madrasah Aliyah Alkhairaat Palu',
-                'jenjang' => Sekolah::JENJANG_MA,
+                'id_jenis_sekolah' => $maSma,
                 'status' => Sekolah::STATUS_AKTIF,
-                'kabupaten_id' => $kotaPalu->id,
+                'id_kabupaten' => $kotaPalu->id,
                 'kecamatan' => 'Palu Utara',
                 'alamat' => 'Jl. Alkhairaat No. 4, Palu',
                 'telepon' => '0451-456789',
@@ -73,9 +81,9 @@ class SekolahSeeder extends Seeder
             [
                 'kode_sekolah' => 'ALK-005',
                 'nama' => 'SD Alkhairaat Palu',
-                'jenjang' => Sekolah::JENJANG_SD,
+                'id_jenis_sekolah' => $miSd,
                 'status' => Sekolah::STATUS_AKTIF,
-                'kabupaten_id' => $kotaPalu->id,
+                'id_kabupaten' => $kotaPalu->id,
                 'kecamatan' => 'Palu Barat',
                 'alamat' => 'Jl. Alkhairaat No. 5, Palu',
                 'telepon' => '0451-567890',

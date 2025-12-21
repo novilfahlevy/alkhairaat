@@ -45,14 +45,14 @@ class KabupatenController extends Controller
         $validated = $request->validate([
             'kode_kabupaten' => 'required|string|max:10|unique:kabupaten,kode_kabupaten',
             'nama_kabupaten' => 'required|string|max:255|unique:kabupaten,nama_kabupaten',
-            'provinsi_id' => 'required|exists:provinsi,id',
+            'id_provinsi' => 'required|exists:provinsi,id',
         ], [
             'kode_kabupaten.required' => 'Kode kabupaten harus diisi',
             'kode_kabupaten.unique' => 'Kode kabupaten sudah digunakan',
             'nama_kabupaten.required' => 'Nama kabupaten harus diisi',
             'nama_kabupaten.unique' => 'Nama kabupaten sudah digunakan',
-            'provinsi_id.required' => 'Provinsi harus dipilih',
-            'provinsi_id.exists' => 'Provinsi tidak ditemukan',
+            'id_provinsi.required' => 'Provinsi harus dipilih',
+            'id_provinsi.exists' => 'Provinsi tidak ditemukan',
         ]);
 
         Kabupaten::create($validated);
@@ -96,14 +96,14 @@ class KabupatenController extends Controller
         $validated = $request->validate([
             'kode_kabupaten' => 'required|string|max:10|unique:kabupaten,kode_kabupaten,' . $kabupaten->id,
             'nama_kabupaten' => 'required|string|max:255|unique:kabupaten,nama_kabupaten,' . $kabupaten->id,
-            'provinsi_id' => 'required|exists:provinsi,id',
+            'id_provinsi' => 'required|exists:provinsi,id',
         ], [
             'kode_kabupaten.required' => 'Kode kabupaten harus diisi',
             'kode_kabupaten.unique' => 'Kode kabupaten sudah digunakan',
             'nama_kabupaten.required' => 'Nama kabupaten harus diisi',
             'nama_kabupaten.unique' => 'Nama kabupaten sudah digunakan',
-            'provinsi_id.required' => 'Provinsi harus dipilih',
-            'provinsi_id.exists' => 'Provinsi tidak ditemukan',
+            'id_provinsi.required' => 'Provinsi harus dipilih',
+            'id_provinsi.exists' => 'Provinsi tidak ditemukan',
         ]);
 
         $kabupaten->update($validated);

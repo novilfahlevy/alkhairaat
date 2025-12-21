@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateSekolahRequest;
 use App\Models\Sekolah;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
+use App\Models\JenisSekolah;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -18,18 +19,18 @@ class SekolahController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Sekolah::query()->with(['kabupaten.provinsi']);
+        $query = Sekolah::query()->with(['kabupaten.provinsi', 'jenisSekolah']);
 
         // Apply filters based on user role
         $user = auth()->user();
         if ($user->isKomisariatWilayah()) {
             // Komisariat wilayah can only see sekolah in their managed kabupaten
             $kabupatenIds = $user->kabupaten()->pluck('kabupaten.id');
-            $query->whereIn('kabupaten_id', $kabupatenIds);
+            $query->whereIn('id_kabupaten', $kabupatenIds);
         } elseif ($user->isKomisariatDaerah()) {
             // Komisariat daerah can only see sekolah in their managed kabupaten
             $kabupatenIds = $user->kabupaten()->pluck('kabupaten.id');
-            $query->whereIn('kabupaten_id', $kabupatenIds);
+            $query->whereIn('id_kabupaten', $kabupatenIds);
         } elseif ($user->isGuru()) {
             // Guru access will be handled differently
             // For now, prevent guru from viewing list
@@ -45,9 +46,9 @@ class SekolahController extends Controller
             });
         }
 
-        // Apply jenjang filter
-        if ($request->filled('jenjang')) {
-            $query->where('jenjang', $request->input('jenjang'));
+        // Apply jenis_sekolah filter
+        if ($request->filled('jenis_sekolah_id')) {
+            $query->where('jenis_sekolah_id', $request->input('jenis_sekolah_id'));
         }
 
         // Apply status filter
@@ -56,11 +57,12 @@ class SekolahController extends Controller
         }
 
         $sekolah = $query->orderBy('nama')->paginate(20);
+        $jenisSekolah = JenisSekolah::orderBy('nama_jenis')->get();
 
         return view('pages.sekolah.index', [
             'title' => 'Data Sekolah',
             'sekolah' => $sekolah,
-            'jenjangOptions' => Sekolah::JENJANG_OPTIONS,
+            'jenisSekolah' => $jenisSekolah,
             'statusOptions' => Sekolah::STATUS_LABELS,
         ]);
     }
@@ -71,11 +73,12 @@ class SekolahController extends Controller
     public function create(): View
     {
         $provinsi = Provinsi::orderBy('nama_provinsi')->get();
+        $jenisSekolah = JenisSekolah::orderBy('nama_jenis')->get();
 
         return view('pages.sekolah.create', [
             'title' => 'Tambah Sekolah',
             'provinsi' => $provinsi,
-            'jenjangOptions' => Sekolah::JENJANG_OPTIONS,
+            'jenisSekolah' => $jenisSekolah,
             'statusOptions' => Sekolah::STATUS_LABELS,
         ]);
     }
@@ -101,7 +104,7 @@ class SekolahController extends Controller
             abort(403, 'Anda tidak memiliki akses ke sekolah ini.');
         }
 
-        $sekolah->load(['kabupaten.provinsi', 'santri', 'users']);
+        $sekolah->load(['kabupaten.provinsi', 'jenisSekolah', 'santri', 'users']);
 
         return view('pages.sekolah.show', [
             'title' => 'Detail Sekolah',
@@ -120,16 +123,17 @@ class SekolahController extends Controller
         }
 
         $provinsi = Provinsi::orderBy('nama_provinsi')->get();
-        $kabupaten = $sekolah->kabupaten?->provinsi_id
-            ? Kabupaten::where('provinsi_id', $sekolah->kabupaten->provinsi_id)->orderBy('nama_kabupaten')->get()
+        $kabupaten = $sekolah->kabupaten?->id_provinsi
+            ? Kabupaten::where('id_provinsi', $sekolah->kabupaten->id_provinsi)->orderBy('nama_kabupaten')->get()
             : collect();
+        $jenisSekolah = JenisSekolah::orderBy('nama_jenis')->get();
 
         return view('pages.sekolah.edit', [
             'title' => 'Edit Sekolah',
             'sekolah' => $sekolah,
             'provinsi' => $provinsi,
             'kabupaten' => $kabupaten,
-            'jenjangOptions' => Sekolah::JENJANG_OPTIONS,
+            'jenisSekolah' => $jenisSekolah,
             'statusOptions' => Sekolah::STATUS_LABELS,
         ]);
     }
@@ -177,11 +181,12 @@ class SekolahController extends Controller
      */
     public function getKabupaten(Request $request)
     {
-        $provinsiId = $request->input('provinsi_id');
-        $kabupaten = Kabupaten::where('provinsi_id', $provinsiId)
+        $provinsiId = $request->input('id_provinsi');
+        $kabupaten = Kabupaten::where('id_provinsi', $provinsiId)
             ->orderBy('nama_kabupaten')
             ->get(['id', 'nama_kabupaten']);
 
         return response()->json($kabupaten);
     }
 }
+

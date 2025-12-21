@@ -19,38 +19,10 @@ class Sekolah extends Model
     protected $table = 'sekolah';
 
     /**
-     * Jenjang constants
-     */
-    public const JENJANG_TK = 'TK';
-    public const JENJANG_SD = 'SD';
-    public const JENJANG_SMP = 'SMP';
-    public const JENJANG_SMA = 'SMA';
-    public const JENJANG_SMK = 'SMK';
-    public const JENJANG_MA = 'MA';
-    public const JENJANG_PESANTREN = 'Pesantren';
-    public const JENJANG_LAINNYA = 'Lainnya';
-
-    /**
      * Status constants
      */
     public const STATUS_AKTIF = 'aktif';
     public const STATUS_TIDAK_AKTIF = 'tidak_aktif';
-
-    /**
-     * Available jenjang options
-     *
-     * @var array<string>
-     */
-    public const JENJANG_OPTIONS = [
-        self::JENJANG_TK,
-        self::JENJANG_SD,
-        self::JENJANG_SMP,
-        self::JENJANG_SMA,
-        self::JENJANG_SMK,
-        self::JENJANG_MA,
-        self::JENJANG_PESANTREN,
-        self::JENJANG_LAINNYA,
-    ];
 
     /**
      * Available status options
@@ -80,9 +52,9 @@ class Sekolah extends Model
     protected $fillable = [
         'kode_sekolah',
         'nama',
-        'jenjang',
+        'id_jenis_sekolah',
         'status',
-        'kabupaten_id',
+        'id_kabupaten',
         'kecamatan',
         'alamat',
         'telepon',
@@ -91,12 +63,16 @@ class Sekolah extends Model
     ];
 
     /**
+     * Get the jenis_sekolah that this sekolah belongs to.
+     */
+    public function jenisSekolah(): BelongsTo
+    {
+        return $this->belongsTo(JenisSekolah::class, 'id_jenis_sekolah');
+    }
+
+    /**
      * Get the users that belong to this sekolah.
      */
-    public function users(): HasMany
-    {
-        return $this->hasMany(User::class);
-    }
 
     /**
      * Get the santri that belong to this sekolah.
@@ -111,7 +87,7 @@ class Sekolah extends Model
      */
     public function kabupaten(): BelongsTo
     {
-        return $this->belongsTo(Kabupaten::class);
+        return $this->belongsTo(Kabupaten::class, 'id_kabupaten');
     }
 
     /**
@@ -128,30 +104,6 @@ class Sekolah extends Model
     public function scopeAktif($query)
     {
         return $query->where('status', self::STATUS_AKTIF);
-    }
-
-    /**
-     * Scope to filter by jenjang
-     */
-    public function scopeByJenjang($query, string $jenjang)
-    {
-        return $query->where('jenjang', $jenjang);
-    }
-
-    /**
-     * Scope to filter by provinsi
-     */
-    public function scopeByProvinsi($query, string $provinsi)
-    {
-        return $query->where('provinsi', $provinsi);
-    }
-
-    /**
-     * Scope to filter by kabupaten
-     */
-    public function scopeByKabupaten($query, string $kabupaten)
-    {
-        return $query->where('kabupaten', $kabupaten);
     }
 
     /**

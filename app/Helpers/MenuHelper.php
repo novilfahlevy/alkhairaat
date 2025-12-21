@@ -14,6 +14,12 @@ class MenuHelper
                 'roles' => ['superuser', 'pengurus_besar', 'komisariat_wilayah', 'guru'],
             ],
             [
+                'icon' => 'users',
+                'name' => 'Manajemen User',
+                'roles' => ['superuser'],
+                'path' => '/user'
+            ],
+            [
                 'icon' => 'tables',
                 'name' => 'Sekolah',
                 'roles' => ['superuser', 'pengurus_besar', 'komisariat_daerah', 'komisariat_wilayah'],
