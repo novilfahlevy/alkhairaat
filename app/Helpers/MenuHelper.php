@@ -24,13 +24,13 @@ class MenuHelper
             [
                 'icon' => 'pages',
                 'name' => 'Kabupaten',
-                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR],
+                'roles' => [User::ROLE_SUPERUSER],
                 'path' => '/kabupaten'
             ],
             [
                 'icon' => 'pages',
                 'name' => 'Provinsi',
-                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR],
+                'roles' => [User::ROLE_SUPERUSER],
                 'path' => '/provinsi'
             ],
             [
@@ -38,6 +38,27 @@ class MenuHelper
                 'name' => 'Manajemen User',
                 'roles' => [User::ROLE_SUPERUSER],
                 'path' => '/user'
+            ],
+            // Manajemen Komwil (oleh Pengurus Besar)
+            [
+                'icon' => 'users',
+                'name' => 'Manajemen Komwil',
+                'roles' => [User::ROLE_PENGURUS_BESAR],
+                'path' => '/manajemen/komwil',
+            ],
+            // Manajemen Komda (oleh Komwil)
+            [
+                'icon' => 'users',
+                'name' => 'Manajemen Komda',
+                'roles' => [User::ROLE_KOMISARIAT_WILAYAH],
+                'path' => '/manajemen/komda',
+            ],
+            // Manajemen Guru (oleh Komda)
+            [
+                'icon' => 'users',
+                'name' => 'Manajemen Guru',
+                'roles' => [User::ROLE_KOMISARIAT_DAERAH],
+                'path' => '/manajemen/guru',
             ],
             // [
             //     'icon' => 'students',
@@ -103,7 +124,7 @@ class MenuHelper
     public static function filterItemsByRole(array $items): array
     {
         $user = auth()->user();
-        
+
         if (!$user) {
             return [];
         }

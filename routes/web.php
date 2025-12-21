@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,8 +129,29 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'destroy'])->name('sekolah.destroy');
     
     // User management (superuser only)
-    Route::middleware('role:superuser')->group(function () {
+    Route::middleware('role:'.User::ROLE_SUPERUSER)->group(function () {
         Route::resource('user', App\Http\Controllers\UserController::class);
+    });
+
+    // Manajemen Komwil (oleh Pengurus Besar)
+    Route::middleware('role:'.User::ROLE_PENGURUS_BESAR)->group(function () {
+        Route::resource('manajemen/komwil', App\Http\Controllers\KomwilController::class, [
+            'as' => 'manajemen'
+        ]);
+    });
+
+    // Manajemen Komda (oleh Komwil)
+    Route::middleware('role:'.User::ROLE_KOMISARIAT_WILAYAH)->group(function () {
+        Route::resource('manajemen/komda', App\Http\Controllers\KomdaController::class, [
+            'as' => 'manajemen'
+        ]);
+    });
+
+    // Manajemen Guru (oleh Komda)
+    Route::middleware('role:'.User::ROLE_KOMISARIAT_DAERAH)->group(function () {
+        Route::resource('manajemen/guru', App\Http\Controllers\GuruController::class, [
+            'as' => 'manajemen'
+        ]);
     });
     
     // Reports and export

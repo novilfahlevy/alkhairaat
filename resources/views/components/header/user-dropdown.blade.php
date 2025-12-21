@@ -48,18 +48,13 @@
         style="display: none;"
     >
         <!-- User Info -->
-        <div>
+        <div class="word-wrap break-words">
             <span class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">{{ auth()->user()->name ?? 'Guest' }}</span>
             <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">{{ auth()->user()->email ?? '' }}</span>
             @auth
                 <span class="mt-1 inline-flex items-center rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700 dark:bg-brand-900/30 dark:text-brand-400">
-                    {{ ucfirst(str_replace('_', ' ', auth()->user()->role)) }}
+                    {{ ucfirst(str_replace('_', ' ', auth()?->user()?->roles?->first()?->name ?? '')) }}
                 </span>
-                @if(auth()->user()->sekolah)
-                    <span class="mt-1 block text-theme-xs text-gray-500 dark:text-gray-400">
-                        {{ auth()->user()->sekolah->nama }}
-                    </span>
-                @endif
             @endauth
         </div>
 

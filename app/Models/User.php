@@ -46,8 +46,7 @@ class User extends Authenticatable
         'name',
         'username',
         'email',
-        'password',
-        'role',
+        'password'
     ];
 
     /**
@@ -176,5 +175,14 @@ class User extends Authenticatable
     public function editorLists()
     {
         return $this->hasMany(EditorList::class, 'id_user');
+    }
+
+    /**
+     * Get the first role assigned to the user.
+     */
+    public function getFirstRole(): ?string
+    {
+        $roles = $this->getRoleNames();
+        return $roles->first() ?: null;
     }
 }

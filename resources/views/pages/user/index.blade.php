@@ -104,7 +104,7 @@
                         <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50">
                             <td class="px-4 py-3 text-sm">
                                 <span class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                                    {{ $roleLabels[$user->role] ?? $user->role }}
+                                    {{ ucfirst(str_replace('_', ' ', $user->getFirstRole() ?? '')) }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-800 dark:text-white/90">{{ $user->name }}</td>

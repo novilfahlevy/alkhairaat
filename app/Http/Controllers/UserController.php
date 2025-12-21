@@ -104,8 +104,7 @@ class UserController extends Controller
             'name' => $request->input('name'),
             'username' => $request->input('username'),
             'email' => $request->input('email'),
-            'password' => $request->input('password'),
-            'role' => $request->input('role'),
+            'password' => $request->input('password')
         ]);
 
         // Assign role using spatie/laravel-permission
@@ -190,8 +189,7 @@ class UserController extends Controller
         $updateData = [
             'name' => $request->input('name'),
             'username' => $request->input('username'),
-            'email' => $request->input('email'),
-            'role' => $request->input('role'),
+            'email' => $request->input('email')
         ];
 
         // Only update password if provided

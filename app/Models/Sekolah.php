@@ -113,4 +113,12 @@ class Sekolah extends Model
     {
         return $this->status === self::STATUS_AKTIF;
     }
+
+    /**
+     * Get the editor lists associated with the sekolah.
+     */
+    public function editorLists()
+    {
+        return $this->hasMany(EditorList::class, 'id_sekolah');
+    }
 }
