@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Models\User;
+
 class MenuHelper
 {
     public static function getMainNavItems()
@@ -11,31 +13,31 @@ class MenuHelper
                 'icon' => 'dashboard',
                 'name' => 'Dasbor',
                 'path' => '/',
-                'roles' => ['superuser', 'pengurus_besar', 'komisariat_wilayah', 'guru'],
-            ],
-            [
-                'icon' => 'users',
-                'name' => 'Manajemen User',
-                'roles' => ['superuser'],
-                'path' => '/user'
+                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH, User::ROLE_GURU],
             ],
             [
                 'icon' => 'tables',
                 'name' => 'Sekolah',
-                'roles' => ['superuser', 'pengurus_besar', 'komisariat_daerah', 'komisariat_wilayah'],
+                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_DAERAH, User::ROLE_KOMISARIAT_WILAYAH],
                 'path' => '/sekolah'
             ],
             [
                 'icon' => 'pages',
                 'name' => 'Kabupaten',
-                'roles' => ['superuser', 'pengurus_besar'],
+                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR],
                 'path' => '/kabupaten'
             ],
             [
                 'icon' => 'pages',
                 'name' => 'Provinsi',
-                'roles' => ['superuser', 'pengurus_besar'],
+                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR],
                 'path' => '/provinsi'
+            ],
+            [
+                'icon' => 'users',
+                'name' => 'Manajemen User',
+                'roles' => [User::ROLE_SUPERUSER],
+                'path' => '/user'
             ],
             // [
             //     'icon' => 'students',
@@ -66,7 +68,7 @@ class MenuHelper
             [
                 'icon' => 'export',
                 'name' => 'Ekspor Data',
-                'roles' => ['superuser', 'pengurus_besar', 'komisariat_wilayah', 'guru'], // All roles
+                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH, User::ROLE_GURU], // All roles
                 'subItems' => [
                     ['name' => 'Ekspor Santri', 'path' => '/export/santri'],
                     ['name' => 'Ekspor Alumni', 'path' => '/export/alumni'],
@@ -75,7 +77,7 @@ class MenuHelper
             [
                 'icon' => 'users',
                 'name' => 'Pengguna',
-                'roles' => ['superuser', 'pengurus_besar'],
+                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR],
                 'subItems' => [
                     ['name' => 'Daftar Pengguna', 'path' => '/users'],
                     ['name' => 'Role & Permission', 'path' => '/users/roles'],
@@ -108,15 +110,15 @@ class MenuHelper
 
         $userRole = null;
         if ($user->isSuperuser()) {
-            $userRole = 'superuser';
+            $userRole = User::ROLE_SUPERUSER;
         } elseif ($user->isPengurusBesar()) {
-            $userRole = 'pengurus_besar';
+            $userRole = User::ROLE_PENGURUS_BESAR;
         } elseif ($user->isKomisariatDaerah()) {
-            $userRole = 'komisariat_daerah';
+            $userRole = User::ROLE_KOMISARIAT_DAERAH;
         } elseif ($user->isKomisariatWilayah()) {
-            $userRole = 'komisariat_wilayah';
+            $userRole = User::ROLE_KOMISARIAT_WILAYAH;
         } elseif ($user->isGuru()) {
-            $userRole = 'guru';
+            $userRole = User::ROLE_GURU;
         }
 
         return array_filter($items, function ($item) use ($userRole) {
