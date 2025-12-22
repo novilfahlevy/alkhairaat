@@ -18,6 +18,6 @@ class RolePermissionSeeder extends Seeder
         Role::create(['name' => User::ROLE_PENGURUS_BESAR]);
         Role::create(['name' => User::ROLE_KOMISARIAT_DAERAH]);
         Role::create(['name' => User::ROLE_KOMISARIAT_WILAYAH]);
-        Role::create(['name' => User::ROLE_GURU]);
+        Role::create(['name' => User::ROLE_SEKOLAH]);
     }
 }

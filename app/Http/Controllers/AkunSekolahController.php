@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreGuruRequest;
-use App\Http\Requests\UpdateGuruRequest;
+use App\Http\Requests\StoreAkunSekolahRequest;
+use App\Http\Requests\UpdateAkunSekolahRequest;
 use App\Models\User;
 use App\Models\Sekolah;
 use App\Models\EditorList;
@@ -14,13 +14,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class GuruController extends Controller
+class AkunSekolahController extends Controller
 {
     public function index(Request $request): View
     {
         $query = User::query()
             ->whereHas('roles', function ($q) {
-                $q->where('name', User::ROLE_GURU);
+                $q->where('name', User::ROLE_SEKOLAH);
             })
             ->orderBy('name');
 
@@ -35,8 +35,8 @@ class GuruController extends Controller
 
         $users = $query->paginate(20);
 
-        return view('pages.guru.index', [
-            'title' => 'Manajemen Guru',
+        return view('pages.akun-sekolah.index', [
+            'title' => 'Manajemen Akun Sekolah',
             'users' => $users,
         ]);
     }
@@ -61,13 +61,13 @@ class GuruController extends Controller
             }
         }
 
-        return view('pages.guru.create', [
-            'title' => 'Tambah Guru',
+        return view('pages.akun-sekolah.create', [
+            'title' => 'Tambah Akun Sekolah',
             'sekolahByProvinsi' => $sekolahByProvinsi,
         ]);
     }
 
-    public function store(StoreGuruRequest $request): RedirectResponse
+    public function store(StoreAkunSekolahRequest $request): RedirectResponse
     {
         $user = User::create([
             'name' => $request->input('name'),
@@ -75,7 +75,7 @@ class GuruController extends Controller
             'email' => $request->input('email'),
             'password' => $request->input('password')
         ]);
-        $user->assignRole(User::ROLE_GURU);
+        $user->assignRole(User::ROLE_SEKOLAH);
 
         $sekolahIds = $request->input('sekolah_ids', []);
         if (!empty($sekolahIds)) {
@@ -87,11 +87,11 @@ class GuruController extends Controller
             }
         }
 
-        return redirect()->route('manajemen.guru.index')
-            ->with('success', 'Guru berhasil ditambahkan.');
+        return redirect()->route('manajemen.akun-sekolah.index')
+            ->with('success', 'Akun sekolah berhasil ditambahkan.');
     }
 
-    public function edit(User $guru): View
+    public function edit(User $akunSekolah): View
     {
         $provinsi = Provinsi::naungan()
             ->orderBy('nama_provinsi')
@@ -111,46 +111,46 @@ class GuruController extends Controller
             }
         }
 
-        $currentSekolahIds = EditorList::where('id_user', $guru->id)->pluck('id_sekolah')->toArray();
+        $currentSekolahIds = EditorList::where('id_user', $akunSekolah->id)->pluck('id_sekolah')->toArray();
 
-        return view('pages.guru.edit', [
-            'title' => 'Edit Guru',
-            'user' => $guru,
+        return view('pages.akun-sekolah.edit', [
+            'title' => 'Edit Akun Sekolah',
+            'user' => $akunSekolah,
             'sekolahByProvinsi' => $sekolahByProvinsi,
             'currentSekolahIds' => $currentSekolahIds,
         ]);
     }
 
-    public function update(UpdateGuruRequest $request, User $guru): RedirectResponse
+    public function update(UpdateAkunSekolahRequest $request, User $akunSekolah): RedirectResponse
     {
-        $guru->update([
+        $akunSekolah->update([
             'name' => $request->input('name'),
             'username' => $request->input('username'),
             'email' => $request->input('email'),
-            'password' => $request->filled('password') ? $request->input('password') : $guru->password,
+            'password' => $request->filled('password') ? $request->input('password') : $akunSekolah->password,
         ]);
-        $guru->syncRoles(User::ROLE_GURU);
+        $akunSekolah->syncRoles(User::ROLE_SEKOLAH);
 
-        EditorList::where('id_user', $guru->id)->delete();
+        EditorList::where('id_user', $akunSekolah->id)->delete();
         $sekolahIds = $request->input('sekolah_ids', []);
         if (!empty($sekolahIds)) {
             foreach ($sekolahIds as $idSekolah) {
                 EditorList::create([
-                    'id_user' => $guru->id,
+                    'id_user' => $akunSekolah->id,
                     'id_sekolah' => $idSekolah,
                 ]);
             }
         }
 
-        return redirect()->route('manajemen.guru.index')
-            ->with('success', 'Guru berhasil diperbarui.');
+        return redirect()->route('manajemen.akun-sekolah.index')
+            ->with('success', 'Akun sekolah berhasil diperbarui.');
     }
 
-    public function destroy(User $guru): RedirectResponse
+    public function destroy(User $akunSekolah): RedirectResponse
     {
-        EditorList::where('id_user', $guru->id)->delete();
-        $guru->delete();
-        return redirect()->route('manajemen.guru.index')
-            ->with('success', 'Guru berhasil dihapus.');
+        EditorList::where('id_user', $akunSekolah->id)->delete();
+        $akunSekolah->delete();
+        return redirect()->route('manajemen.akun-sekolah.index')
+            ->with('success', 'Akun sekolah berhasil dihapus.');
     }
 }

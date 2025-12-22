@@ -51,7 +51,7 @@ class UserController extends Controller
                 'pengurus_besar' => 'Pengurus Besar',
                 'komisariat_wilayah' => 'Komisariat Wilayah',
                 'komisariat_daerah' => 'Komisariat Daerah',
-                'guru' => 'Guru',
+                'sekolah' => 'Sekolah',
             ],
         ]);
     }
@@ -92,7 +92,7 @@ class UserController extends Controller
                 'pengurus_besar' => 'Pengurus Besar',
                 'komisariat_wilayah' => 'Komisariat Wilayah',
                 'komisariat_daerah' => 'Komisariat Daerah',
-                'guru' => 'Guru',
+                'sekolah' => 'Sekolah',
             ],
             'sekolahByProvinsi' => $sekolahByProvinsi,
         ]);
@@ -177,7 +177,7 @@ class UserController extends Controller
                 'pengurus_besar' => 'Pengurus Besar',
                 'komisariat_wilayah' => 'Komisariat Wilayah',
                 'komisariat_daerah' => 'Komisariat Daerah',
-                'guru' => 'Guru',
+                'sekolah' => 'Sekolah',
             ],
             'sekolahByProvinsi' => $sekolahByProvinsi,
             'currentSekolahIds' => $currentSekolahIds,

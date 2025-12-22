@@ -19,8 +19,8 @@ return new class extends Migration
                 'pengurus_besar',
                 'komisariat_daerah',
                 'komisariat_wilayah',
-                'guru'
-            ])->default('guru')->change();
+                'sekolah'
+            ])->default('sekolah')->change();
         });
     }
 
@@ -34,8 +34,8 @@ return new class extends Migration
                 'superuser',
                 'pengurus_besar',
                 'komisariat_wilayah',
-                'guru'
-            ])->default('guru')->change();
+                'sekolah'
+            ])->default('sekolah')->change();
         });
     }
 };

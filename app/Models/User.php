@@ -22,7 +22,7 @@ class User extends Authenticatable
     public const ROLE_PENGURUS_BESAR = 'pengurus_besar';
     public const ROLE_KOMISARIAT_WILAYAH = 'komisariat_wilayah';
     public const ROLE_KOMISARIAT_DAERAH = 'komisariat_daerah';
-    public const ROLE_GURU = 'guru';
+    public const ROLE_SEKOLAH = 'sekolah';
 
     /**
      * Available roles
@@ -34,7 +34,7 @@ class User extends Authenticatable
         self::ROLE_PENGURUS_BESAR,
         self::ROLE_KOMISARIAT_WILAYAH,
         self::ROLE_KOMISARIAT_DAERAH,
-        self::ROLE_GURU,
+        self::ROLE_SEKOLAH,
     ];
 
     /**
@@ -113,11 +113,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is guru
+     * Check if user is sekolah
      */
-    public function isGuru(): bool
+    public function isSekolah(): bool
     {
-        return $this->hasRole(self::ROLE_GURU);
+        return $this->hasRole(self::ROLE_SEKOLAH);
     }
 
     /**
@@ -157,7 +157,7 @@ class User extends Authenticatable
             return $this->kabupaten()->where('kabupaten.id', $sekolah->id_kabupaten)->exists();
         }
 
-        // Guru has no direct access via this method
+        // Akun sekolah has no direct access via this method
         return false;
     }
 

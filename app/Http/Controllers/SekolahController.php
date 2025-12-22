@@ -31,9 +31,9 @@ class SekolahController extends Controller
             // Komisariat daerah can only see sekolah in their managed kabupaten
             $kabupatenIds = $user->kabupaten()->pluck('kabupaten.id');
             $query->whereIn('id_kabupaten', $kabupatenIds);
-        } elseif ($user->isGuru()) {
-            // Guru access will be handled differently
-            // For now, prevent guru from viewing list
+        } elseif ($user->isSekolah()) {
+            // Sekolah access will be handled differently
+            // For now, prevent sekolah from viewing list
             $query->whereRaw('1=0');
         }
 

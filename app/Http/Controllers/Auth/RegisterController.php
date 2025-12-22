@@ -37,7 +37,7 @@ class RegisterController extends Controller
         ]);
 
         // Assign role using Spatie
-        $user->assignRole(User::ROLE_GURU);
+        $user->assignRole(User::ROLE_SEKOLAH);
 
         Auth::login($user);
 

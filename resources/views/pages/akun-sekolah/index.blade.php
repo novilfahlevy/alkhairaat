@@ -7,16 +7,16 @@
                 {{ $title }}
             </h1>
             <p class="text-sm text-gray-500 dark:text-gray-400">
-                Kelola akun Guru
+                Kelola akun Sekolah
             </p>
         </div>
         <div>
-            <a href="{{ route('manajemen.guru.create') }}"
+            <a href="{{ route('manajemen.akun-sekolah.create') }}"
                 class="bg-brand-500 hover:bg-brand-600 flex items-center rounded-lg px-4 py-2.5 text-sm font-medium text-white transition">
                 <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Tambah Guru
+                Tambah Akun Sekolah
             </a>
         </div>
     </div>
@@ -43,17 +43,17 @@
                             <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $user->username ?? '-' }}</td>
                             <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $user->email }}</td>
                             <td class="px-4 py-3 text-center">
-                                <a href="{{ route('manajemen.guru.edit', $user->id) }}" class="text-brand-500 hover:underline">Edit</a>
-                                <form action="{{ route('manajemen.guru.destroy', $user->id) }}" method="POST" class="inline">
+                                <a href="{{ route('manajemen.akun-sekolah.edit', $user->id) }}" class="text-brand-500 hover:underline">Edit</a>
+                                <form action="{{ route('manajemen.akun-sekolah.destroy', $user->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:underline ml-2" onclick="return confirm('Yakin ingin menghapus Guru ini?')">Hapus</button>
+                                    <button type="submit" class="text-red-500 hover:underline ml-2" onclick="return confirm('Yakin ingin menghapus akun sekolah ini?')">Hapus</button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr class="border-b border-gray-200 dark:border-gray-700">
-                            <td colspan="4" class="px-4 py-3 text-center text-sm text-gray-500 dark:text-gray-400">Belum ada Guru</td>
+                            <td colspan="4" class="px-4 py-3 text-center text-sm text-gray-500 dark:text-gray-400">Belum ada akun sekolah</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -62,7 +62,7 @@
         @if ($users->hasPages())
             <div class="mt-6 flex items-center justify-between">
                 <div class="text-sm text-gray-500 dark:text-gray-400">
-                    Menampilkan {{ $users->firstItem() }} hingga {{ $users->lastItem() }} dari {{ $users->total() }} Guru
+                    Menampilkan {{ $users->firstItem() }} hingga {{ $users->lastItem() }} dari {{ $users->total() }} akun sekolah
                 </div>
                 <div>
                     {{ $users->links('pagination::tailwind') }}

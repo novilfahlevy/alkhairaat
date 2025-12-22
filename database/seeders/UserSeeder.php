@@ -99,13 +99,13 @@ class UserSeeder extends Seeder
             }
         }
 
-        // Create sample Guru users for each sekolah
+        // Create sample akun sekolah users for each sekolah
         $sekolahList = Sekolah::all();
 
         foreach ($sekolahList as $sekolah) {
             $email = 'operator.' . strtolower(str_replace([' ', '-'], '', $sekolah->kode_sekolah)) . '@alkhairaat.or.id';
             
-            $guru = User::firstOrCreate(
+            $akunSekolah = User::firstOrCreate(
                 ['email' => $email],
                 [
                     'name' => 'Operator ' . $sekolah->nama,
@@ -113,9 +113,9 @@ class UserSeeder extends Seeder
                 ]
             );
             
-            if (!$guru->hasRole(User::ROLE_GURU)) {
-                $guru->assignRole(User::ROLE_GURU);
-                $this->command->info('Guru role assigned to: ' . $guru->email);
+            if (!$akunSekolah->hasRole(User::ROLE_SEKOLAH)) {
+                $akunSekolah->assignRole(User::ROLE_SEKOLAH);
+                $this->command->info('Sekolah role assigned to: ' . $akunSekolah->email);
             }
         }
 

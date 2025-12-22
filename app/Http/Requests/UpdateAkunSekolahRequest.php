@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\User;
 
-class StoreGuruRequest extends FormRequest
+class UpdateAkunSekolahRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,12 +15,13 @@ class StoreGuruRequest extends FormRequest
 
     public function rules(): array
     {
+        $userId = $this->route('akun-sekolah')->id ?? $this->route('akun-sekolah');
         return [
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:100', 'unique:users,username'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'password_confirmation' => ['required'],
+            'username' => ['required', 'string', 'max:100', Rule::unique('users', 'username')->ignore($userId)],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'password_confirmation' => ['nullable'],
             'sekolah_ids' => ['sometimes', 'array'],
             'sekolah_ids.*' => ['exists:sekolah,id'],
         ];
@@ -37,7 +38,6 @@ class StoreGuruRequest extends FormRequest
             'email.required' => 'Email harus diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email sudah terdaftar.',
-            'password.required' => 'Password harus diisi.',
             'password.min' => 'Password minimal 8 karakter.',
             'password.confirmed' => 'Konfirmasi password tidak sesuai.',
             'sekolah_ids.*.exists' => 'Sekolah yang dipilih tidak ditemukan.',

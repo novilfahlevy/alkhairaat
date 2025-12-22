@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class MenuHelper
 {
@@ -13,7 +14,7 @@ class MenuHelper
                 'icon' => 'dashboard',
                 'name' => 'Dasbor',
                 'path' => '/',
-                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH, User::ROLE_GURU],
+                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH, User::ROLE_SEKOLAH],
             ],
             [
                 'icon' => 'tables',
@@ -53,12 +54,12 @@ class MenuHelper
                 'roles' => [User::ROLE_KOMISARIAT_WILAYAH],
                 'path' => '/manajemen/komda',
             ],
-            // Manajemen Guru (oleh Komda)
+            // Manajemen Akun Sekolah (oleh Komda)
             [
                 'icon' => 'users',
-                'name' => 'Manajemen Guru',
+                'name' => 'Manajemen Akun Sekolah',
                 'roles' => [User::ROLE_KOMISARIAT_DAERAH],
-                'path' => '/manajemen/guru',
+                'path' => '/manajemen/akun-sekolah',
             ],
             // [
             //     'icon' => 'students',
@@ -89,7 +90,7 @@ class MenuHelper
             [
                 'icon' => 'export',
                 'name' => 'Ekspor Data',
-                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH, User::ROLE_GURU], // All roles
+                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH, User::ROLE_SEKOLAH], // All roles
                 'subItems' => [
                     ['name' => 'Ekspor Murid', 'path' => '/export/murid'],
                     ['name' => 'Ekspor Alumni', 'path' => '/export/alumni'],
@@ -123,7 +124,7 @@ class MenuHelper
      */
     public static function filterItemsByRole(array $items): array
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (!$user) {
             return [];
@@ -138,8 +139,8 @@ class MenuHelper
             $userRole = User::ROLE_KOMISARIAT_DAERAH;
         } elseif ($user->isKomisariatWilayah()) {
             $userRole = User::ROLE_KOMISARIAT_WILAYAH;
-        } elseif ($user->isGuru()) {
-            $userRole = User::ROLE_GURU;
+        } elseif ($user->isSekolah()) {
+            $userRole = User::ROLE_SEKOLAH;
         }
 
         return array_filter($items, function ($item) use ($userRole) {

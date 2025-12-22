@@ -147,9 +147,9 @@ Route::middleware(['auth'])->group(function () {
         ]);
     });
 
-    // Manajemen Guru (oleh Komda)
+    // Manajemen Akun Sekolah (oleh Komda)
     Route::middleware('role:'.User::ROLE_KOMISARIAT_DAERAH)->group(function () {
-        Route::resource('manajemen/guru', App\Http\Controllers\GuruController::class, [
+        Route::resource('manajemen/akun-sekolah', App\Http\Controllers\AkunSekolahController::class, [
             'as' => 'manajemen'
         ]);
     });
