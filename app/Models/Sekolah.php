@@ -52,14 +52,20 @@ class Sekolah extends Model
      */
     protected $fillable = [
         'kode_sekolah',
+        'no_npsn',
         'nama',
         'id_jenis_sekolah',
+        'id_bentuk_pendidikan',
         'status',
         'id_kabupaten',
         'kecamatan',
         'alamat',
         'telepon',
         'email',
+        'website',
+        'nomor_rekening',
+        'rekening_atas_nama',
+        'bank_rekening',
         'keterangan',
     ];
 
@@ -72,8 +78,20 @@ class Sekolah extends Model
     }
 
     /**
-     * Get the users that belong to this sekolah.
+     * Get the bentuk_pendidikan that this sekolah belongs to.
      */
+    public function bentukPendidikan(): BelongsTo
+    {
+        return $this->belongsTo(BentukPendidikan::class, 'id_bentuk_pendidikan');
+    }
+
+    /**
+     * Get the alamat associated with this sekolah.
+     */
+    public function alamatList(): HasMany
+    {
+        return $this->hasMany(Alamat::class, 'id_sekolah');
+    }
 
     /**
      * Get the murid that belong to this sekolah.

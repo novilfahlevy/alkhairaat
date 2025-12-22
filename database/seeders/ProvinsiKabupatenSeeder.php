@@ -153,17 +153,19 @@ class ProvinsiKabupatenSeeder extends Seeder
         ];
 
         foreach ($data as $provinsiData) {
-            $provinsi = Provinsi::create([
-                'kode_provinsi' => $provinsiData['kode_provinsi'],
-                'nama_provinsi' => $provinsiData['nama_provinsi'],
-            ]);
+            $provinsi = Provinsi::firstOrCreate(
+                ['kode_provinsi' => $provinsiData['kode_provinsi']],
+                ['nama_provinsi' => $provinsiData['nama_provinsi']]
+            );
 
             foreach ($provinsiData['kabupaten'] as $kabupatenData) {
-                Kabupaten::create([
-                    'kode_kabupaten' => $kabupatenData['kode_kabupaten'],
-                    'nama_kabupaten' => $kabupatenData['nama_kabupaten'],
-                    'id_provinsi' => $provinsi->id,
-                ]);
+                Kabupaten::firstOrCreate(
+                    ['kode_kabupaten' => $kabupatenData['kode_kabupaten']],
+                    [
+                        'nama_kabupaten' => $kabupatenData['nama_kabupaten'],
+                        'id_provinsi' => $provinsi->id,
+                    ]
+                );
             }
         }
     }

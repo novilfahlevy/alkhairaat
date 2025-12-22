@@ -123,7 +123,7 @@
                     <div class="flex max-w-xs flex-col items-center gap-6">
                         <img src="/images/logo_alkhairaat.png" alt="Logo Alkhairaat" width="200" height="200" class="drop-shadow-lg" />
                         <p class="text-center text-gray-400 dark:text-white/60">
-                            Sistem Database Murid & Alumni<br>
+                            Sistem Database<br>
                             Perguruan Islam Alkhairaat
                         </p>
                     </div>

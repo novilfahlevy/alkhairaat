@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSekolahRequest;
 use App\Http\Requests\UpdateSekolahRequest;
 use App\Models\Sekolah;
+use App\Models\Alamat;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\JenisSekolah;
+use App\Models\BentukPendidikan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class SekolahController extends Controller
@@ -22,7 +25,8 @@ class SekolahController extends Controller
         $query = Sekolah::query()->with(['kabupaten.provinsi', 'jenisSekolah']);
 
         // Apply filters based on user role
-        $user = auth()->user();
+        $user = Auth::user();
+
         if ($user->isKomisariatWilayah()) {
             // Komisariat wilayah can only see sekolah in their managed kabupaten
             $kabupatenIds = $user->kabupaten()->pluck('kabupaten.id');
@@ -47,8 +51,8 @@ class SekolahController extends Controller
         }
 
         // Apply jenis_sekolah filter
-        if ($request->filled('jenis_sekolah_id')) {
-            $query->where('jenis_sekolah_id', $request->input('jenis_sekolah_id'));
+        if ($request->filled('id_jenis_sekolah')) {
+            $query->where('id_jenis_sekolah', $request->input('id_jenis_sekolah'));
         }
 
         // Apply status filter
@@ -74,11 +78,13 @@ class SekolahController extends Controller
     {
         $provinsi = Provinsi::orderBy('nama_provinsi')->get();
         $jenisSekolah = JenisSekolah::orderBy('nama_jenis')->get();
+        $bentukPendidikan = BentukPendidikan::orderBy('nama')->get();
 
         return view('pages.sekolah.create', [
             'title' => 'Tambah Sekolah',
             'provinsi' => $provinsi,
             'jenisSekolah' => $jenisSekolah,
+            'bentukPendidikan' => $bentukPendidikan,
             'statusOptions' => Sekolah::STATUS_LABELS,
         ]);
     }
@@ -88,7 +94,44 @@ class SekolahController extends Controller
      */
     public function store(StoreSekolahRequest $request): RedirectResponse
     {
-        $sekolah = Sekolah::create($request->validated());
+        $validated = $request->validated();
+        
+        // Get nama provinsi and kabupaten from database
+        $provinsi = Provinsi::find($validated['id_provinsi']);
+        $kabupaten = Kabupaten::find($validated['id_kabupaten']);
+        
+        // Extract alamat-related fields for alamat table
+        $alamatData = [
+            'provinsi' => $provinsi?->nama_provinsi,
+            'kabupaten' => $kabupaten?->nama_kabupaten,
+            'kecamatan' => $validated['alamat_kecamatan'] ?? null,
+            'kelurahan' => $validated['alamat_kelurahan'] ?? null,
+            'rt' => $validated['alamat_rt'] ?? null,
+            'rw' => $validated['alamat_rw'] ?? null,
+            'kode_pos' => $validated['alamat_kode_pos'] ?? null,
+            'koordinat_x' => $validated['alamat_koordinat_x'] ?? null,
+            'koordinat_y' => $validated['alamat_koordinat_y'] ?? null,
+            'alamat_lengkap' => $validated['alamat'] ?? null,
+        ];
+
+        // Remove alamat_* prefixed fields from validated data (keep 'alamat' for sekolah table)
+        unset($validated['alamat_kecamatan']);
+        unset($validated['alamat_kelurahan']);
+        unset($validated['alamat_rt']);
+        unset($validated['alamat_rw']);
+        unset($validated['alamat_kode_pos']);
+        unset($validated['alamat_koordinat_x']);
+        unset($validated['alamat_koordinat_y']);
+
+        // Create sekolah
+        $sekolah = Sekolah::create($validated);
+
+        // Create alamat record if any alamat data is provided
+        if (array_filter($alamatData)) {
+            $alamatData['id_sekolah'] = $sekolah->id;
+            $alamatData['jenis'] = Alamat::JENIS_ASLI;
+            Alamat::create($alamatData);
+        }
 
         return redirect()->route('sekolah.index')
             ->with('success', 'Sekolah berhasil ditambahkan.');
@@ -99,12 +142,7 @@ class SekolahController extends Controller
      */
     public function show(Sekolah $sekolah): View
     {
-        // Check if user can access this sekolah
-        if (!auth()->user()->canAccessSekolah($sekolah->id)) {
-            abort(403, 'Anda tidak memiliki akses ke sekolah ini.');
-        }
-
-        $sekolah->load(['kabupaten.provinsi', 'jenisSekolah', 'murid', 'users']);
+        $sekolah->load(['kabupaten.provinsi', 'jenisSekolah', 'bentukPendidikan', 'murid', 'alamatList']);
 
         return view('pages.sekolah.show', [
             'title' => 'Detail Sekolah',
@@ -117,16 +155,12 @@ class SekolahController extends Controller
      */
     public function edit(Sekolah $sekolah): View
     {
-        // Check if user can access this sekolah
-        if (!auth()->user()->canAccessSekolah($sekolah->id)) {
-            abort(403, 'Anda tidak memiliki akses ke sekolah ini.');
-        }
-
         $provinsi = Provinsi::orderBy('nama_provinsi')->get();
         $kabupaten = $sekolah->kabupaten?->id_provinsi
             ? Kabupaten::where('id_provinsi', $sekolah->kabupaten->id_provinsi)->orderBy('nama_kabupaten')->get()
             : collect();
         $jenisSekolah = JenisSekolah::orderBy('nama_jenis')->get();
+        $bentukPendidikan = BentukPendidikan::orderBy('nama')->get();
 
         return view('pages.sekolah.edit', [
             'title' => 'Edit Sekolah',
@@ -134,6 +168,7 @@ class SekolahController extends Controller
             'provinsi' => $provinsi,
             'kabupaten' => $kabupaten,
             'jenisSekolah' => $jenisSekolah,
+            'bentukPendidikan' => $bentukPendidikan,
             'statusOptions' => Sekolah::STATUS_LABELS,
         ]);
     }
@@ -143,14 +178,48 @@ class SekolahController extends Controller
      */
     public function update(UpdateSekolahRequest $request, Sekolah $sekolah): RedirectResponse
     {
-        // Check if user can access this sekolah
-        if (!auth()->user()->canAccessSekolah($sekolah->id)) {
-            abort(403, 'Anda tidak memiliki akses ke sekolah ini.');
+        $validated = $request->validated();
+        
+        // Get nama provinsi and kabupaten from database
+        $provinsi = Provinsi::find($validated['id_provinsi']);
+        $kabupaten = Kabupaten::find($validated['id_kabupaten']);
+        
+        // Extract alamat-related fields for alamat table
+        $alamatData = [
+            'provinsi' => $provinsi?->nama_provinsi,
+            'kabupaten' => $kabupaten?->nama_kabupaten,
+            'kecamatan' => $validated['alamat_kecamatan'] ?? null,
+            'kelurahan' => $validated['alamat_kelurahan'] ?? null,
+            'rt' => $validated['alamat_rt'] ?? null,
+            'rw' => $validated['alamat_rw'] ?? null,
+            'kode_pos' => $validated['alamat_kode_pos'] ?? null,
+            'koordinat_x' => $validated['alamat_koordinat_x'] ?? null,
+            'koordinat_y' => $validated['alamat_koordinat_y'] ?? null,
+            'alamat_lengkap' => $validated['alamat'] ?? null,
+        ];
+
+        // Remove alamat_* prefixed fields from validated data (keep 'alamat' for sekolah table)
+        unset($validated['alamat_kecamatan']);
+        unset($validated['alamat_kelurahan']);
+        unset($validated['alamat_rt']);
+        unset($validated['alamat_rw']);
+        unset($validated['alamat_kode_pos']);
+        unset($validated['alamat_koordinat_x']);
+        unset($validated['alamat_koordinat_y']);
+
+        // Update sekolah
+        $sekolah->update($validated);
+
+        // Update or create alamat record if any alamat data is provided
+        if (array_filter($alamatData)) {
+            $alamatData['jenis'] = Alamat::JENIS_ASLI;
+            $sekolah->alamatList()->updateOrCreate(
+                ['jenis' => Alamat::JENIS_ASLI],
+                $alamatData
+            );
         }
 
-        $sekolah->update($request->validated());
-
-        return redirect()->route('sekolah.index')
+        return redirect()->route('sekolah.show', ['sekolah' => $sekolah->id])
             ->with('success', 'Sekolah berhasil diperbarui.');
     }
 
@@ -159,16 +228,11 @@ class SekolahController extends Controller
      */
     public function destroy(Sekolah $sekolah): RedirectResponse
     {
-        // Check if user can access this sekolah
-        if (!auth()->user()->canAccessSekolah($sekolah->id)) {
-            abort(403, 'Anda tidak memiliki akses ke sekolah ini.');
-        }
-
         // Check if sekolah has users or murid
-        if ($sekolah->users()->count() > 0 || $sekolah->murid()->count() > 0) {
-            return redirect()->route('sekolah.index')
-                ->with('error', 'Sekolah tidak dapat dihapus karena masih memiliki user atau murid.');
-        }
+        // if ($sekolah->guru()->count() > 0 || $sekolah->murid()->count() > 0) {
+        //     return redirect()->route('sekolah.index')
+        //         ->with('error', 'Sekolah tidak dapat dihapus karena masih memiliki user atau murid.');
+        // }
 
         $sekolah->delete();
 

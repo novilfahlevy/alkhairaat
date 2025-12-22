@@ -13,11 +13,11 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create roles
-        Role::create(['name' => User::ROLE_SUPERUSER]);
-        Role::create(['name' => User::ROLE_PENGURUS_BESAR]);
-        Role::create(['name' => User::ROLE_KOMISARIAT_DAERAH]);
-        Role::create(['name' => User::ROLE_KOMISARIAT_WILAYAH]);
-        Role::create(['name' => User::ROLE_SEKOLAH]);
+        // Create roles using firstOrCreate to prevent duplicates
+        Role::firstOrCreate(['name' => User::ROLE_SUPERUSER]);
+        Role::firstOrCreate(['name' => User::ROLE_PENGURUS_BESAR]);
+        Role::firstOrCreate(['name' => User::ROLE_KOMISARIAT_DAERAH]);
+        Role::firstOrCreate(['name' => User::ROLE_KOMISARIAT_WILAYAH]);
+        Role::firstOrCreate(['name' => User::ROLE_SEKOLAH]);
     }
 }

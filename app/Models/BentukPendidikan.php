@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class JenisSekolah extends Model
+class BentukPendidikan extends Model
 {
     use HasFactory;
 
@@ -15,24 +15,23 @@ class JenisSekolah extends Model
      *
      * @var string
      */
-    protected $table = 'jenis_sekolah';
+    protected $table = 'bentuk_pendidikan';
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
-        'kode_jenis',
-        'nama_jenis',
+        'nama',
         'deskripsi',
     ];
 
     /**
-     * Get all sekolah of this jenis.
+     * Get the sekolah that have this bentuk_pendidikan.
      */
     public function sekolah(): HasMany
     {
-        return $this->hasMany(Sekolah::class, 'id_jenis_sekolah');
+        return $this->hasMany(Sekolah::class, 'id_bentuk_pendidikan');
     }
 }
