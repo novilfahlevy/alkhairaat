@@ -23,6 +23,12 @@ class MenuHelper
                 'path' => '/sekolah'
             ],
             [
+                'icon' => 'tables',
+                'name' => 'Sekolah External',
+                'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_DAERAH, User::ROLE_KOMISARIAT_WILAYAH],
+                'path' => '/sekolah-external'
+            ],
+            [
                 'icon' => 'pages',
                 'name' => 'Kabupaten',
                 'roles' => [User::ROLE_SUPERUSER],

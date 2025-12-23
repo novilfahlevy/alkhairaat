@@ -128,6 +128,15 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'update'])->name('sekolah.update');
     Route::delete('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'destroy'])->name('sekolah.destroy');
     
+    // Sekolah External CRUD
+    Route::get('/sekolah-external', [App\Http\Controllers\SekolahExternalController::class, 'index'])->name('sekolah-external.index');
+    Route::get('/sekolah-external/create', [App\Http\Controllers\SekolahExternalController::class, 'create'])->name('sekolah-external.create');
+    Route::post('/sekolah-external', [App\Http\Controllers\SekolahExternalController::class, 'store'])->name('sekolah-external.store');
+    Route::get('/sekolah-external/{sekolahExternal}', [App\Http\Controllers\SekolahExternalController::class, 'show'])->name('sekolah-external.show');
+    Route::get('/sekolah-external/{sekolahExternal}/edit', [App\Http\Controllers\SekolahExternalController::class, 'edit'])->name('sekolah-external.edit');
+    Route::put('/sekolah-external/{sekolahExternal}', [App\Http\Controllers\SekolahExternalController::class, 'update'])->name('sekolah-external.update');
+    Route::delete('/sekolah-external/{sekolahExternal}', [App\Http\Controllers\SekolahExternalController::class, 'destroy'])->name('sekolah-external.destroy');
+    
     // User management (superuser only)
     Route::middleware('role:'.User::ROLE_SUPERUSER)->group(function () {
         Route::resource('user', App\Http\Controllers\UserController::class);
