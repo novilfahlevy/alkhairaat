@@ -327,17 +327,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Alamat Lengkap -->
-                @if ($alamat->alamat_lengkap)
-                    <div class="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700">
-                        <div class="flex flex-col">
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Alamat Lengkap:</dt>
-                            <dd class="mt-2 text-sm text-gray-900 dark:text-white whitespace-pre-wrap">
-                                {{ $alamat->alamat_lengkap }}</dd>
-                        </div>
-                    </div>
-                @endif
             </div>
         @endif
 
