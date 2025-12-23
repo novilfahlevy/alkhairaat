@@ -25,7 +25,7 @@
     <!-- Filters & Desktop Table Card -->
     <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900 mb-6">
         <!-- Filters -->
-        <form method="GET" class="mb-6" x-data="{ isSubmitting: false }" x-on:submit="isSubmitting = true">
+        <form method="GET" class="mb-6" x-data="{ isSubmitting: false, isClearing: false }" x-on:submit="isSubmitting = true">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
                 <!-- Search -->
                 <div>
@@ -70,10 +70,10 @@
                     </select>
                 </div>
 
-                <!-- Filter Button -->
-                <div class="flex items-end">
+                <!-- Filter & Clear Button -->
+                <div class="flex items-end gap-2">
                     <button type="submit"
-                        class="bg-brand-500 hover:bg-brand-600 h-11 w-full rounded-lg px-4 text-sm font-medium text-white transition flex items-center justify-center"
+                        class="bg-brand-500 hover:bg-brand-600 h-11 flex-1 rounded-lg px-4 text-sm font-medium text-white transition flex items-center justify-center"
                         :disabled="isSubmitting" x-bind:class="{ 'opacity-70 cursor-not-allowed': isSubmitting }">
                         <template x-if="isSubmitting">
                             <svg class="mr-2 h-4 w-4 animate-spin text-white" xmlns="http://www.w3.org/2000/svg"
@@ -87,6 +87,22 @@
                         </template>
                         Filter
                     </button>
+                    @if (request('search') || request('id_jenis_sekolah') || request('status'))
+                        <a href="{{ route('sekolah.index') }}" x-on:click="isClearing = true"
+                            class="border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 h-11 flex-1 rounded-lg border px-4 text-sm font-medium text-gray-700 transition flex items-center justify-center dark:text-gray-300"
+                            :disabled="isClearing" x-bind:class="{ 'opacity-70 cursor-not-allowed': isClearing }">
+                            <template x-if="isClearing">
+                                <svg class="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                            </template>
+                            Bersihkan Filter
+                        </a>
+                    @endif
                 </div>
             </div>
         </form>
@@ -110,23 +126,23 @@
                 <thead class="bg-gray-50 dark:bg-gray-800">
                     <tr>
                         <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-300">
                             Sekolah
                         </th>
                         <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                            Jenjang
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                            Kabupaten/Provinsi
                         </th>
                         <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                            Lokasi
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                            Jenis Sekolah
                         </th>
                         <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-300">
                             Status
                         </th>
                         <th
-                            class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-300">
                             Aksi
                         </th>
                     </tr>
@@ -145,18 +161,18 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                <span
-                                    class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                                    {{ $item->jenisSekolah?->nama_jenis ?? 'Tidak diketahui' }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900 dark:text-white">
                                     {{ $item->kabupaten?->nama_kabupaten ?? 'Tidak diketahui' }}
                                 </div>
                                 <div class="text-sm text-gray-500 dark:text-gray-400">
                                     {{ $item->provinsi ?? 'Tidak diketahui' }}
                                 </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span
+                                    class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                                    {{ $item->jenisSekolah?->nama_jenis ?? 'Tidak diketahui' }}
+                                </span>
                             </td>
                             <td class="px-6 py-4">
                                 @if ($item->status === 'aktif')
@@ -171,15 +187,15 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end space-x-2">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-start space-x-2">
                                     <a href="{{ route('sekolah.show', $item) }}"
-                                        class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
+                                        class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20">
                                         Lihat
                                     </a>
 
                                     <a href="{{ route('sekolah.edit', $item) }}"
-                                        class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300">
+                                        class="text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 flex-1 rounded-md bg-amber-50 px-3 py-2 text-center text-sm font-medium dark:bg-amber-900/20">
                                         Edit
                                     </a>
 
@@ -189,7 +205,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                                            class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 w-full rounded-md bg-red-50 px-3 py-2 text-sm font-medium dark:bg-red-900/20">
                                             Hapus
                                         </button>
                                     </form>
@@ -244,7 +260,7 @@
                         <div class="flex items-center">
                             <span
                                 class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                                {{ $item->jenjang }}
+                                {{ $item->jenisSekolah?->nama_jenis ?? 'Tidak diketahui' }}
                             </span>
                         </div>
 
