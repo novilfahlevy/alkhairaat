@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class Sekolah extends Model
 {
@@ -68,6 +69,21 @@ class Sekolah extends Model
         'bank_rekening',
         'keterangan',
     ];
+
+    /**
+     * Boot the model.
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function (self $sekolah) {
+            // Hapus file gambar galeri terkait jika ada
+            foreach ($sekolah->galeri as $galeri) {
+                if ($galeri->image_path && Storage::disk('public')->exists($galeri->image_path)) {
+                    Storage::disk('public')->delete($galeri->image_path);
+                }
+            }
+        });
+    }
 
     /**
      * Get the jenis_sekolah that this sekolah belongs to.
@@ -149,5 +165,13 @@ class Sekolah extends Model
         return $query->whereHas('editorLists', function ($q) {
             $q->where('id_user', Auth::id());
         });
+    }
+
+    /**
+     * Get the galeri associated with this sekolah.
+     */
+    public function galeri(): HasMany
+    {
+        return $this->hasMany(GaleriSekolah::class, 'id_sekolah');
     }
 }

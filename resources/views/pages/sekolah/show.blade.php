@@ -15,7 +15,7 @@
                 {{ session('error') }}
             </div>
         @endif
-        
+
         <!-- Page Header -->
         <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -87,7 +87,8 @@
 
                             <!-- Bentuk Pendidikan -->
                             <div class="flex flex-col sm:flex-row sm:items-center">
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Bentuk Pendidikan:</dt>
+                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Bentuk Pendidikan:
+                                </dt>
                                 <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0">
                                     <span
                                         class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400">
@@ -195,7 +196,8 @@
                             @if ($sekolah->bank_rekening)
                                 <div class="flex flex-col sm:flex-row sm:items-center">
                                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Bank:</dt>
-                                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0">{{ $sekolah->bank_rekening }}</dd>
+                                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0">
+                                        {{ $sekolah->bank_rekening }}</dd>
                                 </div>
                             @else
                                 <div class="flex flex-col sm:flex-row sm:items-center">
@@ -207,12 +209,15 @@
                             <!-- Nomor Rekening -->
                             @if ($sekolah->nomor_rekening)
                                 <div class="flex flex-col sm:flex-row sm:items-center">
-                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">No. Rekening:</dt>
-                                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0">{{ $sekolah->nomor_rekening }}</dd>
+                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">No. Rekening:
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0">
+                                        {{ $sekolah->nomor_rekening }}</dd>
                                 </div>
                             @else
                                 <div class="flex flex-col sm:flex-row sm:items-center">
-                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">No. Rekening:</dt>
+                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">No. Rekening:
+                                    </dt>
                                     <dd class="mt-1 text-sm text-gray-500 dark:text-gray-500 sm:mt-0">-</dd>
                                 </div>
                             @endif
@@ -220,12 +225,15 @@
                             <!-- Atas Nama -->
                             @if ($sekolah->rekening_atas_nama)
                                 <div class="flex flex-col sm:flex-row sm:items-center">
-                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Atas Nama:</dt>
-                                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0">{{ $sekolah->rekening_atas_nama }}</dd>
+                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Atas Nama:
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0">
+                                        {{ $sekolah->rekening_atas_nama }}</dd>
                                 </div>
                             @else
                                 <div class="flex flex-col sm:flex-row sm:items-center">
-                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Atas Nama:</dt>
+                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Atas Nama:
+                                    </dt>
                                     <dd class="mt-1 text-sm text-gray-500 dark:text-gray-500 sm:mt-0">-</dd>
                                 </div>
                             @endif
@@ -239,7 +247,7 @@
         @php
             $alamat = $sekolah->alamatList()->where('jenis', 'asli')->first();
         @endphp
-        
+
         @if ($alamat)
             <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
                 <h2 class="mb-6 text-lg font-semibold text-gray-800 dark:text-white/90">Alamat Sekolah</h2>
@@ -273,6 +281,13 @@
                             <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Kelurahan:</dt>
                             <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0">
                                 {{ $alamat->kelurahan ?? '-' }}</dd>
+                        </div>
+
+                        {{-- Alamat Lengkap --}}
+                        <div class="flex flex-col sm:flex-row sm:items-center">
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 sm:w-40">Alamat Lengkap:</dt>
+                            <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0">
+                                {{ $alamat->alamat_lengkap ?? '-' }}</dd>
                         </div>
                     </div>
 
@@ -404,5 +419,98 @@
                 </div>
             </div>
         </div>
+
+        <!-- Galeri Sekolah Section -->
+        @if ($sekolah->galeri->count() > 0)
+            <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
+                <h2 class="mb-6 text-lg font-semibold text-gray-800 dark:text-white/90">Galeri Sekolah</h2>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    @foreach ($sekolah->galeri as $galeri)
+                        <div class="group relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+                            <img src="{{ asset('storage/' . $galeri->image_path) }}" alt="Galeri Sekolah"
+                                class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-110">
+
+                            <!-- Overlay -->
+                            <div
+                                class="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/40 flex items-center justify-center">
+                                <button type="button"
+                                    onclick="openLightbox('{{ asset('storage/' . $galeri->image_path) }}')"
+                                    class="opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                    <svg class="h-12 w-12 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 hidden">
+        <div class="max-w-4xl w-full">
+            <div class="relative max-h-[90vh] flex flex-col items-center justify-center">
+                <div class="overflow-y-auto max-h-screen w-full flex items-center justify-center">
+                    <img id="lightbox-image" src="" alt="Galeri Sekolah - Full Size"
+                        class="w-full h-auto rounded-lg object-contain">
+                </div>
+                <button type="button" onclick="closeLightbox()"
+                    class="absolute top-4 right-4 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 transition">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <p id="lightbox-caption" class="mt-4 text-white text-center text-sm hidden"></p>
+            </div>
+        </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        function openLightbox(imageSrc, caption = '') {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightbox-image');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+
+            lightboxImage.src = imageSrc;
+            lightboxCaption.textContent = caption;
+
+            if (caption) {
+                lightboxCaption.classList.remove('hidden');
+            } else {
+                lightboxCaption.classList.add('hidden');
+            }
+
+            lightbox.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when lightbox is open
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.add('hidden');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        // Close lightbox when clicking outside the image
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+
+        // Close lightbox with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+    </script>
+@endpush

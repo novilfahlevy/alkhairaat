@@ -6,6 +6,7 @@ use App\Http\Requests\StoreSekolahRequest;
 use App\Http\Requests\UpdateSekolahRequest;
 use App\Models\Sekolah;
 use App\Models\Alamat;
+use App\Models\GaleriSekolah;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\JenisSekolah;
@@ -13,6 +14,7 @@ use App\Models\BentukPendidikan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class SekolahController extends Controller
@@ -26,20 +28,6 @@ class SekolahController extends Controller
 
         // Apply filters based on user role
         $user = Auth::user();
-
-        if ($user->isKomisariatWilayah()) {
-            // Komisariat wilayah can only see sekolah in their managed kabupaten
-            $kabupatenIds = $user->kabupaten()->pluck('kabupaten.id');
-            $query->whereIn('id_kabupaten', $kabupatenIds);
-        } elseif ($user->isKomisariatDaerah()) {
-            // Komisariat daerah can only see sekolah in their managed kabupaten
-            $kabupatenIds = $user->kabupaten()->pluck('kabupaten.id');
-            $query->whereIn('id_kabupaten', $kabupatenIds);
-        } elseif ($user->isSekolah()) {
-            // Sekolah access will be handled differently
-            // For now, prevent sekolah from viewing list
-            $query->whereRaw('1=0');
-        }
 
         // Apply search filter
         if ($request->filled('search')) {
@@ -123,6 +111,10 @@ class SekolahController extends Controller
         unset($validated['alamat_koordinat_x']);
         unset($validated['alamat_koordinat_y']);
 
+        // Extract galeri files
+        $galeriFiles = $request->file('galeri_files') ?? [];
+        unset($validated['galeri_files']);
+
         // Create sekolah
         $sekolah = Sekolah::create($validated);
 
@@ -133,7 +125,18 @@ class SekolahController extends Controller
             Alamat::create($alamatData);
         }
 
-        return redirect()->route('sekolah.index')
+        // Handle galeri upload
+        if (!empty($galeriFiles)) {
+            foreach ($galeriFiles as $file) {
+                $filePath = $file->store('galeri-sekolah/' . $sekolah->kode_sekolah ?? $sekolah->id, 'public');
+                GaleriSekolah::create([
+                    'id_sekolah' => $sekolah->id,
+                    'image_path' => $filePath,
+                ]);
+            }
+        }
+
+        return redirect()->route('sekolah.show', ['sekolah' => $sekolah->id])
             ->with('success', 'Sekolah berhasil ditambahkan.');
     }
 
@@ -207,6 +210,11 @@ class SekolahController extends Controller
         unset($validated['alamat_koordinat_x']);
         unset($validated['alamat_koordinat_y']);
 
+        // Extract galeri files and deleted files
+        $galeriFiles = $request->file('galeri_files') ?? [];
+        $deletedGaleriIds = $request->input('deleted_galeri_ids', []);
+        unset($validated['galeri_files']);
+
         // Update sekolah
         $sekolah->update($validated);
 
@@ -217,6 +225,28 @@ class SekolahController extends Controller
                 ['jenis' => Alamat::JENIS_ASLI],
                 $alamatData
             );
+        }
+
+        // Delete galeri yang dipilih untuk dihapus
+        if (!empty($deletedGaleriIds)) {
+            foreach ($deletedGaleriIds as $galeriId) {
+                $galeri = GaleriSekolah::find($galeriId);
+                if ($galeri && $galeri->id_sekolah === $sekolah->id) {
+                    Storage::disk('public')->delete($galeri->image_path);
+                    $galeri->delete();
+                }
+            }
+        }
+
+        // Handle galeri upload
+        if (!empty($galeriFiles)) {
+            foreach ($galeriFiles as $file) {
+                $filePath = $file->store('galeri-sekolah/' . $sekolah->kode_sekolah ?? $sekolah->id, 'public');
+                GaleriSekolah::create([
+                    'id_sekolah' => $sekolah->id,
+                    'image_path' => $filePath,
+                ]);
+            }
         }
 
         return redirect()->route('sekolah.show', ['sekolah' => $sekolah->id])

@@ -47,6 +47,8 @@ class StoreSekolahRequest extends FormRequest
             'alamat_kode_pos' => ['nullable', 'string', 'max:10'],
             'alamat_koordinat_x' => ['nullable', 'numeric'],
             'alamat_koordinat_y' => ['nullable', 'numeric'],
+            'galeri_files' => ['nullable', 'array'],
+            'galeri_files.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
         ];
     }
 
@@ -74,6 +76,10 @@ class StoreSekolahRequest extends FormRequest
             'email.email' => 'Format email tidak valid.',
             'alamat_koordinat_x.numeric' => 'Koordinat X harus berupa angka.',
             'alamat_koordinat_y.numeric' => 'Koordinat Y harus berupa angka.',
+            'galeri_files.array' => 'Galeri harus berupa array file.',
+            'galeri_files.*.image' => 'File harus berupa gambar.',
+            'galeri_files.*.mimes' => 'Format file harus JPEG, PNG, JPG, GIF, atau WebP.',
+            'galeri_files.*.max' => 'Ukuran file tidak boleh lebih dari 5MB.',
         ];
     }
 
@@ -107,6 +113,7 @@ class StoreSekolahRequest extends FormRequest
             'alamat_kode_pos' => 'kode pos alamat',
             'alamat_koordinat_x' => 'koordinat X',
             'alamat_koordinat_y' => 'koordinat Y',
+            'galeri_files' => 'galeri foto',
         ];
     }
 }
