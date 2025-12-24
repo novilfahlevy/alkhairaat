@@ -3,8 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\SekolahExternal;
-use App\Models\JenisSekolah;
-use App\Models\BentukPendidikan;
+use App\Models\Sekolah;
 use Illuminate\Database\Seeder;
 
 class SekolahExternalSeeder extends Seeder
@@ -14,69 +13,69 @@ class SekolahExternalSeeder extends Seeder
      */
     public function run(): void
     {
-        // Ambil data jenis sekolah dan bentuk pendidikan yang tersedia
-        $jenisSekolah = JenisSekolah::pluck('id')->toArray();
-        $bentukPendidikan = BentukPendidikan::pluck('id')->toArray();
+        // Define enum values for jenis_sekolah and bentuk_pendidikan
+        $jenisSekolahValues = array_keys(Sekolah::JENIS_SEKOLAH_OPTIONS);
+        $bentukPendidikanValues = array_keys(Sekolah::BENTUK_PENDIDIKAN_OPTIONS);
 
         // Data sekolah external sample
         $sekolahExternalData = [
             [
-                'id_jenis_sekolah' => $jenisSekolah[0] ?? 1,
-                'id_bentuk_pendidikan' => $bentukPendidikan[0] ?? 1,
+                'jenis_sekolah' => $jenisSekolahValues[0] ?? Sekolah::JENIS_SEKOLAH_MI_SD,
+                'bentuk_pendidikan' => $bentukPendidikanValues[0] ?? Sekolah::BENTUK_PENDIDIKAN_UMUM,
                 'nama_sekolah' => 'SD Negeri 01 Pusat Kota',
                 'kota_sekolah' => 'Jakarta',
             ],
             [
-                'id_jenis_sekolah' => $jenisSekolah[1] ?? 2,
-                'id_bentuk_pendidikan' => $bentukPendidikan[0] ?? 1,
+                'jenis_sekolah' => $jenisSekolahValues[1] ?? Sekolah::JENIS_SEKOLAH_MTS_SMP,
+                'bentuk_pendidikan' => $bentukPendidikanValues[0] ?? Sekolah::BENTUK_PENDIDIKAN_UMUM,
                 'nama_sekolah' => 'SMP Swasta Maju Jaya',
                 'kota_sekolah' => 'Surabaya',
             ],
             [
-                'id_jenis_sekolah' => $jenisSekolah[0] ?? 1,
-                'id_bentuk_pendidikan' => $bentukPendidikan[1] ?? 2,
+                'jenis_sekolah' => $jenisSekolahValues[0] ?? Sekolah::JENIS_SEKOLAH_MI_SD,
+                'bentuk_pendidikan' => $bentukPendidikanValues[1] ?? Sekolah::BENTUK_PENDIDIKAN_PONPES,
                 'nama_sekolah' => 'SMA Negeri 5',
                 'kota_sekolah' => 'Bandung',
             ],
             [
-                'id_jenis_sekolah' => $jenisSekolah[2] ?? 3,
-                'id_bentuk_pendidikan' => $bentukPendidikan[0] ?? 1,
+                'jenis_sekolah' => $jenisSekolahValues[2] ?? Sekolah::JENIS_SEKOLAH_MTS_SMP,
+                'bentuk_pendidikan' => $bentukPendidikanValues[0] ?? Sekolah::BENTUK_PENDIDIKAN_UMUM,
                 'nama_sekolah' => 'SMK Teknik Industri',
                 'kota_sekolah' => 'Medan',
             ],
             [
-                'id_jenis_sekolah' => $jenisSekolah[1] ?? 2,
-                'id_bentuk_pendidikan' => $bentukPendidikan[1] ?? 2,
+                'jenis_sekolah' => $jenisSekolahValues[1] ?? Sekolah::JENIS_SEKOLAH_MTS_SMP,
+                'bentuk_pendidikan' => $bentukPendidikanValues[1] ?? Sekolah::BENTUK_PENDIDIKAN_PONPES,
                 'nama_sekolah' => 'Pesantren Modern Al-Azhar',
                 'kota_sekolah' => 'Bogor',
             ],
             [
-                'id_jenis_sekolah' => $jenisSekolah[0] ?? 1,
-                'id_bentuk_pendidikan' => $bentukPendidikan[0] ?? 1,
+                'jenis_sekolah' => $jenisSekolahValues[0] ?? Sekolah::JENIS_SEKOLAH_MI_SD,
+                'bentuk_pendidikan' => $bentukPendidikanValues[0] ?? Sekolah::BENTUK_PENDIDIKAN_UMUM,
                 'nama_sekolah' => 'SD Islam Terpadu Salsabila',
                 'kota_sekolah' => 'Yogyakarta',
             ],
             [
-                'id_jenis_sekolah' => $jenisSekolah[2] ?? 3,
-                'id_bentuk_pendidikan' => $bentukPendidikan[1] ?? 2,
+                'jenis_sekolah' => $jenisSekolahValues[2] ?? Sekolah::JENIS_SEKOLAH_MTS_SMP,
+                'bentuk_pendidikan' => $bentukPendidikanValues[1] ?? Sekolah::BENTUK_PENDIDIKAN_PONPES,
                 'nama_sekolah' => 'SMA Bhakti Nusa',
                 'kota_sekolah' => 'Makassar',
             ],
             [
-                'id_jenis_sekolah' => $jenisSekolah[1] ?? 2,
-                'id_bentuk_pendidikan' => $bentukPendidikan[0] ?? 1,
+                'jenis_sekolah' => $jenisSekolahValues[1] ?? Sekolah::JENIS_SEKOLAH_MTS_SMP,
+                'bentuk_pendidikan' => $bentukPendidikanValues[0] ?? Sekolah::BENTUK_PENDIDIKAN_UMUM,
                 'nama_sekolah' => 'SMP Plus Assalaam',
                 'kota_sekolah' => 'Cilegon',
             ],
             [
-                'id_jenis_sekolah' => $jenisSekolah[0] ?? 1,
-                'id_bentuk_pendidikan' => $bentukPendidikan[1] ?? 2,
+                'jenis_sekolah' => $jenisSekolahValues[0] ?? Sekolah::JENIS_SEKOLAH_MI_SD,
+                'bentuk_pendidikan' => $bentukPendidikanValues[1] ?? Sekolah::BENTUK_PENDIDIKAN_PONPES,
                 'nama_sekolah' => 'SD Muhammadiyah 01',
                 'kota_sekolah' => 'Semarang',
             ],
             [
-                'id_jenis_sekolah' => $jenisSekolah[2] ?? 3,
-                'id_bentuk_pendidikan' => $bentukPendidikan[0] ?? 1,
+                'jenis_sekolah' => $jenisSekolahValues[2] ?? Sekolah::JENIS_SEKOLAH_MTS_SMP,
+                'bentuk_pendidikan' => $bentukPendidikanValues[0] ?? Sekolah::BENTUK_PENDIDIKAN_UMUM,
                 'nama_sekolah' => 'SMK Negeri 2 Pertanian',
                 'kota_sekolah' => 'Banjarmasin',
             ],
@@ -90,8 +89,8 @@ class SekolahExternalSeeder extends Seeder
                     'kota_sekolah' => $data['kota_sekolah'],
                 ],
                 [
-                    'id_jenis_sekolah' => $data['id_jenis_sekolah'],
-                    'id_bentuk_pendidikan' => $data['id_bentuk_pendidikan'],
+                    'jenis_sekolah' => $data['jenis_sekolah'],
+                    'bentuk_pendidikan' => $data['bentuk_pendidikan'],
                 ]
             );
         }

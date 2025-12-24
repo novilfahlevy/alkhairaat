@@ -3,8 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use App\Models\Sekolah;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UpdateSekolahExternalRequest extends FormRequest
 {
@@ -29,8 +31,8 @@ class UpdateSekolahExternalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id_jenis_sekolah' => ['required', 'exists:jenis_sekolah,id'],
-            'id_bentuk_pendidikan' => ['required', 'exists:bentuk_pendidikan,id'],
+            'jenis_sekolah' => ['required', Rule::in(array_keys(Sekolah::JENIS_SEKOLAH_OPTIONS))],
+            'bentuk_pendidikan' => ['required', Rule::in(array_keys(Sekolah::BENTUK_PENDIDIKAN_OPTIONS))],
             'nama_sekolah' => ['required', 'string', 'max:255'],
             'kota_sekolah' => ['required', 'string', 'max:100'],
         ];
@@ -44,10 +46,10 @@ class UpdateSekolahExternalRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'id_jenis_sekolah.required' => 'Jenis sekolah harus dipilih.',
-            'id_jenis_sekolah.exists' => 'Jenis sekolah yang dipilih tidak valid.',
-            'id_bentuk_pendidikan.required' => 'Bentuk pendidikan harus dipilih.',
-            'id_bentuk_pendidikan.exists' => 'Bentuk pendidikan yang dipilih tidak valid.',
+            'jenis_sekolah.required' => 'Jenis sekolah harus dipilih.',
+            'jenis_sekolah.in' => 'Jenis sekolah yang dipilih tidak valid.',
+            'bentuk_pendidikan.required' => 'Bentuk pendidikan harus dipilih.',
+            'bentuk_pendidikan.in' => 'Bentuk pendidikan yang dipilih tidak valid.',
             'nama_sekolah.required' => 'Nama sekolah harus diisi.',
             'nama_sekolah.max' => 'Nama sekolah tidak boleh lebih dari 255 karakter.',
             'kota_sekolah.required' => 'Kota sekolah harus diisi.',
@@ -63,8 +65,8 @@ class UpdateSekolahExternalRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'id_jenis_sekolah' => 'jenis sekolah',
-            'id_bentuk_pendidikan' => 'bentuk pendidikan',
+            'jenis_sekolah' => 'jenis sekolah',
+            'bentuk_pendidikan' => 'bentuk pendidikan',
             'nama_sekolah' => 'nama sekolah',
             'kota_sekolah' => 'kota sekolah',
         ];

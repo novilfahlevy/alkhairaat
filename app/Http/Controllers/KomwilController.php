@@ -56,7 +56,7 @@ class KomwilController extends Controller
                 ->whereHas('sekolah')
                 ->with(['sekolah' => function ($query) {
                     $query->where('status', Sekolah::STATUS_AKTIF)
-                        ->orderBy('id_jenis_sekolah');
+                        ->orderBy('jenis_sekolah');
                 }])
                 ->orderBy('nama_kabupaten')
                 ->get();
@@ -111,7 +111,7 @@ class KomwilController extends Controller
                 ->whereHas('sekolah')
                 ->with(['sekolah' => function ($query) {
                     $query->where('status', Sekolah::STATUS_AKTIF)
-                        ->orderBy('id_jenis_sekolah');
+                        ->orderBy('jenis_sekolah');
                 }])
                 ->orderBy('nama_kabupaten')
                 ->get();

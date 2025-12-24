@@ -72,7 +72,7 @@ class UserController extends Controller
         foreach ($provinsi as $prov) {
             $kabupaten = Kabupaten::where('id_provinsi', $prov->id)
                 ->whereHas('sekolah', function ($query) {
-                    $query->orderBy('id_jenis_sekolah');
+                    $query->orderBy('jenis_sekolah');
                 })
                 ->with(['sekolah' => function ($query) {
                     $query->where('status', Sekolah::STATUS_AKTIF)->orderBy('nama');
@@ -151,7 +151,7 @@ class UserController extends Controller
         foreach ($provinsi as $prov) {
             $kabupaten = Kabupaten::where('id_provinsi', $prov->id)
                 ->whereHas('sekolah', function ($query) {
-                    $query->orderBy('id_jenis_sekolah');
+                    $query->orderBy('jenis_sekolah');
                 })
                 ->whereHas('sekolah', function ($query) {
                     $query->where('status', Sekolah::STATUS_AKTIF);
@@ -232,7 +232,7 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         // Prevent deleting the authenticated user
-        if ($user->id === auth()->id()) {
+        if ($user->id === Auth::id()) {
             return redirect()->route('user.index')
                 ->with('error', 'Anda tidak dapat menghapus akun sendiri.');
         }

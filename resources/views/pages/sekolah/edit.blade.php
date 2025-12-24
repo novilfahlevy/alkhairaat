@@ -64,17 +64,17 @@
                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                             Jenis Sekolah <span class="text-red-500">*</span>
                         </label>
-                        <select name="id_jenis_sekolah"
-                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('id_jenis_sekolah') border-red-500 @enderror">
+                        <select name="jenis_sekolah"
+                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('jenis_sekolah') border-red-500 @enderror">
                             <option value="">Pilih Jenis Sekolah</option>
-                            @foreach ($jenisSekolah as $jenis)
-                                <option value="{{ $jenis->id }}"
-                                    {{ old('id_jenis_sekolah', $sekolah->id_jenis_sekolah) == $jenis->id ? 'selected' : '' }}>
-                                    {{ $jenis->nama_jenis }}
+                            @foreach ($jenisSekolahOptions as $key => $label)
+                                <option value="{{ $key }}"
+                                    {{ old('jenis_sekolah', $sekolah->jenis_sekolah) == $key ? 'selected' : '' }}>
+                                    {{ $label }}
                                 </option>
                             @endforeach
                         </select>
-                        @error('id_jenis_sekolah')
+                        @error('jenis_sekolah')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
@@ -84,17 +84,17 @@
                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                             Bentuk Pendidikan <span class="text-red-500">*</span>
                         </label>
-                        <select name="id_bentuk_pendidikan"
-                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('id_bentuk_pendidikan') border-red-500 @enderror">
+                        <select name="bentuk_pendidikan"
+                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('bentuk_pendidikan') border-red-500 @enderror">
                             <option value="">Pilih Bentuk Pendidikan</option>
-                            @foreach ($bentukPendidikan as $bentuk)
-                                <option value="{{ $bentuk->id }}"
-                                    {{ old('id_bentuk_pendidikan', $sekolah->id_bentuk_pendidikan) == $bentuk->id ? 'selected' : '' }}>
-                                    {{ $bentuk->nama }}
+                            @foreach ($bentukPendidikanOptions as $key => $label)
+                                <option value="{{ $key }}"
+                                    {{ old('bentuk_pendidikan', $sekolah->bentuk_pendidikan) == $key ? 'selected' : '' }}>
+                                    {{ $label }}
                                 </option>
                             @endforeach
                         </select>
-                        @error('id_bentuk_pendidikan')
+                        @error('bentuk_pendidikan')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>

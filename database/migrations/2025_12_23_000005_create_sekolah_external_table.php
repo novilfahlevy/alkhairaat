@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\SekolahExternal;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,8 +14,8 @@ return new class extends Migration
     {
         Schema::create('sekolah_external', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_jenis_sekolah')->nullable()->constrained('jenis_sekolah', 'id')->nullOnDelete();
-            $table->foreignId('id_bentuk_pendidikan')->nullable()->constrained('bentuk_pendidikan', 'id')->nullOnDelete();
+            $table->enum('jenis_sekolah', array_keys(SekolahExternal::JENIS_SEKOLAH_OPTIONS))->nullable();
+            $table->enum('bentuk_pendidikan', array_keys(SekolahExternal::BENTUK_PENDIDIKAN_OPTIONS))->nullable();
             $table->string('nama_sekolah');
             $table->string('kota_sekolah');
             $table->timestamps();

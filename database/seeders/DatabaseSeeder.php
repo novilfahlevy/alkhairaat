@@ -15,8 +15,6 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             UserSeeder::class,
             ProvinsiKabupatenSeeder::class,
-            JenisSekolahSeeder::class,
-            BentukPendidikanSeeder::class,
             SekolahSeeder::class,
             SekolahExternalSeeder::class,
         ]);

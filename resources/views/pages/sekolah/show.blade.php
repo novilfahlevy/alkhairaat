@@ -93,7 +93,7 @@
                                 <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0">
                                     <span
                                         class="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                                        {{ $sekolah->jenisSekolah?->nama_jenis ?? 'Tidak diatur' }}
+                                        {{ $jenisSekolahOptions[$sekolah->jenis_sekolah] ?? 'Tidak diatur' }}
                                     </span>
                                 </dd>
                             </div>
@@ -105,7 +105,7 @@
                                 <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0">
                                     <span
                                         class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400">
-                                        {{ $sekolah->bentukPendidikan?->nama ?? 'Tidak diatur' }}
+                                        {{ $sekolah->bentuk_pendidikan ?? 'Tidak diatur' }}
                                     </span>
                                 </dd>
                             </div>

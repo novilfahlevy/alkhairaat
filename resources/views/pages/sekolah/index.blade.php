@@ -42,13 +42,13 @@
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                         Jenis Sekolah
                     </label>
-                    <select name="id_jenis_sekolah"
+                    <select name="jenis_sekolah"
                         class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                         <option value="">Semua Jenis Sekolah</option>
-                        @foreach ($jenisSekolah as $jenis)
-                            <option value="{{ $jenis->id }}"
-                                {{ request('id_jenis_sekolah') == $jenis->id ? 'selected' : '' }}>
-                                {{ $jenis->nama_jenis }}
+                        @foreach ($jenisSekolahOptions as $key => $label)
+                            <option value="{{ $key }}"
+                                {{ request('jenis_sekolah') == $key ? 'selected' : '' }}>
+                                {{ $label }}
                             </option>
                         @endforeach
                     </select>
@@ -171,7 +171,7 @@
                             <td class="px-6 py-4">
                                 <span
                                     class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                                    {{ $item->jenisSekolah?->nama_jenis ?? 'Tidak diketahui' }}
+                                    {{ $jenisSekolahOptions[$item->jenis_sekolah] ?? 'Tidak diketahui' }}
                                 </span>
                             </td>
                             <td class="px-6 py-4">
@@ -260,7 +260,7 @@
                         <div class="flex items-center">
                             <span
                                 class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                                {{ $item->jenisSekolah?->nama_jenis ?? 'Tidak diketahui' }}
+                                {{ $jenisSekolahOptions[$item->jenis_sekolah] ?? 'Tidak diketahui' }}
                             </span>
                         </div>
 
