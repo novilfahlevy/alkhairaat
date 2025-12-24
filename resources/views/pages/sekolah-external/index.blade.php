@@ -42,12 +42,12 @@
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                         Jenis Sekolah
                     </label>
-                    <select name="id_jenis_sekolah"
+                    <select name="jenis_sekolah"
                         class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                         <option value="">Semua Jenis Sekolah</option>
-                        @foreach ($jenisSekolah as $jenis)
-                            <option value="{{ $jenis->id }}" @selected(request('id_jenis_sekolah') == $jenis->id)>
-                                {{ $jenis->nama_jenis }}
+                        @foreach ($jenisSekolahOptions as $key => $label)
+                            <option value="{{ $key }}" @selected(request('jenis_sekolah') == $key)>
+                                {{ $label }}
                             </option>
                         @endforeach
                     </select>
@@ -58,12 +58,12 @@
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                         Bentuk Pendidikan
                     </label>
-                    <select name="id_bentuk_pendidikan"
+                    <select name="bentuk_pendidikan"
                         class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                         <option value="">Semua Bentuk Pendidikan</option>
-                        @foreach ($bentukPendidikan as $bentuk)
-                            <option value="{{ $bentuk->id }}" @selected(request('id_bentuk_pendidikan') == $bentuk->id)>
-                                {{ $bentuk->nama }}
+                        @foreach ($bentukPendidikanOptions as $key => $label)
+                            <option value="{{ $key }}" @selected(request('bentuk_pendidikan') == $key)>
+                                {{ $label }}
                             </option>
                         @endforeach
                     </select>
@@ -85,7 +85,7 @@
                         </template>
                         Filter
                     </button>
-                    @if (request('search') || request('id_jenis_sekolah') || request('id_bentuk_pendidikan'))
+                    @if (request('search') || request('jenis_sekolah') || request('bentuk_pendidikan'))
                         <a href="{{ route('sekolah-external.index') }}"
                             x-on:click="isClearing = true"
                             class="border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 h-11 flex-1 rounded-lg border px-4 text-sm font-medium text-gray-700 transition flex items-center justify-center dark:text-gray-300"
@@ -164,13 +164,13 @@
                             <td class="px-6 py-4">
                                 <span
                                     class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                                    {{ $item->jenisSekolah?->nama_jenis ?? '-' }}
+                                    {{ $jenisSekolahOptions[$item->jenis_sekolah] ?? 'Tidak diketahui' }}
                                 </span>
                             </td>
                             <td class="px-6 py-4">
                                 <span
                                     class="inline-flex rounded-full bg-purple-100 px-2 py-1 text-xs font-semibold text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
-                                    {{ $item->bentukPendidikan?->nama ?? '-' }}
+                                    {{ $bentukPendidikanOptions[$item->bentuk_pendidikan] ?? 'Tidak diketahui' }}
                                 </span>
                             </td>
                             <td class="px-6 py-4">
@@ -231,13 +231,13 @@
                         <div class="flex items-center">
                             <span
                                 class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                                {{ $item->jenisSekolah?->nama_jenis ?? '-' }}
+                                {{ $jenisSekolahOptions[$item->jenis_sekolah] ?? 'Tidak diketahui' }}
                             </span>
                         </div>
                         <div class="flex items-center">
                             <span
                                 class="inline-flex rounded-full bg-purple-100 px-2 py-1 text-xs font-semibold text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
-                                {{ $item->bentukPendidikan?->nama ?? '-' }}
+                                {{ $bentukPendidikanOptions[$item->bentuk_pendidikan] ?? 'Tidak diketahui' }}
                             </span>
                         </div>
                     </div>

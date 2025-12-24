@@ -79,11 +79,11 @@ class SekolahExternalController extends Controller
      */
     public function show(SekolahExternal $sekolahExternal): View
     {
-        $sekolahExternal->load(['jenisSekolah', 'bentukPendidikan']);
-
         return view('pages.sekolah-external.show', [
             'title' => 'Detail Sekolah External',
             'sekolahExternal' => $sekolahExternal,
+            'jenisSekolahOptions' => Sekolah::JENIS_SEKOLAH_OPTIONS,
+            'bentukPendidikanOptions' => Sekolah::BENTUK_PENDIDIKAN_OPTIONS,
         ]);
     }
 

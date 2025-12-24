@@ -33,38 +33,38 @@
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <!-- Jenis Sekolah -->
                 <div>
-                    <label for="id_jenis_sekolah" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                    <label for="jenis_sekolah" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                         Jenis Sekolah <span class="text-red-500">*</span>
                     </label>
-                    <select id="id_jenis_sekolah" name="id_jenis_sekolah"
-                        class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('id_jenis_sekolah') border-red-500 @enderror">
+                    <select id="jenis_sekolah" name="jenis_sekolah"
+                        class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('jenis_sekolah') border-red-500 @enderror">
                         <option value="">Pilih Jenis Sekolah</option>
-                        @foreach ($jenisSekolah as $jenis)
-                            <option value="{{ $jenis->id }}" @selected(old('id_jenis_sekolah', $sekolahExternal->id_jenis_sekolah) == $jenis->id)>
-                                {{ $jenis->nama_jenis }}
+                        @foreach ($jenisSekolahOptions as $key => $label)
+                            <option value="{{ $key }}" @selected(old('jenis_sekolah', $sekolahExternal->jenis_sekolah) == $key)>
+                                {{ $label }}
                             </option>
                         @endforeach
                     </select>
-                    @error('id_jenis_sekolah')
+                    @error('jenis_sekolah')
                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Bentuk Pendidikan -->
                 <div>
-                    <label for="id_bentuk_pendidikan" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                    <label for="bentuk_pendidikan" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                         Bentuk Pendidikan <span class="text-red-500">*</span>
                     </label>
-                    <select id="id_bentuk_pendidikan" name="id_bentuk_pendidikan"
-                        class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('id_bentuk_pendidikan') border-red-500 @enderror">
+                    <select id="bentuk_pendidikan" name="bentuk_pendidikan"
+                        class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('bentuk_pendidikan') border-red-500 @enderror">
                         <option value="">Pilih Bentuk Pendidikan</option>
-                        @foreach ($bentukPendidikan as $bentuk)
-                            <option value="{{ $bentuk->id }}" @selected(old('id_bentuk_pendidikan', $sekolahExternal->id_bentuk_pendidikan) == $bentuk->id)>
-                                {{ $bentuk->nama }}
+                        @foreach ($bentukPendidikanOptions as $key => $label)
+                            <option value="{{ $key }}" @selected(old('bentuk_pendidikan', $sekolahExternal->bentuk_pendidikan) == $key)>
+                                {{ $label }}
                             </option>
                         @endforeach
                     </select>
-                    @error('id_bentuk_pendidikan')
+                    @error('bentuk_pendidikan')
                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                     @enderror
                 </div>

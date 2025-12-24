@@ -66,7 +66,7 @@
                         </label>
                         <div class="mt-2">
                             <span class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                                {{ $sekolahExternal->jenisSekolah?->nama_jenis ?? '-' }}
+                                {{ $jenisSekolahOptions[$sekolahExternal->jenis_sekolah] ?? 'Tidak diketahui' }}
                             </span>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                         </label>
                         <div class="mt-2">
                             <span class="inline-flex rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
-                                {{ $sekolahExternal->bentukPendidikan?->nama ?? '-' }}
+                                {{ $bentukPendidikanOptions[$sekolahExternal->bentuk_pendidikan] ?? 'Tidak diketahui' }}
                             </span>
                         </div>
                     </div>
