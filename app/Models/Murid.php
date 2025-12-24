@@ -2,12 +2,63 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\MuridNauanganScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property int $id
+ * @property string $nisn
+ * @property string|null $kontak_wa_hp
+ * @property string|null $kontak_email
+ * @property string $nama
+ * @property string|null $nik
+ * @property string|null $tempat_lahir
+ * @property \Illuminate\Support\Carbon|null $tanggal_lahir
+ * @property string $jenis_kelamin
+ * @property string|null $nama_ayah
+ * @property string|null $nomor_hp_ayah
+ * @property string|null $nama_ibu
+ * @property string|null $nomor_hp_ibu
+ * @property bool $status_alumni
+ * @property \Illuminate\Support\Carbon $tanggal_update_data
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read string $full_name
+ * @property-read string $jenis_kelamin_label
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Sekolah> $sekolah
+ * @property-read int|null $sekolah_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SekolahMurid> $sekolahMurid
+ * @property-read int|null $sekolah_murid_count
+ * @property-read \App\Models\ValidasiAlumni|null $validasiAlumni
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid alumni()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid byJenisKelamin(string $jenisKelamin)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid nonAlumni()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereJenisKelamin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereKontakEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereKontakWaHp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereNama($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereNamaAyah($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereNamaIbu($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereNik($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereNisn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereNomorHpAyah($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereNomorHpIbu($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereStatusAlumni($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereTanggalLahir($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereTanggalUpdateData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereTempatLahir($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Murid whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Murid extends Model
 {
     use HasFactory;
@@ -18,6 +69,14 @@ class Murid extends Model
      * @var string
      */
     protected $table = 'murid';
+
+    /**
+     * Boot the model.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new MuridNauanganScope());
+    }
 
     /**
      * Jenis kelamin constants

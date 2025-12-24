@@ -6,6 +6,34 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $id_guru
+ * @property int $id_sekolah
+ * @property string $jenis_jabatan
+ * @property string|null $keterangan_jabatan
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read string $jenis_jabatan_label
+ * @property-read \App\Models\Guru $guru
+ * @property-read \App\Models\Sekolah $sekolah
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru byGuru(int $guruId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru byJenisJabatan(string $jenisJabatan)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru bySekolah(int $sekolahId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru guru()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru kepalaSekolah()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru whereIdGuru($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru whereIdSekolah($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru whereJenisJabatan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru whereKeteranganJabatan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|JabatanGuru whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class JabatanGuru extends Model
 {
     use HasFactory;

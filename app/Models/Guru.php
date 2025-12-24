@@ -2,10 +2,71 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\GuruSekolahNauanganScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $status
+ * @property string|null $nama_gelar_depan
+ * @property string $nama
+ * @property string|null $nama_gelar_belakang
+ * @property string|null $tempat_lahir
+ * @property \Illuminate\Support\Carbon|null $tanggal_lahir
+ * @property string $jenis_kelamin
+ * @property string|null $status_perkawinan
+ * @property string|null $nik
+ * @property string|null $status_kepegawaian
+ * @property string|null $npk
+ * @property string|null $nuptk
+ * @property string|null $kontak_wa_hp
+ * @property string|null $kontak_email
+ * @property string|null $nomor_rekening
+ * @property string|null $rekening_atas_nama
+ * @property string|null $bank_rekening
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Alamat> $alamatList
+ * @property-read int|null $alamat_list_count
+ * @property-read string $full_name
+ * @property-read string $jenis_kelamin_label
+ * @property-read string $nama_lengkap
+ * @property-read string $status_kepegawaian_label
+ * @property-read string $status_label
+ * @property-read string $status_perkawinan_label
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\JabatanGuru> $jabatanGuru
+ * @property-read int|null $jabatan_guru_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru aktif()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru byJenisKelamin(string $jenisKelamin)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru byStatusKepegawaian(string $status)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru tidakAktif()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereBankRekening($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereJenisKelamin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereKontakEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereKontakWaHp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereNama($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereNamaGelarBelakang($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereNamaGelarDepan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereNik($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereNomorRekening($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereNpk($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereNuptk($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereRekeningAtasNama($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereStatusKepegawaian($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereStatusPerkawinan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereTanggalLahir($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereTempatLahir($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Guru extends Model
 {
     use HasFactory;
@@ -242,5 +303,13 @@ class Guru extends Model
     public function isPNS(): bool
     {
         return $this->status_kepegawaian === self::STATUS_KEPEGAWAIAN_PNS;
+    }
+
+    /**
+     * Boot the model.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new GuruSekolahNauanganScope());
     }
 }

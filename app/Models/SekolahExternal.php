@@ -4,6 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property string|null $jenis_sekolah
+ * @property string|null $bentuk_pendidikan
+ * @property string $nama_sekolah
+ * @property string $kota_sekolah
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read string $bentuk_pendidikan_label
+ * @property-read string $jenis_sekolah_label
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahExternal newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahExternal newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahExternal query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahExternal whereBentukPendidikan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahExternal whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahExternal whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahExternal whereJenisSekolah($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahExternal whereKotaSekolah($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahExternal whereNamaSekolah($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahExternal whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class SekolahExternal extends Model
 {
     /**

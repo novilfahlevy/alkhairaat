@@ -6,6 +6,49 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $id_murid
+ * @property int|null $id_sekolah
+ * @property int|null $id_sekolah_external
+ * @property int $tahun_masuk
+ * @property int|null $tahun_keluar
+ * @property int|null $tahun_mutasi_masuk
+ * @property string|null $alasan_mutasi_masuk
+ * @property int|null $tahun_mutasi_keluar
+ * @property string|null $alasan_mutasi_keluar
+ * @property string|null $kelas
+ * @property string|null $status_kelulusan
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read string $status_kelulusan_label
+ * @property-read \App\Models\Murid $murid
+ * @property-read \App\Models\Sekolah|null $sekolah
+ * @property-read \App\Models\SekolahExternal|null $sekolahExternal
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid byMurid(int $muridId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid bySekolah(int $sekolahId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid byStatusKelulusan(string $status)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid byTahunMasuk(int $tahun)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid lulus()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereAlasanMutasiKeluar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereAlasanMutasiMasuk($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereIdMurid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereIdSekolah($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereIdSekolahExternal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereKelas($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereStatusKelulusan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereTahunKeluar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereTahunMasuk($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereTahunMutasiKeluar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereTahunMutasiMasuk($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SekolahMurid whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class SekolahMurid extends Model
 {
     use HasFactory;

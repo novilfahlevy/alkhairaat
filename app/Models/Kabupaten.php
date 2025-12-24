@@ -8,6 +8,29 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @property int $id
+ * @property string $kode_kabupaten
+ * @property string $nama_kabupaten
+ * @property int $id_provinsi
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read string|null $nama
+ * @property-read \App\Models\Provinsi $provinsi
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Sekolah> $sekolah
+ * @property-read int|null $sekolah_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabupaten naungan()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabupaten newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabupaten newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabupaten query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabupaten whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabupaten whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabupaten whereIdProvinsi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabupaten whereKodeKabupaten($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabupaten whereNamaKabupaten($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Kabupaten whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Kabupaten extends Model
 {
     /**

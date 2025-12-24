@@ -6,6 +6,52 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int|null $id_murid
+ * @property int|null $id_sekolah
+ * @property int|null $id_guru
+ * @property string $jenis
+ * @property string|null $provinsi
+ * @property string|null $kabupaten
+ * @property string|null $kecamatan
+ * @property string|null $kelurahan
+ * @property string|null $rt
+ * @property string|null $rw
+ * @property string|null $kode_pos
+ * @property string|null $alamat_lengkap
+ * @property string|null $koordinat_x
+ * @property string|null $koordinat_y
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $guru
+ * @property-read \App\Models\Murid|null $murid
+ * @property-read \App\Models\Sekolah|null $sekolah
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat byJenis(string $jenis)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat forMurid(int $muridId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat forSekolah(int $sekolahId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereAlamatLengkap($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereIdGuru($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereIdMurid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereIdSekolah($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereJenis($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereKabupaten($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereKecamatan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereKelurahan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereKodePos($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereKoordinatX($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereKoordinatY($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereProvinsi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereRt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereRw($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Alamat whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Alamat extends Model
 {
     use HasFactory;

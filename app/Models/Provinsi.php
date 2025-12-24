@@ -6,6 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @property int $id
+ * @property string $kode_provinsi
+ * @property string $nama_provinsi
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Kabupaten> $kabupaten
+ * @property-read int|null $kabupaten_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provinsi naungan()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provinsi newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provinsi newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provinsi query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provinsi whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provinsi whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provinsi whereKodeProvinsi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provinsi whereNamaProvinsi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Provinsi whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Provinsi extends Model
 {
     /**
