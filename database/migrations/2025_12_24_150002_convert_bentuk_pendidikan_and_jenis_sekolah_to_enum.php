@@ -7,89 +7,88 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        // Convert sekolah table
-        Schema::table('sekolah', function (Blueprint $table) {
-            // Drop foreign keys first
-            $table->dropForeign(['id_jenis_sekolah']);
-            $table->dropForeign(['id_bentuk_pendidikan']);
-        });
+        $this->convertTable('sekolah', 'kode_sekolah');
+        $this->convertTable('sekolah_external', 'id');
+    }
 
-        Schema::table('sekolah', function (Blueprint $table) {
-            // Drop old foreign key columns
-            $table->dropColumn(['id_jenis_sekolah', 'id_bentuk_pendidikan']);
-            
-            // Add enum columns
-            $table->enum('jenis_sekolah', array_keys(Sekolah::JENIS_SEKOLAH_OPTIONS))
-                ->nullable()
-                ->after('kode_sekolah');
-            
-            $table->enum('bentuk_pendidikan', array_keys(Sekolah::BENTUK_PENDIDIKAN_OPTIONS))
-                ->nullable()
-                ->after('jenis_sekolah');
-        });
+    private function convertTable(string $tableName, string $afterColumn): void
+    {
+        // 1. Get existing foreign keys to avoid "Constraint not found" errors
+        $foreignKeys = collect(Schema::getForeignKeys($tableName))->pluck('name')->toArray();
 
-        // Convert sekolah_external table
-        Schema::table('sekolah_external', function (Blueprint $table) {
-            // Drop foreign keys first
-            $table->dropForeign(['id_jenis_sekolah']);
-            $table->dropForeign(['id_bentuk_pendidikan']);
-        });
+        Schema::table($tableName, function (Blueprint $table) use ($tableName, $foreignKeys, $afterColumn) {
 
-        Schema::table('sekolah_external', function (Blueprint $table) {
-            // Drop old foreign key columns
-            $table->dropColumn(['id_jenis_sekolah', 'id_bentuk_pendidikan']);
-            
-            // Add enum columns
-            $table->enum('jenis_sekolah', array_keys(Sekolah::JENIS_SEKOLAH_OPTIONS))
-                ->nullable()
-                ->after('id');
-            
-            $table->enum('bentuk_pendidikan', array_keys(Sekolah::BENTUK_PENDIDIKAN_OPTIONS))
-                ->nullable()
-                ->after('jenis_sekolah');
+            // --- DROP SECTION ---
+            if (in_array("{$tableName}_id_jenis_sekolah_foreign", $foreignKeys)) {
+                $table->dropForeign(["id_jenis_sekolah"]);
+            }
+            if (in_array("{$tableName}_id_bentuk_pendidikan_foreign", $foreignKeys)) {
+                $table->dropForeign(["id_bentuk_pendidikan"]);
+            }
+
+            if (Schema::hasColumn($tableName, 'id_jenis_sekolah')) {
+                $table->dropColumn('id_jenis_sekolah');
+            }
+            if (Schema::hasColumn($tableName, 'id_bentuk_pendidikan')) {
+                $table->dropColumn('id_bentuk_pendidikan');
+            }
+
+            // --- ADD SECTION (The fix for your current error) ---
+            if (!Schema::hasColumn($tableName, 'jenis_sekolah')) {
+                $table->enum('jenis_sekolah', array_keys(Sekolah::JENIS_SEKOLAH_OPTIONS))
+                    ->nullable()
+                    ->after($afterColumn);
+            }
+
+            if (!Schema::hasColumn($tableName, 'bentuk_pendidikan')) {
+                $table->enum('bentuk_pendidikan', array_keys(Sekolah::BENTUK_PENDIDIKAN_OPTIONS))
+                    ->nullable()
+                    ->after('jenis_sekolah');
+            }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        // Revert sekolah table
-        Schema::table('sekolah', function (Blueprint $table) {
-            $table->dropColumn(['jenis_sekolah', 'bentuk_pendidikan']);
-            
-            $table->foreignId('id_jenis_sekolah')
-                ->nullable()
-                ->after('jenjang')
-                ->constrained('jenis_sekolah')
-                ->onDelete('set null');
-            
-            $table->foreignId('id_bentuk_pendidikan')
-                ->nullable()
-                ->after('id_jenis_sekolah')
-                ->constrained('bentuk_pendidikan')
-                ->onDelete('set null');
-        });
+        $this->revertTable('sekolah', 'jenjang');
+        $this->revertTable('sekolah_external', 'id');
+    }
 
-        // Revert sekolah_external table
-        Schema::table('sekolah_external', function (Blueprint $table) {
-            $table->dropColumn(['jenis_sekolah', 'bentuk_pendidikan']);
-            
-            $table->foreignId('id_jenis_sekolah')
-                ->nullable()
-                ->constrained('jenis_sekolah', 'id')
-                ->nullOnDelete();
-            
-            $table->foreignId('id_bentuk_pendidikan')
-                ->nullable()
-                ->constrained('bentuk_pendidikan', 'id')
-                ->nullOnDelete();
+    private function revertTable(string $tableName, string $afterColumn): void
+    {
+        Schema::table($tableName, function (Blueprint $table) use ($tableName, $afterColumn) {
+            // 1. Clean up the enum columns first
+            if (Schema::hasColumn($tableName, 'jenis_sekolah')) {
+                $table->dropColumn('jenis_sekolah');
+            }
+            if (Schema::hasColumn($tableName, 'bentuk_pendidikan')) {
+                $table->dropColumn('bentuk_pendidikan');
+            }
+
+            // 2. Safely recreate id_jenis_sekolah
+            if (!Schema::hasColumn($tableName, 'id_jenis_sekolah')) {
+                $column = $table->foreignId('id_jenis_sekolah')->nullable();
+
+                // Only use ->after() if the reference column actually exists
+                if (Schema::hasColumn($tableName, $afterColumn)) {
+                    $column->after($afterColumn);
+                }
+
+                $column->constrained('jenis_sekolah')->onDelete('set null');
+            }
+
+            // 3. Safely recreate id_bentuk_pendidikan
+            if (!Schema::hasColumn($tableName, 'id_bentuk_pendidikan')) {
+                $column = $table->foreignId('id_bentuk_pendidikan')->nullable();
+
+                if (Schema::hasColumn($tableName, 'id_jenis_sekolah')) {
+                    $column->after('id_jenis_sekolah');
+                }
+
+                $column->constrained('bentuk_pendidikan')->onDelete('set null');
+            }
         });
     }
 };
