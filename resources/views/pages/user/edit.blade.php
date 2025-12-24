@@ -194,10 +194,6 @@
                                                         class="ml-2 text-sm text-gray-700 dark:text-gray-300 select-none cursor-pointer">
                                                         {{ $sekolah->nama }}
                                                     </span>
-                                                    <span
-                                                        class="ml-2 text-xs text-gray-500 dark:text-gray-400 select-none cursor-pointer">
-                                                        ({{ $sekolah->jenisSekolah?->nama_jenis }})
-                                                    </span>
                                                 </label>
                                             @empty
                                                 <p class="text-sm text-gray-500 dark:text-gray-400">
