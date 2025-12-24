@@ -141,6 +141,14 @@ class Sekolah extends Model
     }
 
     /**
+     * Get the jabatan_guru records for this sekolah.
+     */
+    public function jabatanGuru(): HasMany
+    {
+        return $this->hasMany(JabatanGuru::class, 'id_sekolah');
+    }
+
+    /**
      * Get the kabupaten that owns this sekolah.
      */
     public function kabupaten(): BelongsTo
