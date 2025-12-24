@@ -118,7 +118,7 @@ class SekolahExternalController extends Controller
         
         $sekolahExternal->update($validated);
 
-        return redirect()->route('sekolah-external.show', ['sekolahExternal' => $sekolahExternal->id_sekolah_external])
+        return redirect()->route('sekolah-external.show', ['sekolahExternal' => $sekolahExternal->id])
             ->with('success', 'Sekolah external berhasil diperbarui.');
     }
 

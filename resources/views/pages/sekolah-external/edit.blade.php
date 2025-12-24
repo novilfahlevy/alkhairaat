@@ -25,7 +25,7 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ route('sekolah-external.update', $sekolahExternal->id_sekolah_external) }}" method="POST" x-data="{ isSubmitting: false }"
+        <form action="{{ route('sekolah-external.update', $sekolahExternal->id) }}" method="POST" x-data="{ isSubmitting: false }"
             x-on:submit="isSubmitting = true">
             @csrf
             @method('PUT')

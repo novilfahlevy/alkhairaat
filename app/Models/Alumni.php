@@ -71,7 +71,7 @@ class Alumni extends Model
             'id',           // Foreign key on murid table
             'id',           // Foreign key on sekolah table
             'id_murid',    // Local key on alumni table
-            'sekolah_id'    // Local key on murid table
+            'id_sekolah'    // Local key on murid table
         );
     }
 
@@ -113,7 +113,7 @@ class Alumni extends Model
     public function scopeBySekolah($query, int $sekolahId)
     {
         return $query->whereHas('murid', function ($q) use ($sekolahId) {
-            $q->where('sekolah_id', $sekolahId);
+            $q->where('id_sekolah', $sekolahId);
         });
     }
 

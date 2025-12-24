@@ -24,8 +24,14 @@ class LoginController extends Controller
      */
     public function login(LoginRequest $request): RedirectResponse
     {
-        $credentials = $request->only('email', 'password');
+        $login = $request->input('login');
+        $password = $request->input('password');
         $remember = $request->boolean('remember');
+
+        // Try to authenticate with email or username
+        $credentials = filter_var($login, FILTER_VALIDATE_EMAIL) 
+            ? ['email' => $login, 'password' => $password]
+            : ['username' => $login, 'password' => $password];
 
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
@@ -35,9 +41,9 @@ class LoginController extends Controller
         }
 
         return back()
-            ->withInput($request->only('email', 'remember'))
+            ->withInput($request->only('login', 'remember'))
             ->withErrors([
-                'email' => 'Email atau password yang Anda masukkan salah.',
+                'login' => 'Email/username atau password yang Anda masukkan salah.',
             ]);
     }
 

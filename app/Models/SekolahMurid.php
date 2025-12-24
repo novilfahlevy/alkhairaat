@@ -88,7 +88,7 @@ class SekolahMurid extends Model
      */
     public function sekolahExternal(): BelongsTo
     {
-        return $this->belongsTo(SekolahExternal::class, 'id_sekolah_external', 'id_sekolah_external');
+        return $this->belongsTo(SekolahExternal::class, 'id_sekolah_external', 'id');
     }
 
     /**

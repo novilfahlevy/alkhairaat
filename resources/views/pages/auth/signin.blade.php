@@ -15,7 +15,7 @@
                                 Login ke Sistem Database Alkhairaat
                             </h1>
                             <p class="text-sm text-gray-500 dark:text-gray-400">
-                                Masukkan email dan password untuk mengakses sistem database murid dan alumni Alkhairaat.
+                                Masukkan email/username dan password untuk mengakses sistem database Alkhairaat.
                             </p>
                         </div>
                         <div>
@@ -36,21 +36,21 @@
                             <form action="{{ route('login') }}" method="POST">
                                 @csrf
                                 <div class="space-y-5">
-                                    <!-- Email -->
+                                    <!-- Login (Email or Username) -->
                                     <div>
                                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                            Email<span class="text-error-500">*</span>
+                                            Email atau Username <span class="text-error-500">*</span>
                                         </label>
-                                        <input type="email" id="email" name="email" placeholder="email@alkhairaat.or.id" value="{{ old('email') }}"
-                                            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('email') border-red-500 @enderror" />
-                                        @error('email')
+                                        <input type="text" id="login" name="login" placeholder="Email atau username" value="{{ old('login') }}"
+                                            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('login') border-red-500 @enderror" />
+                                        @error('login')
                                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                         @enderror
                                     </div>
                                     <!-- Password -->
                                     <div>
                                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                            Password<span class="text-error-500">*</span>
+                                            Password <span class="text-error-500">*</span>
                                         </label>
                                         <div x-data="{ showPassword: false }" class="relative">
                                             <input :type="showPassword ? 'text' : 'password'" name="password"

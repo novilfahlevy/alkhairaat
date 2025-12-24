@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_murid')->constrained('murid', 'id')->onDelete('cascade');
             $table->foreignId('id_sekolah')->nullable()->constrained('sekolah', 'id')->onDelete('cascade');
-            $table->unsignedBigInteger('id_sekolah_external')->nullable();
-            $table->foreign('id_sekolah_external')->references('id_sekolah_external')->on('sekolah_external')->onDelete('cascade');
+            $table->foreignId('id_sekolah_external')->nullable()->constrained('sekolah_external', 'id')->onDelete('cascade');
             $table->integer('tahun_masuk');
             $table->integer('tahun_keluar')->nullable();
             $table->integer('tahun_mutasi_masuk')->nullable();

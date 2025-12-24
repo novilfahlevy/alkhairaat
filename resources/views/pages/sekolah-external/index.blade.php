@@ -175,15 +175,15 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center justify-start space-x-2">
-                                    <a href="{{ route('sekolah-external.show', $item->id_sekolah_external) }}"
+                                    <a href="{{ route('sekolah-external.show', $item->id) }}"
                                         class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20">
                                         Lihat
                                     </a>
-                                    <a href="{{ route('sekolah-external.edit', $item->id_sekolah_external) }}"
+                                    <a href="{{ route('sekolah-external.edit', $item->id) }}"
                                         class="text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 flex-1 rounded-md bg-amber-50 px-3 py-2 text-center text-sm font-medium dark:bg-amber-900/20">
                                         Edit
                                     </a>
-                                    <form action="{{ route('sekolah-external.destroy', $item->id_sekolah_external) }}"
+                                    <form action="{{ route('sekolah-external.destroy', $item->id) }}"
                                         method="POST" class="flex-1"
                                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                         @csrf
@@ -243,15 +243,15 @@
                     </div>
 
                     <div class="flex items-center justify-start space-x-2">
-                        <a href="{{ route('sekolah-external.show', $item->id_sekolah_external) }}"
+                        <a href="{{ route('sekolah-external.show', $item->id) }}"
                             class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20">
                             Lihat
                         </a>
-                        <a href="{{ route('sekolah-external.edit', $item->id_sekolah_external) }}"
+                        <a href="{{ route('sekolah-external.edit', $item->id) }}"
                             class="text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 flex-1 rounded-md bg-amber-50 px-3 py-2 text-center text-sm font-medium dark:bg-amber-900/20">
                             Edit
                         </a>
-                        <form action="{{ route('sekolah-external.destroy', $item->id_sekolah_external) }}" method="POST"
+                        <form action="{{ route('sekolah-external.destroy', $item->id) }}" method="POST"
                             class="flex-1" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                             @csrf
                             @method('DELETE')

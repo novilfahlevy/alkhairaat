@@ -14,12 +14,7 @@ class SekolahExternal extends Model
      */
     protected $table = 'sekolah_external';
 
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'id_sekolah_external';
+
 
     /**
      * The attributes that are mass assignable.

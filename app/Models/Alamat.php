@@ -17,12 +17,7 @@ class Alamat extends Model
      */
     protected $table = 'alamat';
 
-    /**
-     * The primary key associated with the model.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'id_alamat';
+
 
     /**
      * Jenis alamat constants

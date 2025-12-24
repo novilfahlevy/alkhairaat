@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
@@ -110,11 +111,33 @@ class Sekolah extends Model
     }
 
     /**
-     * Get the murid that belong to this sekolah.
+     * Get the murid that belong to this sekolah (many-to-many through sekolah_murid).
      */
-    public function murid(): HasMany
+    public function murid(): BelongsToMany
     {
-        return $this->hasMany(Murid::class);
+        return $this->belongsToMany(
+            Murid::class,
+            'sekolah_murid',
+            'id_sekolah',
+            'id_murid'
+        )->withPivot([
+            'tahun_masuk',
+            'tahun_keluar',
+            'kelas',
+            'status_kelulusan',
+            'tahun_mutasi_masuk',
+            'alasan_mutasi_masuk',
+            'tahun_mutasi_keluar',
+            'alasan_mutasi_keluar',
+        ])->withTimestamps();
+    }
+
+    /**
+     * Get the sekolah_murid records for this sekolah.
+     */
+    public function sekolahMurid(): HasMany
+    {
+        return $this->hasMany(SekolahMurid::class, 'id_sekolah');
     }
 
     /**

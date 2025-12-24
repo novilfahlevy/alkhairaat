@@ -18,13 +18,6 @@ class ValidasiAlumni extends Model
     protected $table = 'validasi_alumni';
 
     /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
