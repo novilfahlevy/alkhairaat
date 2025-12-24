@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Murid extends Model
@@ -25,14 +26,6 @@ class Murid extends Model
     public const JENIS_KELAMIN_PEREMPUAN = 'P';
 
     /**
-     * Status constants
-     */
-    public const STATUS_AKTIF = 'aktif';
-    public const STATUS_LULUS = 'lulus';
-    public const STATUS_PINDAH = 'pindah';
-    public const STATUS_KELUAR = 'keluar';
-
-    /**
      * Available jenis kelamin options
      *
      * @var array<string, string>
@@ -43,40 +36,25 @@ class Murid extends Model
     ];
 
     /**
-     * Available status options
-     *
-     * @var array<string, string>
-     */
-    public const STATUS_OPTIONS = [
-        self::STATUS_AKTIF => 'Aktif',
-        self::STATUS_LULUS => 'Lulus',
-        self::STATUS_PINDAH => 'Pindah',
-        self::STATUS_KELUAR => 'Keluar',
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'nis',
         'nama',
-        'nik',
         'tempat_lahir',
         'tanggal_lahir',
         'jenis_kelamin',
-        'alamat',
+        'nik',
+        'nisn',
+        'kontak_wa_hp',
+        'kontak_email',
         'nama_ayah',
+        'nomor_hp_ayah',
         'nama_ibu',
-        'telepon',
-        'email',
-        'kelas',
-        'status',
-        'tahun_masuk',
-        'tahun_lulus',
-        'foto',
-        'sekolah_id',
+        'nomor_hp_ibu',
+        'status_alumni',
+        'tanggal_update_data',
     ];
 
     /**
@@ -88,65 +66,47 @@ class Murid extends Model
     {
         return [
             'tanggal_lahir' => 'date',
-            'tahun_masuk' => 'integer',
-            'tahun_lulus' => 'integer',
+            'tanggal_update_data' => 'datetime',
+            'status_alumni' => 'boolean',
         ];
     }
 
     /**
-     * Get the sekolah that the murid belongs to.
+     * Get the sekolah murid records for this murid.
      */
-    public function sekolah(): BelongsTo
+    public function sekolahMurid(): HasMany
     {
-        return $this->belongsTo(Sekolah::class);
+        return $this->hasMany(SekolahMurid::class, 'id_murid');
     }
 
     /**
-     * Get the alumni record for this murid.
+     * Get the validasi alumni record for this murid.
      */
-    public function alumni(): HasOne
+    public function validasiAlumni(): HasOne
     {
-        return $this->hasOne(Alumni::class);
+        return $this->hasOne(ValidasiAlumni::class, 'id_murid');
     }
 
     /**
-     * Scope to filter active murid
+     * Get the sekolah records that this murid belongs to (many-to-many through sekolah_murid).
      */
-    public function scopeAktif($query)
+    public function sekolah(): BelongsToMany
     {
-        return $query->where('status', self::STATUS_AKTIF);
-    }
-
-    /**
-     * Scope to filter by status
-     */
-    public function scopeByStatus($query, string $status)
-    {
-        return $query->where('status', $status);
-    }
-
-    /**
-     * Scope to filter by sekolah (backward compatibility)
-     */
-    public function scopeBySekolah($query, int $sekolahId)
-    {
-        return $query->where('sekolah_id', $sekolahId);
-    }
-
-    /**
-     * Scope to filter by tahun masuk
-     */
-    public function scopeByTahunMasuk($query, int $tahun)
-    {
-        return $query->where('tahun_masuk', $tahun);
-    }
-
-    /**
-     * Scope to filter by kelas
-     */
-    public function scopeByKelas($query, string $kelas)
-    {
-        return $query->where('kelas', $kelas);
+        return $this->belongsToMany(
+            Sekolah::class,
+            'sekolah_murid',
+            'id_murid',
+            'id_sekolah'
+        )->withPivot([
+            'tahun_masuk',
+            'tahun_keluar',
+            'kelas',
+            'status_kelulusan',
+            'tahun_mutasi_masuk',
+            'alasan_mutasi_masuk',
+            'tahun_mutasi_keluar',
+            'alasan_mutasi_keluar',
+        ])->withTimestamps();
     }
 
     /**
@@ -158,19 +118,27 @@ class Murid extends Model
     }
 
     /**
-     * Check if murid is active
+     * Scope to filter alumni status
      */
-    public function isAktif(): bool
+    public function scopeAlumni($query)
     {
-        return $this->status === self::STATUS_AKTIF;
+        return $query->where('status_alumni', true);
     }
 
     /**
-     * Check if murid has graduated
+     * Scope to filter non-alumni
      */
-    public function isLulus(): bool
+    public function scopeNonAlumni($query)
     {
-        return $this->status === self::STATUS_LULUS;
+        return $query->where('status_alumni', false);
+    }
+
+    /**
+     * Check if murid is alumni
+     */
+    public function isAlumni(): bool
+    {
+        return $this->status_alumni === true;
     }
 
     /**
@@ -182,18 +150,10 @@ class Murid extends Model
     }
 
     /**
-     * Get formatted status
+     * Get full name
      */
-    public function getStatusLabelAttribute(): string
+    public function getFullNameAttribute(): string
     {
-        return self::STATUS_OPTIONS[$this->status] ?? $this->status;
-    }
-
-    /**
-     * Get full name with NIS
-     */
-    public function getFullIdentityAttribute(): string
-    {
-        return "{$this->nis} - {$this->nama}";
+        return $this->nama;
     }
 }

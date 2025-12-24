@@ -109,7 +109,7 @@ Gunakan penamaan konsisten berikut:
 * Field utama:
 
   * `id`
-  * `murid_id`
+  * `id_murid`
   * `tahun_lulus`
   * `angkatan`
   * `kontak`

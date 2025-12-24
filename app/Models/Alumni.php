@@ -23,7 +23,7 @@ class Alumni extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'murid_id',
+        'id_murid',
         'tahun_lulus',
         'angkatan',
         'kontak',
@@ -35,6 +35,8 @@ class Alumni extends Model
         'pekerjaan',
         'nama_perusahaan',
         'jabatan',
+        'kota_perusahaan',
+        'riwayat_pekerjaan',
         'keterangan',
     ];
 
@@ -68,7 +70,7 @@ class Alumni extends Model
             Murid::class,
             'id',           // Foreign key on murid table
             'id',           // Foreign key on sekolah table
-            'murid_id',    // Local key on alumni table
+            'id_murid',    // Local key on alumni table
             'sekolah_id'    // Local key on murid table
         );
     }
