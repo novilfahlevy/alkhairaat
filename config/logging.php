@@ -58,6 +58,13 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'murid_bulk_import' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/murid_bulk_import.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
