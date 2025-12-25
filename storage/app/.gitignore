@@ -1,4 +1,13 @@
+# Ignore everything
 *
-!private/
-!public/
+
+# But do NOT ignore the subdirectories themselves
+!*/
+
+# Now un-ignore the contents of these specific folders
+!templates/*
+!private/*
+!public/*
+
+# Keep the gitignore itself
 !.gitignore
