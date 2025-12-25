@@ -410,8 +410,7 @@ class SekolahController extends Controller
                 ],
                 [
                     'tahun_masuk' => $validated['tahun_masuk'],
-                    'kelas' => $validated['kelas'] ?? null,
-                    'status_kelulusan' => $validated['status_kelulusan'] ?? null,
+                    'kelas' => $validated['kelas'] ?? null
                 ]
             );
 
@@ -524,14 +523,12 @@ class SekolahController extends Controller
         $validated = $request->validate([
             'murid_ids' => 'required|json',
             'tahun_masuk' => 'required|integer|min:1990|max:' . now()->year,
-            'kelas' => 'nullable|string|max:50',
-            'status_kelulusan' => 'nullable|in:ya,tidak',
+            'kelas' => 'nullable|string|max:50'
         ]);
 
         $muridIds = json_decode($validated['murid_ids'], true);
         $tahunMasuk = $validated['tahun_masuk'];
         $kelas = $validated['kelas'] ?? null;
-        $statusKelulusan = $validated['status_kelulusan'] ?? null;
 
         if (!is_array($muridIds) || empty($muridIds)) {
             return redirect()->back()
@@ -567,7 +564,6 @@ class SekolahController extends Controller
                     'id_sekolah' => $sekolah->id,
                     'tahun_masuk' => $tahunMasuk,
                     'kelas' => $kelas,
-                    'status_kelulusan' => $statusKelulusan,
                 ]);
 
                 $successCount++;

@@ -224,25 +224,6 @@
 
                         <!-- Full Width Section -->
                         <div class="lg:col-span-2 space-y-6">
-                            <!-- Status Kelulusan -->
-                            <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                    Status Kelulusan
-                                </label>
-                                <select name="status_kelulusan"
-                                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
-                                    <option value="">Belum lulus</option>
-                                    @foreach ($statusKelulusanOptions as $value => $label)
-                                        <option value="{{ $value }}"
-                                            {{ old('status_kelulusan', 'tidak') === $value ? 'selected' : '' }}>
-                                            {{ $label }}</option>
-                                    @endforeach
-                                </select>
-                                @error('status_kelulusan')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
-
                             <!-- Kontak WA/HP -->
                             <div>
                                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">

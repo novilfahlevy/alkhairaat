@@ -182,7 +182,6 @@
                 <!-- Hidden input for selected murid IDs -->
                 <input type="hidden" name="murid_ids" x-model="selectedMuridIdsJson">
                 <input type="hidden" name="kelas" x-model="kelas">
-                <input type="hidden" name="status_kelulusan" x-model="statusKelulusan">
 
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
@@ -217,22 +216,6 @@
                             <input type="text" x-model="kelas"
                                 class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                                 placeholder="Contoh: 1A, X-1">
-                        </div>
-
-                        <!-- Status Kelulusan Select -->
-                        <div>
-                            <label class="mb-1.5 block text-sm font-medium text-brand-900 dark:text-brand-400">
-                                Status Kelulusan
-                            </label>
-                            <select x-model="statusKelulusan"
-                                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
-                                <option value="">Belum Lulus</option>
-                                @foreach ($statusKelulusanOptions as $value => $label)
-                                    <option value="{{ $value }}"
-                                        {{ old('status_kelulusan', 'tidak') === $value ? 'selected' : '' }}>
-                                        {{ $label }}</option>
-                                @endforeach
-                            </select>
                         </div>
                     </div>
 
