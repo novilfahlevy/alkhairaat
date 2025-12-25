@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreGuruRequest;
 use App\Http\Requests\StoreSekolahRequest;
 use App\Http\Requests\UpdateSekolahRequest;
 use App\Http\Requests\StoreMuridBulkRequest;
@@ -35,6 +36,15 @@ class SekolahController extends Controller
      */
     public function createGuru(Sekolah $sekolah, Request $request): View
     {
+        $tab = $request->input('tab', 'manual');
+
+        if ($tab === 'existing') {
+            return view('pages.sekolah.guru.existing', [
+                'sekolah' => $sekolah,
+                'title' => 'Tambah Guru dari Data yang Ada',
+            ]);
+        }
+
         return view('pages.sekolah.guru.create', [
             'sekolah' => $sekolah,
             'title' => 'Tambah Guru',
@@ -44,7 +54,7 @@ class SekolahController extends Controller
     /**
      * Store a newly created Guru in storage (manual input).
      */
-    public function storeGuru(\App\Http\Requests\StoreGuruRequest $request, Sekolah $sekolah): RedirectResponse
+    public function storeGuru(StoreGuruRequest $request, Sekolah $sekolah): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -80,13 +90,42 @@ class SekolahController extends Controller
     }
 
     /**
-     * Show the form for selecting existing Guru to assign to sekolah.
+     * Get guru that exist in the system but not yet assigned to this sekolah (AJAX endpoint)
      */
-    public function getExistingGuru(Request $request, Sekolah $sekolah): View
+    public function getExistingGuru(Request $request, Sekolah $sekolah)
     {
-        return view('pages.sekolah.guru.existing', [
-            'sekolah' => $sekolah,
-            'title' => 'Pilih Guru yang Ada',
+        $query = Guru::whereDoesntHave('jabatanGuru', function ($q) use ($sekolah) {
+            $q->where('id_sekolah', $sekolah->id);
+        });
+
+        // Apply search filter (nama, nik, nuptk)
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%$search%")
+                    ->orWhere('nik', 'like', "%$search%")
+                    ->orWhere('nuptk', 'like', "%$search%")
+                    ->orWhere('kontak_wa_hp', 'like', "%$search%")
+                    ->orWhere('status_kepegawaian', 'like', "%$search%")
+                    ->orWhere('jenis_kelamin', 'like', "%$search%")
+                ;
+            });
+        }
+
+        $perPage = $request->input('per_page', 20);
+        $guru = $query->orderBy('nama')->paginate($perPage);
+
+        // Format for Alpine.js
+        return response()->json([
+            'data' => $guru->items(),
+            'pagination' => [
+                'current_page' => $guru->currentPage(),
+                'last_page' => $guru->lastPage(),
+                'per_page' => $guru->perPage(),
+                'total' => $guru->total(),
+                'from' => $guru->firstItem(),
+                'to' => $guru->lastItem(),
+            ],
         ]);
     }
 
@@ -95,7 +134,64 @@ class SekolahController extends Controller
      */
     public function storeExistingGuru(Request $request, Sekolah $sekolah): RedirectResponse
     {
-        return redirect()->route('sekolah.show', $sekolah)->with('success', 'Guru berhasil ditambahkan ke sekolah.');
+        $validated = $request->validate([
+            'guru_ids' => 'required|json',
+        ]);
+
+        $guruIds = json_decode($validated['guru_ids'], true);
+
+        if (!is_array($guruIds) || empty($guruIds)) {
+            return redirect()->back()->with('error', 'Tidak ada guru yang dipilih');
+        }
+
+        try {
+            $successCount = 0;
+            $skipCount = 0;
+            $errors = [];
+
+            foreach ($guruIds as $guruId) {
+                // Check if guru exists
+                $guru = Guru::find($guruId);
+                if (!$guru) {
+                    $errors[] = "Guru dengan ID {$guruId} tidak ditemukan";
+                    continue;
+                }
+
+                // Check if guru already assigned to this sekolah
+                $exists = JabatanGuru::where('id_sekolah', $sekolah->id)
+                    ->where('id_guru', $guruId)
+                    ->where('jenis_jabatan', JabatanGuru::JENIS_JABATAN_GURU)
+                    ->exists();
+
+                if ($exists) {
+                    $skipCount++;
+                    continue;
+                }
+
+                // Assign guru ke sekolah (JabatanGuru)
+                JabatanGuru::create([
+                    'id_guru' => $guruId,
+                    'id_sekolah' => $sekolah->id,
+                    'jenis_jabatan' => JabatanGuru::JENIS_JABATAN_GURU,
+                ]);
+
+                $successCount++;
+            }
+
+            $message = "Berhasil menambahkan {$successCount} guru";
+            if ($skipCount > 0) {
+                $message .= " ({$skipCount} guru sudah terdaftar)";
+            }
+            if (!empty($errors)) {
+                $message .= ". " . implode('; ', $errors);
+            }
+
+            return redirect()->route('sekolah.show', $sekolah)
+                ->with('success', $message);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -260,40 +356,40 @@ class SekolahController extends Controller
         }
 
         // Get per_page parameter, default to 10
-            $perPage = $request->input('per_page', 10);
-            if ($perPage === 'all') {
-                $murid = $muridQuery->paginate(PHP_INT_MAX);
-            } else {
-                $perPage = (int) $perPage;
-                $murid = $muridQuery->paginate($perPage);
-            }
+        $perPage = $request->input('per_page', 10);
+        if ($perPage === 'all') {
+            $murid = $muridQuery->paginate(PHP_INT_MAX);
+        } else {
+            $perPage = (int) $perPage;
+            $murid = $muridQuery->paginate($perPage);
+        }
 
-            // Fetch guru dengan relasi jabatan_guru
-            $guruQuery = $sekolah->guru();
-            if ($request->filled('search_guru')) {
-                $searchGuru = $request->input('search_guru');
-                $guruQuery->where(function ($q) use ($searchGuru) {
-                    $q->where('nama', 'like', "%$searchGuru%")
-                      ->orWhere('nik', 'like', "%$searchGuru%")
-                      ->orWhere('nuptk', 'like', "%$searchGuru%")
-                      ->orWhere('kontak_wa_hp', 'like', "%$searchGuru%")
-                      ->orWhere('status_kepegawaian', 'like', "%$searchGuru%")
-                      ->orWhere('jenis_kelamin', 'like', "%$searchGuru%");
-                });
-            }
-            $perPageGuru = $request->input('per_page_guru', 10);
-            if ($perPageGuru === 'all') {
-                $guru = $guruQuery->paginate(PHP_INT_MAX, ['*'], 'page_guru');
-            } else {
-                $perPageGuru = (int) $perPageGuru;
-                $guru = $guruQuery->paginate($perPageGuru, ['*'], 'page_guru');
-            }
+        // Fetch guru dengan relasi jabatan_guru
+        $guruQuery = $sekolah->guru();
+        if ($request->filled('search_guru')) {
+            $searchGuru = $request->input('search_guru');
+            $guruQuery->where(function ($q) use ($searchGuru) {
+                $q->where('nama', 'like', "%$searchGuru%")
+                    ->orWhere('nik', 'like', "%$searchGuru%")
+                    ->orWhere('nuptk', 'like', "%$searchGuru%")
+                    ->orWhere('kontak_wa_hp', 'like', "%$searchGuru%")
+                    ->orWhere('status_kepegawaian', 'like', "%$searchGuru%")
+                    ->orWhere('jenis_kelamin', 'like', "%$searchGuru%");
+            });
+        }
+        $perPageGuru = $request->input('per_page_guru', 10);
+        if ($perPageGuru === 'all') {
+            $guru = $guruQuery->paginate(PHP_INT_MAX, ['*'], 'page_guru');
+        } else {
+            $perPageGuru = (int) $perPageGuru;
+            $guru = $guruQuery->paginate($perPageGuru, ['*'], 'page_guru');
+        }
 
         return view('pages.sekolah.show', [
             'title' => 'Detail Sekolah',
             'sekolah' => $sekolah,
             'murid' => $murid,
-                'guru' => $guru,
+            'guru' => $guru,
             'jenisSekolahOptions' => Sekolah::JENIS_SEKOLAH_OPTIONS,
             'statusOptions' => Sekolah::STATUS_LABELS,
         ]);

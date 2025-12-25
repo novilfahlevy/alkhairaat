@@ -2,6 +2,7 @@
 
 @section('content')
     <div class="space-y-6 pb-60">
+        @include('pages.sekolah.guru.tambah-guru-tabs', compact('sekolah'))
         <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
             <h1 class="text-2xl font-semibold mb-6 text-gray-800 dark:text-white">Tambah Guru Baru</h1>
             @if ($errors->any())
