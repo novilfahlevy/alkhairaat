@@ -40,7 +40,6 @@ class StoreMuridBulkRequest extends FormRequest
             'kontak_email' => ['nullable', 'email', 'max:255'],
             'tahun_masuk' => ['required', 'integer', 'min:1900', 'max:' . date('Y') + 1],
             'kelas' => ['nullable', 'string', 'max:50'],
-            'status_kelulusan' => ['nullable', Rule::in(array_keys(SekolahMurid::STATUS_KELULUSAN_OPTIONS))],
             'provinsi' => ['nullable', 'string', 'max:255'],
             'kabupaten' => ['nullable', 'string', 'max:255'],
             'kecamatan' => ['nullable', 'string', 'max:255'],

@@ -127,7 +127,6 @@ class MuridImport implements ToCollection, WithHeadingRow, WithChunkReading
                     'id_sekolah' => $this->idSekolah,
                     'tahun_masuk' => $row['tahun_masuk'],
                     'kelas' => $row['kelas'],
-                    'status_kelulusan' => $row['status_kelulusan'],
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
@@ -206,7 +205,6 @@ class MuridImport implements ToCollection, WithHeadingRow, WithChunkReading
                 'kontak_email' => $row['kontak_email'] ?? null,
                 'tahun_masuk' => (int)($row['tahun_masuk'] ?? date('Y')),
                 'kelas' => $row['kelas'] ?? null,
-                'status_kelulusan' => strtolower($row['status_kelulusan'] ?? '') === 'ya' ? 'ya' : 'tidak',
                 'provinsi' => $row['provinsi'] ?? null,
                 'kabupaten' => $row['kabupaten'] ?? null,
                 'kecamatan' => $row['kecamatan'] ?? null,

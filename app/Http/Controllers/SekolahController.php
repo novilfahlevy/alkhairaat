@@ -332,16 +332,14 @@ class SekolahController extends Controller
         if ($tab === 'existing') {
             return view('pages.sekolah.tambah-murid-existing', [
                 'title' => 'Pilih Murid yang Ada - ' . $sekolah->nama,
-                'sekolah' => $sekolah,
-                'statusKelulusanOptions' => SekolahMurid::STATUS_KELULUSAN_OPTIONS,
+                'sekolah' => $sekolah
             ]);
         }
 
         return view('pages.sekolah.tambah-murid', [
             'title' => 'Tambah Murid - ' . $sekolah->nama,
             'sekolah' => $sekolah,
-            'jenisKelaminOptions' => Murid::JENIS_KELAMIN_OPTIONS,
-            'statusKelulusanOptions' => SekolahMurid::STATUS_KELULUSAN_OPTIONS,
+            'jenisKelaminOptions' => Murid::JENIS_KELAMIN_OPTIONS
         ]);
     }
 
