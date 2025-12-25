@@ -134,6 +134,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sekolah/{sekolah}/store-existing-murid', [App\Http\Controllers\SekolahController::class, 'storeExistingMurid'])->name('sekolah.store-existing-murid');
     Route::post('/sekolah/{sekolah}/tambah-murid-file', [App\Http\Controllers\SekolahController::class, 'storeMuridFile'])->name('sekolah.store-murid-file');
     Route::get('/sekolah/template/download', [App\Http\Controllers\SekolahController::class, 'downloadTemplate'])->name('sekolah.download-template');
+
+    // Tambah Guru (manual, pilih, file)
+    Route::get('/sekolah/{sekolah}/tambah-guru', [App\Http\Controllers\SekolahController::class, 'createGuru'])->name('sekolah.create-guru');
+    Route::post('/sekolah/{sekolah}/tambah-guru', [App\Http\Controllers\SekolahController::class, 'storeGuru'])->name('sekolah.store-guru');
+    Route::get('/sekolah/{sekolah}/get-existing-guru', [App\Http\Controllers\SekolahController::class, 'getExistingGuru'])->name('sekolah.get-existing-guru');
+    Route::post('/sekolah/{sekolah}/store-existing-guru', [App\Http\Controllers\SekolahController::class, 'storeExistingGuru'])->name('sekolah.store-existing-guru');
+    Route::post('/sekolah/{sekolah}/tambah-guru-file', [App\Http\Controllers\SekolahController::class, 'storeGuruFile'])->name('sekolah.store-guru-file');
+    Route::get('/sekolah/guru/template/download', [App\Http\Controllers\SekolahController::class, 'downloadGuruTemplate'])->name('sekolah.download-guru-template');
     
     // Sekolah External CRUD
     Route::get('/sekolah-external', [App\Http\Controllers\SekolahExternalController::class, 'index'])->name('sekolah-external.index');

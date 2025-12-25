@@ -12,6 +12,8 @@ use App\Models\Murid;
 use App\Models\SekolahMurid;
 use App\Models\Alamat;
 use App\Models\GaleriSekolah;
+use App\Models\Guru;
+use App\Models\JabatanGuru;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\Scopes\NauanganSekolahScope;
@@ -21,9 +23,104 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SekolahController extends Controller
 {
+
+    // --- Tambah Guru (manual, pilih, file) ---
+
+    /**
+     * Show the form for creating a new Guru (manual input).
+     */
+    public function createGuru(Sekolah $sekolah, Request $request): View
+    {
+        return view('pages.sekolah.guru.create', [
+            'sekolah' => $sekolah,
+            'title' => 'Tambah Guru',
+        ]);
+    }
+
+    /**
+     * Store a newly created Guru in storage (manual input).
+     */
+    public function storeGuru(\App\Http\Requests\StoreGuruRequest $request, Sekolah $sekolah): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        // Simpan Guru baru
+        $guru = Guru::create($validated);
+
+        // Simpan alamat guru (domisili) jika ada input
+        $alamatData = [
+            'id_guru' => $guru->id,
+            'jenis' => Alamat::JENIS_DOMISILI,
+            'provinsi' => $validated['alamat_provinsi'] ?? null,
+            'kabupaten' => $validated['alamat_kabupaten'] ?? null,
+            'kecamatan' => $validated['alamat_kecamatan'] ?? null,
+            'kelurahan' => $validated['alamat_kelurahan'] ?? null,
+            'rt' => $validated['alamat_rt'] ?? null,
+            'rw' => $validated['alamat_rw'] ?? null,
+            'kode_pos' => $validated['alamat_kode_pos'] ?? null,
+            'alamat_lengkap' => $validated['alamat_lengkap'] ?? null
+        ];
+
+        if (array_filter($alamatData, fn($v) => $v !== null && $v !== '')) {
+            Alamat::create($alamatData);
+        }
+
+        // Assign ke sekolah (JabatanGuru)
+        JabatanGuru::create([
+            'id_guru' => $guru->id,
+            'id_sekolah' => $sekolah->id,
+            'jenis_jabatan' => JabatanGuru::JENIS_JABATAN_GURU,
+        ]);
+
+        return redirect()->route('sekolah.show', $sekolah)->with('success', 'Guru berhasil ditambahkan.');
+    }
+
+    /**
+     * Show the form for selecting existing Guru to assign to sekolah.
+     */
+    public function getExistingGuru(Request $request, Sekolah $sekolah): View
+    {
+        return view('pages.sekolah.guru.existing', [
+            'sekolah' => $sekolah,
+            'title' => 'Pilih Guru yang Ada',
+        ]);
+    }
+
+    /**
+     * Store selected existing Guru to sekolah (assign JabatanGuru).
+     */
+    public function storeExistingGuru(Request $request, Sekolah $sekolah): RedirectResponse
+    {
+        return redirect()->route('sekolah.show', $sekolah)->with('success', 'Guru berhasil ditambahkan ke sekolah.');
+    }
+
+    /**
+     * Store Guru from uploaded file (bulk import).
+     */
+    public function storeGuruFile(Request $request, Sekolah $sekolah): RedirectResponse
+    {
+        return redirect()->route('sekolah.show', $sekolah)->with('success', 'Guru berhasil diimpor dari file.');
+    }
+
+    /**
+     * Download template CSV for guru bulk import.
+     */
+    public function downloadGuruTemplate(): BinaryFileResponse
+    {
+        $templatePath = storage_path('app/templates/template-guru.csv');
+
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template file not found');
+        }
+
+        return response()->download($templatePath, 'template-guru.csv', [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -163,18 +260,40 @@ class SekolahController extends Controller
         }
 
         // Get per_page parameter, default to 10
-        $perPage = $request->input('per_page', 10);
-        if ($perPage === 'all') {
-            $murid = $muridQuery->paginate(PHP_INT_MAX);
-        } else {
-            $perPage = (int) $perPage;
-            $murid = $muridQuery->paginate($perPage);
-        }
+            $perPage = $request->input('per_page', 10);
+            if ($perPage === 'all') {
+                $murid = $muridQuery->paginate(PHP_INT_MAX);
+            } else {
+                $perPage = (int) $perPage;
+                $murid = $muridQuery->paginate($perPage);
+            }
+
+            // Fetch guru dengan relasi jabatan_guru
+            $guruQuery = $sekolah->guru();
+            if ($request->filled('search_guru')) {
+                $searchGuru = $request->input('search_guru');
+                $guruQuery->where(function ($q) use ($searchGuru) {
+                    $q->where('nama', 'like', "%$searchGuru%")
+                      ->orWhere('nik', 'like', "%$searchGuru%")
+                      ->orWhere('nuptk', 'like', "%$searchGuru%")
+                      ->orWhere('kontak_wa_hp', 'like', "%$searchGuru%")
+                      ->orWhere('status_kepegawaian', 'like', "%$searchGuru%")
+                      ->orWhere('jenis_kelamin', 'like', "%$searchGuru%");
+                });
+            }
+            $perPageGuru = $request->input('per_page_guru', 10);
+            if ($perPageGuru === 'all') {
+                $guru = $guruQuery->paginate(PHP_INT_MAX, ['*'], 'page_guru');
+            } else {
+                $perPageGuru = (int) $perPageGuru;
+                $guru = $guruQuery->paginate($perPageGuru, ['*'], 'page_guru');
+            }
 
         return view('pages.sekolah.show', [
             'title' => 'Detail Sekolah',
             'sekolah' => $sekolah,
             'murid' => $murid,
+                'guru' => $guru,
             'jenisSekolahOptions' => Sekolah::JENIS_SEKOLAH_OPTIONS,
             'statusOptions' => Sekolah::STATUS_LABELS,
         ]);

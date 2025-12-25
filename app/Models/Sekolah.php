@@ -220,6 +220,24 @@ class Sekolah extends Model
     }
 
     /**
+     * Get the guru that belong to this sekolah (many-to-many through jabatan_guru).
+     */
+    public function guru(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Guru::class,
+            'jabatan_guru',
+            'id_sekolah',
+            'id_guru'
+        )->withPivot([
+            'jenis_jabatan',
+            'keterangan_jabatan',
+            'created_at',
+            'updated_at',
+        ]);
+    }
+
+    /**
      * Get the sekolah_murid records for this sekolah.
      */
     public function sekolahMurid(): HasMany

@@ -35,6 +35,13 @@
                     </svg>
                     Tambah Murid
                 </a>
+                <a href="{{ route('sekolah.create-guru', $sekolah) }}"
+                    class="bg-blue-500 hover:bg-blue-600 flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white transition">
+                    <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Tambah Guru
+                </a>
                 <a href="{{ route('sekolah.edit', $sekolah) }}"
                     class="bg-brand-500 hover:bg-brand-600 flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white transition">
                     <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -430,5 +437,8 @@
 
         <!-- Murid Table Section -->
         <x-sekolah.tabel-murid :murid="$murid" :sekolah="$sekolah" />
+
+        <!-- Guru Table Section -->
+        <x-sekolah.tabel-guru :guru="$guru" :sekolah="$sekolah" />
     </div>
 @endsection
