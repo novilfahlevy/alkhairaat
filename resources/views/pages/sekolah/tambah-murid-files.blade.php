@@ -409,23 +409,6 @@
                         <tr>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Status Kelulusan
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                ya (lulus) atau tidak (tidak lulus)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kontak WA/HP
                             </td>
                             <td
