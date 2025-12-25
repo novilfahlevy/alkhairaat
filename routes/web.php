@@ -127,6 +127,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sekolah/{sekolah}/edit', [App\Http\Controllers\SekolahController::class, 'edit'])->name('sekolah.edit');
     Route::put('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'update'])->name('sekolah.update');
     Route::delete('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'destroy'])->name('sekolah.destroy');
+    Route::get('/sekolah/{sekolah}/tambah-murid', [App\Http\Controllers\SekolahController::class, 'createMurid'])->name('sekolah.create-murid');
+    Route::post('/sekolah/{sekolah}/tambah-murid', [App\Http\Controllers\SekolahController::class, 'storeMurid'])->name('sekolah.store-murid');
     
     // Sekolah External CRUD
     Route::get('/sekolah-external', [App\Http\Controllers\SekolahExternalController::class, 'index'])->name('sekolah-external.index');

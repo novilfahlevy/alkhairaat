@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSekolahRequest;
 use App\Http\Requests\UpdateSekolahRequest;
+use App\Http\Requests\StoreMuridBulkRequest;
 use App\Models\Sekolah;
+use App\Models\Murid;
+use App\Models\SekolahMurid;
 use App\Models\Alamat;
 use App\Models\GaleriSekolah;
 use App\Models\Provinsi;
@@ -78,11 +81,11 @@ class SekolahController extends Controller
     public function store(StoreSekolahRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        
+
         // Get nama provinsi and kabupaten from database
         $provinsi = Provinsi::find($validated['id_provinsi']);
         $kabupaten = Kabupaten::find($validated['id_kabupaten']);
-        
+
         // Extract alamat-related fields for alamat table
         $alamatData = [
             'provinsi' => $provinsi?->nama_provinsi,
@@ -138,13 +141,36 @@ class SekolahController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Sekolah $sekolah): View
+    public function show(Sekolah $sekolah, Request $request): View
     {
-        $sekolah->load(['kabupaten.provinsi', 'murid', 'alamatList']);
+        $sekolah->load(['kabupaten.provinsi', 'alamatList']);
+
+        // Fetch murid with sekolah_murid relationship
+        $muridQuery = $sekolah->murid();
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $muridQuery->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('nisn', 'like', "%{$search}%")
+                    ->orWhere('nik', 'like', "%{$search}%");
+            });
+        }
+
+        // Get per_page parameter, default to 10
+        $perPage = $request->input('per_page', 10);
+        if ($perPage === 'all') {
+            $murid = $muridQuery->paginate(PHP_INT_MAX);
+        } else {
+            $perPage = (int) $perPage;
+            $murid = $muridQuery->paginate($perPage);
+        }
 
         return view('pages.sekolah.show', [
             'title' => 'Detail Sekolah',
             'sekolah' => $sekolah,
+            'murid' => $murid,
             'jenisSekolahOptions' => Sekolah::JENIS_SEKOLAH_OPTIONS,
             'statusOptions' => Sekolah::STATUS_LABELS,
         ]);
@@ -177,11 +203,11 @@ class SekolahController extends Controller
     public function update(UpdateSekolahRequest $request, Sekolah $sekolah): RedirectResponse
     {
         $validated = $request->validated();
-        
+
         // Get nama provinsi and kabupaten from database
         $provinsi = Provinsi::find($validated['id_provinsi']);
         $kabupaten = Kabupaten::find($validated['id_kabupaten']);
-        
+
         // Extract alamat-related fields for alamat table
         $alamatData = [
             'provinsi' => $provinsi?->nama_provinsi,
@@ -277,5 +303,70 @@ class SekolahController extends Controller
 
         return response()->json($kabupaten);
     }
-}
 
+    /**
+     * Show the form for creating multiple murid in bulk.
+     */
+    public function createMurid(Sekolah $sekolah): View
+    {
+        return view('pages.sekolah.tambah-murid', [
+            'title' => 'Tambah Murid - ' . $sekolah->nama,
+            'sekolah' => $sekolah,
+            'jenisKelaminOptions' => Murid::JENIS_KELAMIN_OPTIONS,
+            'statusKelulusanOptions' => SekolahMurid::STATUS_KELULUSAN_OPTIONS,
+        ]);
+    }
+
+    /**
+     * Store multiple murid in bulk.
+     */
+    public function storeMurid(StoreMuridBulkRequest $request, Sekolah $sekolah): RedirectResponse
+    {
+        $validated = $request->validated();
+        $muridData = $validated['murid'];
+
+        try {
+            // Create each murid
+            foreach ($muridData as $data) {
+                // Create or find murid by NISN
+                $murid = Murid::firstOrCreate(
+                    ['nisn' => $data['nisn']],
+                    [
+                        'nama' => $data['nama'],
+                        'nik' => $data['nik'] ?? null,
+                        'tempat_lahir' => $data['tempat_lahir'] ?? null,
+                        'tanggal_lahir' => $data['tanggal_lahir'] ?? null,
+                        'jenis_kelamin' => $data['jenis_kelamin'],
+                        'nama_ayah' => $data['nama_ayah'] ?? null,
+                        'nomor_hp_ayah' => $data['nomor_hp_ayah'] ?? null,
+                        'nama_ibu' => $data['nama_ibu'] ?? null,
+                        'nomor_hp_ibu' => $data['nomor_hp_ibu'] ?? null,
+                        'kontak_wa_hp' => $data['kontak_wa_hp'] ?? null,
+                        'kontak_email' => $data['kontak_email'] ?? null,
+                        'tanggal_update_data' => now(),
+                    ]
+                );
+
+                // Create sekolah_murid record
+                SekolahMurid::firstOrCreate(
+                    [
+                        'id_murid' => $murid->id,
+                        'id_sekolah' => $sekolah->id,
+                    ],
+                    [
+                        'tahun_masuk' => $data['tahun_masuk'],
+                        'kelas' => $data['kelas'] ?? null,
+                        'status_kelulusan' => $data['status_kelulusan'] ?? SekolahMurid::STATUS_LULUS_TIDAK,
+                    ]
+                );
+            }
+
+            return redirect()->route('sekolah.show', ['sekolah' => $sekolah->id])
+                ->with('success', 'Murid berhasil ditambahkan sebanyak ' . count($muridData) . ' data.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat menambahkan murid: ' . $e->getMessage());
+        }
+    }
+}
