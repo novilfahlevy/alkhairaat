@@ -48,81 +48,11 @@ Struktur utama:
 
 Pastikan semua kode mempertimbangkan role berikut:
 
-* `super_admin` → PB Alkhairaat
-* `sekolah` → operator sekolah/pesantren
-* `wilayah` → monitoring rekap
-
-Super Admin:
-1. Mengelola data Lembaga
-2. Mengelola akun User (pengelola) Sekolah
-3. Melihat semua laporan nasional
-
-User Sekolah:
-1. Mengelola data Murid (di unit Sekolah masing-masing)
-2. Mengelola data Alumni (di unit Sekolah masing-masing)
-3. Melihat laporan internal unit Sekolah
-4. Tidak dapat melihat dan mengelola data unit Sekolah lain.
-
-User Wilayah:
-1. Dapat melihat data semua Sekolah di wilayahnya.
-2. Tidak dapat mengelola data Santi dan Alumni.
-
-Semua query wajib memfilter berdasarkan `lembaga_id` jika user role = sekolah
-
----
-
-## 🗃️ Entitas Data Utama
-
-Gunakan penamaan konsisten berikut:
-
-### 1. Lembaga
-
-* Table: `lembaga`
-* Field utama:
-
-  * `id`
-  * `kode_lembaga`
-  * `nama`
-  * `jenjang`
-  * `status`
-  * `provinsi`
-  * `kabupaten`
-
-### 2. Murid
-
-* Table: `murid`
-* Field utama:
-
-  * `id`
-  * `nis`
-  * `nama`
-  * `nik`
-  * `jenis_kelamin`
-  * `kelas`
-  * `status`
-  * `tahun_masuk`
-  * `lembaga_id`
-
-### 3. Alumni
-
-* Table: `alumni`
-* Field utama:
-
-  * `id`
-  * `id_murid`
-  * `tahun_lulus`
-  * `angkatan`
-  * `kontak`
-  * `lanjutan_studi`
-  * `pekerjaan`
-
-### 4. User
-
-* Gunakan default Laravel `users`
-* Tambahan:
-
-  * `role`
-  * `lembaga_id`
+* `Superuser` → Tim IT atau orang PB Alkhairaat yang mengelola sistem.
+* `Pengurus Besar` → Pengurus besar Alkhairaat di tingkat pusat.
+* `Komisariat Wilayah` → Bertugas menaungi semua sekolah di wilayah provinsi yang ditentukan oleh PB.
+* `Komisariat Daerah` → Bertugas menaungi semua sekolah di wilayah kabupaten/kota yang ditentukan oleh Komisariat Wilayah.
+* `Sekolah/Pesantren` → User di tingkat sekolah/pesantren yang mengelola data guru, murid, dan alumni di sekolahnya masing-masing.
 
 ---
 
@@ -130,10 +60,10 @@ Gunakan penamaan konsisten berikut:
 
 ### Umum
 
-* Gunakan **PSR-12 Coding Style**
-* Gunakan **type hint & return type**
-* Gunakan **strict validation** pada semua request
-* Mohon berhati-hati dengan __null safety__ pada setiap data maupun relasi, gunakan `?` jika perlu, dan gunakan falback default value jika memungkinkan
+* Gunakan **PSR-12 Coding Style**.
+* Gunakan **type hint & return type**.
+* Gunakan **strict validation** pada semua request.
+* Mohon berhati-hati dengan __null safety__ pada setiap data maupun relasi, gunakan `?` jika diperlukan, dan gunakan falback default value jika memungkinkan, ini penting.
 
 ### Controller
 
@@ -169,36 +99,6 @@ Gunakan penamaan konsisten berikut:
 
 ---
 
-## 📊 Aturan Dashboard & Laporan
-
-* Semua dashboard wajib berbasis:
-
-  * Data real-time
-  * Query terfilter berdasarkan role
-* Gunakan **query builder atau Eloquent** yang optimal
-* Hindari `N+1 Query`
-
----
-
-## 📤 Aturan Ekspor Data
-
-* Gunakan format:
-
-  * CSV
-  * Excel
-* Data yang diekspor:
-
-  * Murid
-  * Alumni
-  * Rekap nasional
-
-Pastikan:
-
-* Encoding UTF-8
-* Header kolom jelas
-
----
-
 ## 🛡️ Keamanan
 
 * Wajib:
@@ -206,21 +106,6 @@ Pastikan:
   * CSRF Protection
   * Hash password (bcrypt)
   * Validasi input ketat
-* Larangan:
-
-  * Query tanpa filter `lembaga_id`
-  * Akses data lintas sekolah
-
----
-
-## 🧪 Testing
-
-* Minimal testing untuk:
-
-  * Login
-  * CRUD murid
-  * CRUD alumni
-  * Hak akses user
 
 ---
 
@@ -228,20 +113,22 @@ Pastikan:
 
 GitHub Copilot harus:
 
-* Mengutamakan **keamanan data murid & alumni**
 * Menghasilkan kode **clean, readable, dan scalable**
 * Menghindari:
 
   * Hardcoded role
   * Magic number
   * Query mentah tanpa sanitasi
+  * Tidak boleh ada logika bisnis di Blade
+  * Wajib memprioritaskan clean code dan best practices Laravel
+  * Wajib Memperhatikan potensi Null Reference Exception, terutama pada relasi Eloquent, berikan pengecekan dan fallback yang tepat
 
 ---
 
 ## ✅ Prinsip Akhir
 
-> "Aplikasi ini bersifat **amanah**, karena mengelola data murid dan alumni secara nasional. Setiap baris kode harus mengutamakan **keamanan, kejujuran data, dan kemudahan operator sekolah."*
+> "Aplikasi ini bersifat **amanah**, karena mengelola data guru, murid, dan alumni secara nasional. Setiap baris kode harus mengutamakan **keamanan, kejujuran data, dan kemudahan operator sekolah."*
 
 ---
 
-Dokumen ini menjadi standar perilaku pengkodean selama pengembangan aplikasi Database Murid & Alumni Perguruan Islam Alkhairaat.
+Dokumen ini menjadi standar perilaku pengkodean selama pengembangan aplikasi Database Perguruan Islam Alkhairaat.
