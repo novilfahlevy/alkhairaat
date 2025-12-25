@@ -337,51 +337,101 @@ class SekolahController extends Controller
     }
 
     /**
-     * Store multiple murid in bulk.
+     * Check if NISN already exists in the system.
+     */
+    public function checkNisn(Request $request, Sekolah $sekolah)
+    {
+        $nisn = $request->input('nisn', '');
+
+        if (empty($nisn)) {
+            return response()->json([
+                'exists' => false,
+                'message' => ''
+            ]);
+        }
+
+        // Check if NISN exists
+        $murid = Murid::where('nisn', $nisn)->first();
+
+        if ($murid) {
+            return response()->json([
+                'exists' => true,
+                'message' => 'NISN ini sudah terdaftar atas nama <b>' . $murid->nama . '</b>.'
+            ]);
+        }
+
+        return response()->json([
+            'exists' => false,
+            'message' => 'NISN ini belum terdaftar.'
+        ]);
+    }
+
+    /**
+     * Store a single murid.
      */
     public function storeMurid(StoreMuridBulkRequest $request, Sekolah $sekolah): RedirectResponse
     {
         $validated = $request->validated();
-        $muridData = $validated['murid'];
 
         try {
-            // Create each murid
-            foreach ($muridData as $data) {
-                // Create or find murid by NISN
-                $murid = Murid::firstOrCreate(
-                    ['nisn' => $data['nisn']],
-                    [
-                        'nama' => $data['nama'],
-                        'nik' => $data['nik'] ?? null,
-                        'tempat_lahir' => $data['tempat_lahir'] ?? null,
-                        'tanggal_lahir' => $data['tanggal_lahir'] ?? null,
-                        'jenis_kelamin' => $data['jenis_kelamin'],
-                        'nama_ayah' => $data['nama_ayah'] ?? null,
-                        'nomor_hp_ayah' => $data['nomor_hp_ayah'] ?? null,
-                        'nama_ibu' => $data['nama_ibu'] ?? null,
-                        'nomor_hp_ibu' => $data['nomor_hp_ibu'] ?? null,
-                        'kontak_wa_hp' => $data['kontak_wa_hp'] ?? null,
-                        'kontak_email' => $data['kontak_email'] ?? null,
-                        'tanggal_update_data' => now(),
-                    ]
-                );
+            // Create or find murid by NISN
+            $murid = Murid::firstOrCreate(
+                ['nisn' => $validated['nisn']],
+                [
+                    'nama' => $validated['nama'],
+                    'nik' => $validated['nik'] ?? null,
+                    'tempat_lahir' => $validated['tempat_lahir'] ?? null,
+                    'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
+                    'jenis_kelamin' => $validated['jenis_kelamin'],
+                    'nama_ayah' => $validated['nama_ayah'] ?? null,
+                    'nomor_hp_ayah' => $validated['nomor_hp_ayah'] ?? null,
+                    'nama_ibu' => $validated['nama_ibu'] ?? null,
+                    'nomor_hp_ibu' => $validated['nomor_hp_ibu'] ?? null,
+                    'kontak_wa_hp' => $validated['kontak_wa_hp'] ?? null,
+                    'kontak_email' => $validated['kontak_email'] ?? null,
+                    'tanggal_update_data' => now(),
+                ]
+            );
 
-                // Create sekolah_murid record
-                SekolahMurid::firstOrCreate(
+            // Create sekolah_murid record
+            SekolahMurid::firstOrCreate(
+                [
+                    'id_murid' => $murid->id,
+                    'id_sekolah' => $sekolah->id,
+                ],
+                [
+                    'tahun_masuk' => $validated['tahun_masuk'],
+                    'kelas' => $validated['kelas'] ?? null,
+                    'status_kelulusan' => $validated['status_kelulusan'] ?? null,
+                ]
+            );
+
+            // Create alamat record if any address data is provided
+            $alamatData = [
+                'provinsi' => $validated['provinsi'] ?? null,
+                'kabupaten' => $validated['kabupaten'] ?? null,
+                'kecamatan' => $validated['kecamatan'] ?? null,
+                'kelurahan' => $validated['kelurahan'] ?? null,
+                'rt' => $validated['rt'] ?? null,
+                'rw' => $validated['rw'] ?? null,
+                'kode_pos' => $validated['kode_pos'] ?? null,
+                'alamat_lengkap' => $validated['alamat_lengkap'] ?? null,
+                'koordinat_x' => $validated['koordinat_x'] ?? null,
+                'koordinat_y' => $validated['koordinat_y'] ?? null,
+            ];
+
+            if (array_filter($alamatData)) {
+                Alamat::firstOrCreate(
                     [
                         'id_murid' => $murid->id,
-                        'id_sekolah' => $sekolah->id,
+                        'jenis' => Alamat::JENIS_ASLI,
                     ],
-                    [
-                        'tahun_masuk' => $data['tahun_masuk'],
-                        'kelas' => $data['kelas'] ?? null,
-                        'status_kelulusan' => $data['status_kelulusan'] ?? SekolahMurid::STATUS_LULUS_TIDAK,
-                    ]
+                    $alamatData
                 );
             }
 
             return redirect()->route('sekolah.show', ['sekolah' => $sekolah->id])
-                ->with('success', 'Murid berhasil ditambahkan sebanyak ' . count($muridData) . ' data.');
+                ->with('success', 'Murid ' . $validated['nama'] . ' berhasil ditambahkan.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()

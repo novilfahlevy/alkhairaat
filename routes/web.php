@@ -129,6 +129,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'destroy'])->name('sekolah.destroy');
     Route::get('/sekolah/{sekolah}/tambah-murid', [App\Http\Controllers\SekolahController::class, 'createMurid'])->name('sekolah.create-murid');
     Route::post('/sekolah/{sekolah}/tambah-murid', [App\Http\Controllers\SekolahController::class, 'storeMurid'])->name('sekolah.store-murid');
+    Route::post('/sekolah/{sekolah}/check-nisn', [App\Http\Controllers\SekolahController::class, 'checkNisn'])->name('sekolah.check-nisn');
     Route::post('/sekolah/{sekolah}/tambah-murid-file', [App\Http\Controllers\SekolahController::class, 'storeMuridFile'])->name('sekolah.store-murid-file');
     Route::get('/sekolah/template/download', [App\Http\Controllers\SekolahController::class, 'downloadTemplate'])->name('sekolah.download-template');
     

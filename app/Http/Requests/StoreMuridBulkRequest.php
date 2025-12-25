@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Murid;
+use App\Models\SekolahMurid;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -25,22 +26,31 @@ class StoreMuridBulkRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'murid' => ['required', 'array', 'min:1'],
-            'murid.*.nama' => ['required', 'string', 'max:255'],
-            'murid.*.nisn' => ['required', 'string', 'max:20', 'distinct'],
-            'murid.*.nik' => ['nullable', 'string', 'max:20'],
-            'murid.*.tempat_lahir' => ['nullable', 'string', 'max:255'],
-            'murid.*.tanggal_lahir' => ['nullable', 'date'],
-            'murid.*.jenis_kelamin' => ['required', Rule::in(array_keys(Murid::JENIS_KELAMIN_OPTIONS))],
-            'murid.*.nama_ayah' => ['nullable', 'string', 'max:255'],
-            'murid.*.nomor_hp_ayah' => ['nullable', 'string', 'max:20'],
-            'murid.*.nama_ibu' => ['nullable', 'string', 'max:255'],
-            'murid.*.nomor_hp_ibu' => ['nullable', 'string', 'max:20'],
-            'murid.*.kontak_wa_hp' => ['nullable', 'string', 'max:20'],
-            'murid.*.kontak_email' => ['nullable', 'email', 'max:255'],
-            'murid.*.tahun_masuk' => ['required', 'integer', 'min:1900', 'max:' . date('Y') + 1],
-            'murid.*.kelas' => ['nullable', 'string', 'max:50'],
-            'murid.*.status_kelulusan' => ['nullable', Rule::in(array_keys(Murid::JENIS_KELAMIN_OPTIONS))],
+            'nama' => ['required', 'string', 'max:255'],
+            'nisn' => ['required', 'string', 'max:20'],
+            'nik' => ['nullable', 'string', 'max:20'],
+            'tempat_lahir' => ['nullable', 'string', 'max:255'],
+            'tanggal_lahir' => ['nullable', 'date'],
+            'jenis_kelamin' => ['required', Rule::in(array_keys(Murid::JENIS_KELAMIN_OPTIONS))],
+            'nama_ayah' => ['nullable', 'string', 'max:255'],
+            'nomor_hp_ayah' => ['nullable', 'string', 'max:20'],
+            'nama_ibu' => ['nullable', 'string', 'max:255'],
+            'nomor_hp_ibu' => ['nullable', 'string', 'max:20'],
+            'kontak_wa_hp' => ['nullable', 'string', 'max:20'],
+            'kontak_email' => ['nullable', 'email', 'max:255'],
+            'tahun_masuk' => ['required', 'integer', 'min:1900', 'max:' . date('Y') + 1],
+            'kelas' => ['nullable', 'string', 'max:50'],
+            'status_kelulusan' => ['nullable', Rule::in(array_keys(SekolahMurid::STATUS_KELULUSAN_OPTIONS))],
+            'provinsi' => ['nullable', 'string', 'max:255'],
+            'kabupaten' => ['nullable', 'string', 'max:255'],
+            'kecamatan' => ['nullable', 'string', 'max:255'],
+            'kelurahan' => ['nullable', 'string', 'max:255'],
+            'rt' => ['nullable', 'string', 'max:10'],
+            'rw' => ['nullable', 'string', 'max:10'],
+            'kode_pos' => ['nullable', 'string', 'max:10'],
+            'alamat_lengkap' => ['nullable', 'string', 'max:500'],
+            'koordinat_x' => ['nullable', 'numeric'],
+            'koordinat_y' => ['nullable', 'numeric'],
         ];
     }
 
@@ -52,18 +62,14 @@ class StoreMuridBulkRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'murid.required' => 'Minimal harus ada satu baris data murid',
-            'murid.array' => 'Format data murid tidak valid',
-            'murid.min' => 'Minimal harus ada satu baris data murid',
-            'murid.*.nama.required' => 'Nama murid wajib diisi',
-            'murid.*.nisn.required' => 'NISN wajib diisi',
-            'murid.*.nisn.distinct' => 'NISN tidak boleh duplikat',
-            'murid.*.jenis_kelamin.required' => 'Jenis kelamin wajib diisi',
-            'murid.*.jenis_kelamin.in' => 'Jenis kelamin tidak valid',
-            'murid.*.tahun_masuk.required' => 'Tahun masuk wajib diisi',
-            'murid.*.tahun_masuk.integer' => 'Tahun masuk harus berupa angka',
-            'murid.*.kontak_email.email' => 'Format email tidak valid',
-            'murid.*.tanggal_lahir.date' => 'Format tanggal lahir tidak valid',
+            'nama.required' => 'Nama murid wajib diisi',
+            'nisn.required' => 'NISN wajib diisi',
+            'jenis_kelamin.required' => 'Jenis kelamin wajib diisi',
+            'jenis_kelamin.in' => 'Jenis kelamin tidak valid',
+            'tahun_masuk.required' => 'Tahun masuk wajib diisi',
+            'tahun_masuk.integer' => 'Tahun masuk harus berupa angka',
+            'kontak_email.email' => 'Format email tidak valid',
+            'tanggal_lahir.date' => 'Format tanggal lahir tidak valid',
         ];
     }
 }
