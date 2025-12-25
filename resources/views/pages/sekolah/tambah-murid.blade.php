@@ -25,29 +25,61 @@
             </div>
         </div>
 
-        <!-- Form Card -->
-        <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
-            <!-- Error Messages -->
-            @if ($errors->any())
-                <div class="mb-6 rounded-lg bg-red-100 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">
-                    <p class="font-medium mb-2">Terjadi kesalahan validasi:</p>
-                    <ul class="list-disc list-inside space-y-1">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+        <!-- Tab Navigation -->
+        @php
+            $currentTab = request()->query('tab', 'manual');
+        @endphp
+        <div class="rounded-lg bg-white shadow-md dark:bg-gray-900">
+            <div class="border-b border-gray-200 dark:border-gray-700">
+                <div class="flex" role="tablist">
+                    <a href="{{ route('sekolah.create-murid', ['sekolah' => $sekolah, 'tab' => 'manual']) }}"
+                        role="tab" :aria-selected="{{ $currentTab === 'manual' ? 'true' : 'false' }}"
+                        class="text-center flex-1 border-b-2 px-6 py-4 text-sm font-medium transition {{ $currentTab === 'manual' ? 'border-brand-500 text-brand-600 dark:text-brand-400' : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white' }}">
+                        <svg class="mr-2 inline-block h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Tambah Murid Manual
+                    </a>
+                    <a href="{{ route('sekolah.create-murid', ['sekolah' => $sekolah, 'tab' => 'file']) }}"
+                        role="tab" :aria-selected="{{ $currentTab === 'file' ? 'true' : 'false' }}"
+                        class="text-center flex-1 border-b-2 px-6 py-4 text-sm font-medium transition {{ $currentTab === 'file' ? 'border-brand-500 text-brand-600 dark:text-brand-400' : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white' }}">
+                        <svg class="mr-2 inline-block h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        Tambah Murid dengan File
+                    </a>
                 </div>
-            @endif
+            </div>
+        </div>
 
-            @php
-                $muridDefault = old('murid', [
-                    [
-                        'nama' => '',
-                        'nisn' => '',
-                        'nik' => '',
-                        'tempat_lahir' => '',
-                        'tanggal_lahir' => '',
-                        'jenis_kelamin' => 'L',
+        <!-- Tab Content -->
+        @if ($currentTab === 'manual')
+        <div id="tab-manual" role="tabpanel">
+            <!-- Form Card -->
+            <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
+                <!-- Error Messages -->
+                @if ($errors->any())
+                    <div class="mb-6 rounded-lg bg-red-100 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">
+                        <p class="font-medium mb-2">Terjadi kesalahan validasi:</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                @php
+                    $muridDefault = old('murid', [
+                        [
+                            'nama' => '',
+                            'nisn' => '',
+                            'nik' => '',
+                            'tempat_lahir' => '',
+                            'tanggal_lahir' => '',
+                            'jenis_kelamin' => 'L',
                         'nama_ayah' => '',
                         'nomor_hp_ayah' => '',
                         'nama_ibu' => '',
@@ -346,6 +378,8 @@
                 </div>
             </form>
         </div>
+        @endif
+        </div>
     </div>
 @endsection
 
@@ -354,26 +388,29 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Validate that NISN values are unique
             const form = document.getElementById('muridForm');
-            form.addEventListener('submit', function(e) {
-                const nisnInputs = document.querySelectorAll('input[name*="[nisn]"]');
-                const nisnValues = Array.from(nisnInputs).map(input => input.value.trim());
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const nisnInputs = document.querySelectorAll('input[name*="[nisn]"]');
+                    const nisnValues = Array.from(nisnInputs).map(input => input.value.trim());
 
-                // Check for empty values
-                const emptyNisn = nisnValues.some(v => v === '');
-                if (emptyNisn) {
-                    e.preventDefault();
-                    alert('NISN tidak boleh kosong pada semua baris');
-                    return false;
-                }
+                    // Check for empty values
+                    const emptyNisn = nisnValues.some(v => v === '');
+                    if (emptyNisn) {
+                        e.preventDefault();
+                        alert('NISN tidak boleh kosong pada semua baris');
+                        return false;
+                    }
 
-                // Check for duplicates
-                const uniqueNisn = new Set(nisnValues);
-                if (uniqueNisn.size !== nisnValues.length) {
-                    e.preventDefault();
-                    alert('NISN tidak boleh duplikat');
-                    return false;
-                }
-            });
+                    // Check for duplicates
+                    const uniqueNisn = new Set(nisnValues);
+                    if (uniqueNisn.size !== nisnValues.length) {
+                        e.preventDefault();
+                        alert('NISN tidak boleh duplikat');
+                        return false;
+                    }
+                });
+            }
         });
     </script>
 @endpush
+

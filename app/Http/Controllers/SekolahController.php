@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSekolahRequest;
 use App\Http\Requests\UpdateSekolahRequest;
 use App\Http\Requests\StoreMuridBulkRequest;
+use App\Http\Requests\StoreMuridFileRequest;
+use App\Jobs\ProcessMuridBulkFile;
 use App\Models\Sekolah;
 use App\Models\Murid;
 use App\Models\SekolahMurid;
@@ -12,6 +14,7 @@ use App\Models\Alamat;
 use App\Models\GaleriSekolah;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
+use App\Models\TambahMuridBulkFile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -307,8 +310,24 @@ class SekolahController extends Controller
     /**
      * Show the form for creating multiple murid in bulk.
      */
-    public function createMurid(Sekolah $sekolah): View
+    public function createMurid(Sekolah $sekolah, Request $request): View
     {
+        $tab = $request->query('tab', 'manual');
+
+        if ($tab === 'file') {
+            // Fetch uploaded files for this sekolah
+            $uploadedFiles = TambahMuridBulkFile::where('id_sekolah', $sekolah->id)
+                ->orderBy('created_at', 'desc')
+                ->limit(10)
+                ->get();
+
+            return view('pages.sekolah.tambah-murid-files', [
+                'title' => 'Tambah Murid dengan File - ' . $sekolah->nama,
+                'sekolah' => $sekolah,
+                'uploadedFiles' => $uploadedFiles,
+            ]);
+        }
+
         return view('pages.sekolah.tambah-murid', [
             'title' => 'Tambah Murid - ' . $sekolah->nama,
             'sekolah' => $sekolah,
@@ -368,5 +387,52 @@ class SekolahController extends Controller
                 ->withInput()
                 ->with('error', 'Terjadi kesalahan saat menambahkan murid: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Store murid file for bulk processing.
+     */
+    public function storeMuridFile(StoreMuridFileRequest $request, Sekolah $sekolah): RedirectResponse
+    {
+        try {
+            $validated = $request->validated();
+            $file = $validated['file'];
+
+            // Store file to disk
+            $filePath = $file->store('murid-bulk-files', 'local');
+
+            // Create record in tambah_murid_bulk_files table
+            $bulkFile = TambahMuridBulkFile::create([
+                'file_path' => $filePath,
+                'id_sekolah' => $sekolah->id,
+                'is_finished' => null,
+            ]);
+
+            // Dispatch job untuk processing file di background
+            ProcessMuridBulkFile::dispatch($bulkFile);
+
+            return redirect()->back()
+                ->with('success', 'File berhasil diunggah dan akan diproses oleh sistem dalam beberapa saat.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat mengunggah file: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download template CSV for murid bulk import.
+     */
+    public function downloadTemplate(): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $templatePath = storage_path('app/templates/template-murid.csv');
+
+        if (!file_exists($templatePath)) {
+            abort(404, 'Template file not found');
+        }
+
+        return response()->download($templatePath, 'template-murid.csv', [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
     }
 }
