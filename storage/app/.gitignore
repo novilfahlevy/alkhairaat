@@ -6,8 +6,8 @@
 
 # Now un-ignore the contents of these specific folders
 !templates/*
-!private/*
-!public/*
+!private/
+!public/
 
 # Keep the gitignore itself
 !.gitignore
