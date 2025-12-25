@@ -130,6 +130,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sekolah/{sekolah}/tambah-murid', [App\Http\Controllers\SekolahController::class, 'createMurid'])->name('sekolah.create-murid');
     Route::post('/sekolah/{sekolah}/tambah-murid', [App\Http\Controllers\SekolahController::class, 'storeMurid'])->name('sekolah.store-murid');
     Route::post('/sekolah/{sekolah}/check-nisn', [App\Http\Controllers\SekolahController::class, 'checkNisn'])->name('sekolah.check-nisn');
+    Route::get('/sekolah/{sekolah}/get-existing-murid', [App\Http\Controllers\SekolahController::class, 'getExistingMurid'])->name('sekolah.get-existing-murid');
+    Route::post('/sekolah/{sekolah}/store-existing-murid', [App\Http\Controllers\SekolahController::class, 'storeExistingMurid'])->name('sekolah.store-existing-murid');
     Route::post('/sekolah/{sekolah}/tambah-murid-file', [App\Http\Controllers\SekolahController::class, 'storeMuridFile'])->name('sekolah.store-murid-file');
     Route::get('/sekolah/template/download', [App\Http\Controllers\SekolahController::class, 'downloadTemplate'])->name('sekolah.download-template');
     

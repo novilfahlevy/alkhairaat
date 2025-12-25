@@ -72,8 +72,8 @@ class SekolahMurid extends Model
      * @var array<string, string>
      */
     public const STATUS_KELULUSAN_OPTIONS = [
-        self::STATUS_LULUS_YA => 'Ya',
-        self::STATUS_LULUS_TIDAK => 'Tidak',
+        self::STATUS_LULUS_YA => 'Sudah lulus',
+        self::STATUS_LULUS_TIDAK => 'Tidak lulus',
     ];
 
     /**

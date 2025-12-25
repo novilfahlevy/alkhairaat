@@ -14,6 +14,7 @@ use App\Models\Alamat;
 use App\Models\GaleriSekolah;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
+use App\Models\Scopes\NauanganSekolahScope;
 use App\Models\TambahMuridBulkFile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -328,6 +329,14 @@ class SekolahController extends Controller
             ]);
         }
 
+        if ($tab === 'existing') {
+            return view('pages.sekolah.tambah-murid-existing', [
+                'title' => 'Pilih Murid yang Ada - ' . $sekolah->nama,
+                'sekolah' => $sekolah,
+                'statusKelulusanOptions' => SekolahMurid::STATUS_KELULUSAN_OPTIONS,
+            ]);
+        }
+
         return view('pages.sekolah.tambah-murid', [
             'title' => 'Tambah Murid - ' . $sekolah->nama,
             'sekolah' => $sekolah,
@@ -467,6 +476,113 @@ class SekolahController extends Controller
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Terjadi kesalahan saat mengunggah file: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get murid that exist in the system for this sekolah.
+     */
+    public function getExistingMurid(Request $request, Sekolah $sekolah)
+    {
+        $query = Murid::withoutGlobalScope(NauanganSekolahScope::class)
+            ->whereDoesntHave('sekolahMurid', function ($q) use ($sekolah) {
+                $q->where('id_sekolah', $sekolah->id);
+            })
+            ->orderBy('nama', 'asc');
+
+        // Apply search filter (nama, nisn)
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('nisn', 'like', "%{$search}%");
+            });
+        }
+
+        // Paginate results
+        $perPage = $request->input('per_page', 20);
+        $murid = $query->paginate($perPage);
+
+        return response()->json([
+            'data' => $murid->items(),
+            'pagination' => [
+                'current_page' => $murid->currentPage(),
+                'last_page' => $murid->lastPage(),
+                'per_page' => $murid->perPage(),
+                'total' => $murid->total(),
+                'from' => $murid->firstItem(),
+                'to' => $murid->lastItem(),
+            ]
+        ]);
+    }
+
+    /**
+     * Store selected murid that already exist in the system to a sekolah.
+     */
+    public function storeExistingMurid(Request $request, Sekolah $sekolah): \Illuminate\Http\RedirectResponse
+    {
+        $validated = $request->validate([
+            'murid_ids' => 'required|json',
+            'tahun_masuk' => 'required|integer|min:1990|max:' . now()->year,
+            'kelas' => 'nullable|string|max:50',
+            'status_kelulusan' => 'nullable|in:ya,tidak',
+        ]);
+
+        $muridIds = json_decode($validated['murid_ids'], true);
+        $tahunMasuk = $validated['tahun_masuk'];
+        $kelas = $validated['kelas'] ?? null;
+        $statusKelulusan = $validated['status_kelulusan'] ?? null;
+
+        if (!is_array($muridIds) || empty($muridIds)) {
+            return redirect()->back()
+                ->with('error', 'Tidak ada murid yang dipilih');
+        }
+
+        try {
+            $successCount = 0;
+            $skipCount = 0;
+            $errors = [];
+
+            foreach ($muridIds as $muridId) {
+                // Check if murid exists
+                $murid = Murid::find($muridId);
+                if (!$murid) {
+                    $errors[] = "Murid dengan ID {$muridId} tidak ditemukan";
+                    continue;
+                }
+
+                // Check if murid already registered in this sekolah
+                $exists = SekolahMurid::where('id_sekolah', $sekolah->id)
+                    ->where('id_murid', $muridId)
+                    ->exists();
+
+                if ($exists) {
+                    $skipCount++;
+                    continue;
+                }
+
+                // Create new sekolah_murid record
+                SekolahMurid::create([
+                    'id_murid' => $muridId,
+                    'id_sekolah' => $sekolah->id,
+                    'tahun_masuk' => $tahunMasuk,
+                    'kelas' => $kelas,
+                    'status_kelulusan' => $statusKelulusan,
+                ]);
+
+                $successCount++;
+            }
+
+            $message = "Berhasil menambahkan {$successCount} murid";
+            if ($skipCount > 0) {
+                $message .= " ({$skipCount} murid sudah terdaftar)";
+            }
+
+            return redirect()->route('sekolah.show', ['sekolah' => $sekolah->id])
+                ->with('success', $message);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 

@@ -3,56 +3,8 @@
 @section('content')
     <!-- Page Content -->
     <div class="space-y-6 pb-60">
-        <!-- Page Header Card -->
-        <div
-            class="flex flex-col gap-y-4 md:flex-row md:justify-between md:items-center rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
-            <div>
-                <h1 class="text-title-md mb-2 font-semibold text-gray-800 dark:text-white/90">
-                    Tambah Murid
-                </h1>
-                <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Sekolah: <span class="font-medium">{{ $sekolah->nama }}</span>
-                </p>
-            </div>
-            <div>
-                <a href="{{ route('sekolah.show', $sekolah) }}"
-                    class="flex items-center justify-center rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
-                    <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    Kembali
-                </a>
-            </div>
-        </div>
-
         <!-- Tab Navigation -->
-        @php
-            $currentTab = request()->query('tab', 'manual');
-        @endphp
-        <div class="rounded-lg bg-white shadow-md dark:bg-gray-900">
-            <div class="border-b border-gray-200 dark:border-gray-700">
-                <div class="flex" role="tablist">
-                    <a href="{{ route('sekolah.create-murid', ['sekolah' => $sekolah, 'tab' => 'manual']) }}" role="tab"
-                        :aria-selected="{{ $currentTab === 'manual' ? 'true' : 'false' }}"
-                        class="text-center flex-1 border-b-2 px-6 py-4 text-sm font-medium transition {{ $currentTab === 'manual' ? 'border-brand-500 text-brand-600 dark:text-brand-400' : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white' }}">
-                        <svg class="mr-2 inline-block h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        Tambah Murid Manual
-                    </a>
-                    <a href="{{ route('sekolah.create-murid', ['sekolah' => $sekolah, 'tab' => 'file']) }}" role="tab"
-                        :aria-selected="{{ $currentTab === 'file' ? 'true' : 'false' }}"
-                        class="text-center flex-1 border-b-2 px-6 py-4 text-sm font-medium transition {{ $currentTab === 'file' ? 'border-brand-500 text-brand-600 dark:text-brand-400' : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white' }}">
-                        <svg class="mr-2 inline-block h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                        Tambah Murid dengan File
-                    </a>
-                </div>
-            </div>
-        </div>
+        @include('pages.sekolah.tambah-murid-tabs', compact('sekolah'))
 
         <!-- Form Card -->
         <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
