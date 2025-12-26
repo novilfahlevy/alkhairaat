@@ -43,15 +43,15 @@
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                            NIK
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                             Jenis Kelamin
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                             Tahun Masuk
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            NIK
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
@@ -70,19 +70,19 @@
                     @foreach ($murid as $item)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
                             <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
-                                {{ $item->nama }}
+                                {{ $item->nama ?? '-' }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                {{ $item->nisn }}
+                                {{ $item->nisn ?? '-' }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                                {{ $item->jenis_kelamin_label ?? '-' }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                                {{ $item->pivot?->tahun_masuk ?? '-' }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
                                 {{ $item->nik ?? '-' }}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                {{ $item->jenis_kelamin_label }}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                {{ $item->pivot?->tahun_masuk }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
                                 {{ $item->pivot?->kelas ?? '-' }}

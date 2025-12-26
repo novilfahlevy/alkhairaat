@@ -143,7 +143,6 @@
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-300">
-                            Aksi
                         </th>
                     </tr>
                 </thead>
@@ -193,22 +192,6 @@
                                         class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20">
                                         Lihat
                                     </a>
-
-                                    <a href="{{ route('sekolah.edit', $item) }}"
-                                        class="text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 flex-1 rounded-md bg-amber-50 px-3 py-2 text-center text-sm font-medium dark:bg-amber-900/20">
-                                        Edit
-                                    </a>
-
-                                    <form action="{{ route('sekolah.destroy', $item) }}" method="POST"
-                                        class="inline-block"
-                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus sekolah ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 w-full rounded-md bg-red-50 px-3 py-2 text-sm font-medium dark:bg-red-900/20">
-                                            Hapus
-                                        </button>
-                                    </form>
                                 </div>
                             </td>
                         </tr>
