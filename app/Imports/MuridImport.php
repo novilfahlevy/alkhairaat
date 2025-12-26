@@ -34,9 +34,9 @@ class MuridImport implements ToCollection, WithHeadingRow, WithChunkReading
         // 3. Bulk query - ambil NISN yang sudah ada dalam 1 query
         $existingNisn = Murid::withoutGlobalScope(MuridNauanganScope::class)
             ->whereIn('nisn', $nisnList)
-            ->whereHas('sekolahMurid', function ($query) {
-                $query->where('id_sekolah', $this->idSekolah);
-            })
+            // ->whereHas('sekolahMurid', function ($query) {
+            //     $query->where('id_sekolah', $this->idSekolah);
+            // })
             ->pluck('nisn')
             ->toArray();
 
@@ -152,6 +152,8 @@ class MuridImport implements ToCollection, WithHeadingRow, WithChunkReading
                         'rw' => $row['rw'],
                         'kode_pos' => $row['kode_pos'],
                         'alamat_lengkap' => $row['alamat_lengkap'],
+                        'koordinat_x' => $row['latitude_koordinat_x'], // Tambahkan koordinat X
+                        'koordinat_y' => $row['longitude_koordinat_y'], // Tambahkan koordinat Y
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
@@ -183,8 +185,8 @@ class MuridImport implements ToCollection, WithHeadingRow, WithChunkReading
         return $rows->map(function ($row) {
             $row = $row->toArray();
 
-            // Skip jika data tidak valid
-            if (empty($row['nisn']) || empty($row['nama'])) {
+            // Validasi field wajib: nisn, nama, jenis_kelamin, tahun_masuk
+            if (empty($row['nisn']) || empty($row['nama']) || empty($row['jenis_kelamin']) || empty($row['tahun_masuk'])) {
                 return null;
             }
 
@@ -197,12 +199,12 @@ class MuridImport implements ToCollection, WithHeadingRow, WithChunkReading
                 'tempat_lahir' => $row['tempat_lahir'] ?? null,
                 'tanggal_lahir' => $this->transformDate($row['tanggal_lahir'] ?? null),
                 'kelas' => $row['kelas'] ?? null,
-                'kontak_wa_hp' => $row['kontak_wa_hp'] ?? null,
-                'kontak_email' => $row['kontak_email'] ?? null,
                 'nama_ayah' => $row['nama_ayah'] ?? null,
                 'nomor_hp_ayah' => $row['nomor_hp_ayah'] ?? null,
                 'nama_ibu' => $row['nama_ibu'] ?? null,
                 'nomor_hp_ibu' => $row['nomor_hp_ibu'] ?? null,
+                'kontak_wa_hp' => $row['kontak_wa_hp'] ?? null,
+                'kontak_email' => $row['kontak_email'] ?? null,
                 'provinsi' => $row['provinsi'] ?? null,
                 'kabupaten' => $row['kabupaten'] ?? null,
                 'kecamatan' => $row['kecamatan'] ?? null,
@@ -211,6 +213,8 @@ class MuridImport implements ToCollection, WithHeadingRow, WithChunkReading
                 'rw' => $row['rw'] ?? null,
                 'kode_pos' => $row['kode_pos'] ?? null,
                 'alamat_lengkap' => $row['alamat_lengkap'] ?? null,
+                'latitude_koordinat_x' => isset($row['latitude_koordinat_x']) ? (float)$row['latitude_koordinat_x'] : null, // Tambahkan koordinat X
+                'longitude_koordinat_y' => isset($row['longitude_koordinat_y']) ? (float)$row['longitude_koordinat_y'] : null, // Tambahkan koordinat Y
             ];
         })->filter();
     }

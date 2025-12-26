@@ -32,9 +32,9 @@ class GuruImport implements ToCollection, WithHeadingRow, WithChunkReading
         // Bulk query - ambil NIK yang sudah ada dalam 1 query
         $existingNik = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)
             ->whereIn('nik', $nikList)
-            ->whereHas('jabatanGuru', function ($query) {
-                $query->where('id_sekolah', $this->idSekolah);
-            })
+            // ->whereHas('jabatanGuru', function ($query) {
+            //     $query->where('id_sekolah', $this->idSekolah);
+            // })
             ->pluck('nik')
             ->toArray();
 

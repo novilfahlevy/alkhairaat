@@ -21,9 +21,8 @@
             @endif
 
             <!-- Form -->
-            <form action="{{ route('sekolah.store-murid', $sekolah) }}" method="POST" id="muridForm"
-                x-data="formData()" x-init="init()" x-on:submit="isSubmitting = true"
-                enctype="multipart/form-data">
+            <form action="{{ route('sekolah.store-murid', $sekolah) }}" method="POST" id="muridForm" x-data="formData()"
+                x-init="init()" x-on:submit="isSubmitting = true" enctype="multipart/form-data">
                 @csrf
 
                 <div class="rounded-lg border border-gray-200 p-6 dark:border-gray-700">
@@ -87,19 +86,6 @@
                                 @enderror
                             </div>
 
-                            <!-- NIK -->
-                            <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                    NIK
-                                </label>
-                                <input type="text" name="nik" value="{{ old('nik', '') }}"
-                                    placeholder="Nomor Induk Kependudukan"
-                                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
-                                @error('nik')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
-
                             <!-- Jenis Kelamin -->
                             <div>
                                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
@@ -115,6 +101,33 @@
                                     @endforeach
                                 </select>
                                 @error('jenis_kelamin')
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Tahun Masuk -->
+                            <div>
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    Tahun Masuk <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" name="tahun_masuk" value="{{ old('tahun_masuk', date('Y')) }}"
+                                    min="1900" max="{{ date('Y') + 1 }}"
+                                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white {{ $errors->has('tahun_masuk') ? 'border-red-500' : '' }}"
+                                    required />
+                                @error('tahun_masuk')
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- NIK -->
+                            <div>
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    NIK
+                                </label>
+                                <input type="text" name="nik" value="{{ old('nik', '') }}"
+                                    placeholder="Nomor Induk Kependudukan"
+                                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
+                                @error('nik')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -142,20 +155,6 @@
 
                         <!-- Right Column -->
                         <div class="space-y-6">
-                            <!-- Tahun Masuk -->
-                            <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                    Tahun Masuk <span class="text-red-500">*</span>
-                                </label>
-                                <input type="number" name="tahun_masuk" value="{{ old('tahun_masuk', date('Y')) }}"
-                                    min="1900" max="{{ date('Y') + 1 }}"
-                                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white {{ $errors->has('tahun_masuk') ? 'border-red-500' : '' }}"
-                                    required />
-                                @error('tahun_masuk')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
-
                             <!-- Kelas -->
                             <div>
                                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
@@ -220,10 +219,7 @@
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
                             </div>
-                        </div>
 
-                        <!-- Full Width Section -->
-                        <div class="lg:col-span-2 space-y-6">
                             <!-- Kontak WA/HP -->
                             <div>
                                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
@@ -249,7 +245,10 @@
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
                             </div>
+                        </div>
 
+                        <!-- Full Width Section -->
+                        <div class="lg:col-span-2 space-y-6">
                             <!-- Section Divider -->
                             <div class="mt-2 pt-6 border-t border-gray-200 dark:border-gray-700">
                                 <h4 class="text-sm font-semibold text-gray-800 dark:text-white/90 mb-4">Data Alamat
