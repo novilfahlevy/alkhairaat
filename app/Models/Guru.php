@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $tanggal_lahir
  * @property string $jenis_kelamin
  * @property string|null $status_perkawinan
- * @property string|null $nik
+ * @property string $nik
  * @property string|null $status_kepegawaian
  * @property string|null $npk
  * @property string|null $nuptk
@@ -150,18 +150,21 @@ class Guru extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'status',
-        'nama_gelar_depan',
+        // Mandatory fields
         'nama',
+        'jenis_kelamin',
+        'nik',
+        'status',
+        
+        // Optional fields
+        'npk',
+        'nuptk',
+        'status_kepegawaian',
+        'nama_gelar_depan',
         'nama_gelar_belakang',
         'tempat_lahir',
         'tanggal_lahir',
-        'jenis_kelamin',
         'status_perkawinan',
-        'nik',
-        'status_kepegawaian',
-        'npk',
-        'nuptk',
         'kontak_wa_hp',
         'kontak_email',
         'nomor_rekening',

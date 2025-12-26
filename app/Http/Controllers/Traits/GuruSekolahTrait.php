@@ -37,7 +37,7 @@ trait GuruSekolahTrait
                 ->orderBy('created_at', 'desc')
                 ->limit(10)
                 ->get();
-            
+
             return view('pages.sekolah.guru.tambah-guru-files', [
                 'title' => 'Tambah Guru dengan File - ' . $sekolah->nama,
                 'sekolah' => $sekolah,
@@ -70,9 +70,14 @@ trait GuruSekolahTrait
     /**
      * Store a newly created Guru in storage (manual input).
      */
-    public function storeGuru(StoreGuruRequest $request, $sekolah): RedirectResponse
+    public function storeGuru(StoreGuruRequest $request, Sekolah $sekolah): RedirectResponse
     {
         $validated = $request->validated();
+
+        // Extract jabatan fields sebelum disimpan ke Guru
+        $jenisJabatan = $validated['jenis_jabatan'];
+        $keteranganJabatan = $validated['keterangan_jabatan'];
+        unset($validated['jenis_jabatan'], $validated['keterangan_jabatan']);
 
         // Simpan Guru baru
         $guru = Guru::create($validated);
@@ -95,11 +100,12 @@ trait GuruSekolahTrait
             Alamat::create($alamatData);
         }
 
-        // Assign ke sekolah (JabatanGuru)
+        // Assign ke sekolah dengan jabatan dan keterangan dari form
         JabatanGuru::create([
             'id_guru' => $guru->id,
             'id_sekolah' => $sekolah->id,
-            'jenis_jabatan' => JabatanGuru::JENIS_JABATAN_GURU,
+            'jenis_jabatan' => $jenisJabatan,
+            'keterangan_jabatan' => $keteranganJabatan,
         ]);
 
         return redirect()->route('sekolah.show', $sekolah)->with('success', 'Guru berhasil ditambahkan.');
@@ -239,5 +245,22 @@ trait GuruSekolahTrait
                 ->withInput()
                 ->with('error', 'Terjadi kesalahan saat mengunggah file: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * API: Cek apakah NIK guru sudah ada
+     */
+    public function checkNikGuru(Request $request)
+    {
+        $request->validate([
+            'nik' => 'required|string',
+        ]);
+
+        $guru = Guru::where('nik', $request->input('nik'))->first();
+
+        return response()->json([
+            'exists' => $guru !== null,
+            'message' => $guru ? 'NIK sudah digunakan oleh <b>' . $guru->nama . '</b>.' : 'NIK tersedia.'
+        ]);
     }
 }

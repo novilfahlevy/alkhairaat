@@ -148,6 +148,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Guru Management
     Route::get('/sekolah/{sekolah}/tambah-guru', [App\Http\Controllers\SekolahController::class, 'createGuru'])->name('sekolah.create-guru');
+    Route::post('/sekolah/check-nik-guru', [App\Http\Controllers\SekolahController::class, 'checkNikGuru'])->name('sekolah.check-nik-guru');
     Route::post('/sekolah/{sekolah}/tambah-guru', [App\Http\Controllers\SekolahController::class, 'storeGuru'])->name('sekolah.store-guru');
     Route::get('/sekolah/{sekolah}/get-existing-guru', [App\Http\Controllers\SekolahController::class, 'getExistingGuru'])->name('sekolah.get-existing-guru');
     Route::post('/sekolah/{sekolah}/store-existing-guru', [App\Http\Controllers\SekolahController::class, 'storeExistingGuru'])->name('sekolah.store-existing-guru');

@@ -76,7 +76,7 @@ class JabatanGuru extends Model
         'id_guru',
         'id_sekolah',
         'jenis_jabatan',
-        'keterangan_jabatan',
+        'keterangan_jabatan', // Untuk guru, bisa diisi mata pelajaran yang diampu
     ];
 
     /**
