@@ -60,7 +60,7 @@ class GuruImport implements ToCollection, WithHeadingRow, WithChunkReading
             foreach ($newGuruRows as $row) {
                 // Siapkan data untuk bulk insert guru baru
                 $newGuruData[] = [
-                    'status' => Guru::STATUS_AKTIF,
+                    'status' => $row['status'] ?? Guru::STATUS_AKTIF,
                     'nama_gelar_depan' => $row['gelar_depan'],
                     'nama' => $row['nama'],
                     'nama_gelar_belakang' => $row['gelar_belakang'],
@@ -132,7 +132,8 @@ class GuruImport implements ToCollection, WithHeadingRow, WithChunkReading
                 $jabatanGuruData[] = [
                     'id_guru' => $guru->id,
                     'id_sekolah' => $this->idSekolah,
-                    'jenis_jabatan' => JabatanGuru::JENIS_JABATAN_GURU,
+                    'jenis_jabatan' => $row['jenis_jabatan'] ?? JabatanGuru::JENIS_JABATAN_GURU,
+                    'keterangan_jabatan' => $row['keterangan_jabatan'],
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
@@ -179,13 +180,25 @@ class GuruImport implements ToCollection, WithHeadingRow, WithChunkReading
     {
         return $rows->map(function ($row) {
             $row = $row->toArray();
-            if (empty($row['nik']) || empty($row['nama']) || empty($row['jenis_kelamin'])) {
+            // Validasi field wajib: nama, nik, jenis_kelamin, status, status_kepegawaian, keterangan_jabatan
+            if (empty($row['nik']) || empty($row['nama']) || empty($row['jenis_kelamin']) || 
+                empty($row['status']) || empty($row['status_kepegawaian']) || empty($row['keterangan_jabatan'])) {
                 return null;
             }
+            
+            // Validasi field wajib alamat: provinsi, kabupaten
+            if (empty($row['provinsi']) || empty($row['kabupaten'])) {
+                return null;
+            }
+            
             return [
+                'jenis_jabatan' => $row['jenis_jabatan'] ?? JabatanGuru::JENIS_JABATAN_GURU,
+                'keterangan_jabatan' => $row['keterangan_jabatan'],
                 'nama' => trim($row['nama']),
                 'nik' => trim((string)$row['nik']),
                 'jenis_kelamin' => strtoupper(trim($row['jenis_kelamin'] ?? '')) === 'P' ? 'P' : 'L',
+                'status' => $row['status'] ?? Guru::STATUS_AKTIF,
+                'status_kepegawaian' => $row['status_kepegawaian'],
                 'nuptk' => isset($row['nuptk']) ? trim((string)$row['nuptk']) : null,
                 'npk' => isset($row['npk']) ? trim((string)$row['npk']) : null,
                 'gelar_depan' => $row['gelar_depan'] ?? null,
@@ -193,14 +206,13 @@ class GuruImport implements ToCollection, WithHeadingRow, WithChunkReading
                 'tempat_lahir' => $row['tempat_lahir'] ?? null,
                 'tanggal_lahir' => $this->transformDate($row['tanggal_lahir'] ?? null),
                 'status_perkawinan' => $row['status_perkawinan'] ?? null,
-                'status_kepegawaian' => $row['status_kepegawaian'] ?? null,
                 'kontak_wa_hp' => $row['kontak_wa_hp'] ?? null,
                 'email' => $row['email'] ?? null,
                 'nomor_rekening' => $row['nomor_rekening'] ?? null,
                 'rekening_atas_nama' => $row['rekening_atas_nama'] ?? null,
                 'bank_rekening' => $row['bank_rekening'] ?? null,
-                'provinsi' => $row['provinsi'] ?? null,
-                'kabupaten' => $row['kabupaten'] ?? null,
+                'provinsi' => $row['provinsi'],
+                'kabupaten' => $row['kabupaten'],
                 'kecamatan' => $row['kecamatan'] ?? null,
                 'kelurahan' => $row['kelurahan'] ?? null,
                 'rt' => $row['rt'] ?? null,

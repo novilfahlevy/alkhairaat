@@ -264,6 +264,7 @@
         </div>
 
         <!-- Template Information Card -->
+        <!-- Template Information Card -->
         <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
             <h2 class="mb-4 text-lg font-semibold text-gray-800 dark:text-white/90">Format File Template</h2>
 
@@ -289,6 +290,23 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Jenis Jabatan
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Jenis jabatan guru (Kepala Sekolah, Wakil Kepala Sekolah, Guru, Staff / TU, Pengasuh Asrama)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                    Wajib
+                                </span>
+                            </td>
+                        </tr>
                         <tr>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
@@ -343,11 +361,62 @@
                         <tr>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                NUPTK
+                                Status
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor Unik Pendidik dan Tenaga Kependidikan
+                                Status guru (Aktif, Tidak Aktif)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                    Wajib
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Status Kepegawaian
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Status kepegawaian guru (PNS, Non PNS, PPPK)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                    Wajib
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Keterangan Jabatan
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Keterangan jabatan (untuk guru: mata pelajaran yang diampu)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                    Wajib
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                NPK
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Nomor Pokok Kepegawaian
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
@@ -360,11 +429,11 @@
                         <tr>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                NPK
+                                NUPTK
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor Pokok Kepegawaian
+                                Nomor Unik Pendidik dan Tenaga Kependidikan
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
@@ -450,23 +519,6 @@
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Status perkawinan (Lajang, Menikah)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Status Kepegawaian
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Status kepegawaian guru (PNS, Non PNS, PPPK)
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
@@ -573,8 +625,8 @@
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
+                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                    Wajib
                                 </span>
                             </td>
                         </tr>
@@ -590,8 +642,8 @@
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
+                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                    Wajib
                                 </span>
                             </td>
                         </tr>
