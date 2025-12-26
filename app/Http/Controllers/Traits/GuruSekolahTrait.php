@@ -9,6 +9,7 @@ use App\Jobs\ProcessGuruBulkFile;
 use App\Models\Guru;
 use App\Models\JabatanGuru;
 use App\Models\Alamat;
+use App\Models\Scopes\GuruSekolahNauanganScope;
 use App\Models\Sekolah;
 use App\Models\TambahGuruBulkFile;
 use Illuminate\Http\RedirectResponse;
@@ -117,9 +118,7 @@ trait GuruSekolahTrait
      */
     public function getExistingGuru(Request $request, Sekolah $sekolah)
     {
-        $query = Guru::whereDoesntHave('jabatanGuru', function ($q) use ($sekolah) {
-            $q->where('id_sekolah', $sekolah->id);
-        });
+        $query = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class);
 
         // Apply search filter (nama, nik, nuptk) - Select2 sends search term as 'q'
         if ($request->query('q')) {
@@ -229,7 +228,7 @@ trait GuruSekolahTrait
             'nik' => 'required|string',
         ]);
 
-        $guru = Guru::where('nik', $request->input('nik'))->first();
+        $guru = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)->where('nik', $request->input('nik'))->first();
 
         return response()->json([
             'exists' => $guru !== null,

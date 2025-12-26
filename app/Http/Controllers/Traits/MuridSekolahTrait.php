@@ -8,6 +8,7 @@ use App\Jobs\ProcessMuridBulkFile;
 use App\Models\Murid;
 use App\Models\SekolahMurid;
 use App\Models\Alamat;
+use App\Models\Scopes\MuridNauanganScope;
 use App\Models\Scopes\NauanganSekolahScope;
 use App\Models\Sekolah;
 use App\Models\TambahMuridBulkFile;
@@ -68,7 +69,7 @@ trait MuridSekolahTrait
         }
 
         // Check if NISN exists
-        $murid = Murid::where('nisn', $nisn)->first();
+        $murid = Murid::withoutGlobalScope(MuridNauanganScope::class)->where('nisn', $nisn)->first();
 
         if ($murid) {
             return response()->json([
@@ -191,7 +192,7 @@ trait MuridSekolahTrait
      */
     public function getExistingMurid(Request $request, Sekolah $sekolah)
     {
-        $query = Murid::withoutGlobalScope(NauanganSekolahScope::class)
+        $query = Murid::withoutGlobalScope(MuridNauanganScope::class)
             ->whereDoesntHave('sekolahMurid', function ($q) use ($sekolah) {
                 $q->where('id_sekolah', $sekolah->id);
             })

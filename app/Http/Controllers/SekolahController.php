@@ -11,6 +11,7 @@ use App\Models\Alamat;
 use App\Models\GaleriSekolah;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
+use App\Models\Scopes\NauanganSekolahScope;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -336,7 +337,7 @@ class SekolahController extends Controller
             'kode_sekolah' => 'required|string',
         ]);
 
-        $sekolah = Sekolah::where('kode_sekolah', $request->input('kode_sekolah'))->first();
+        $sekolah = Sekolah::withoutGlobalScope(NauanganSekolahScope::class)->where('kode_sekolah', $request->input('kode_sekolah'))->first();
 
         return response()->json([
             'exists' => $sekolah !== null,
