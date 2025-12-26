@@ -140,7 +140,7 @@
         }
 
         function updateSubmitButtonState() {
-            const guruId = document.querySelector('select[name="guru_id"]').value;
+            const guruId = document.querySelector('select[name="id_guru"]').value;
             const submitBtn = document.querySelector('#submitBtn');
             submitBtn.disabled = !guruId;
         }
