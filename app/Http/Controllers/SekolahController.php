@@ -810,4 +810,20 @@ class SekolahController extends Controller
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }
+    /**
+     * API: Cek apakah kode sekolah sudah ada
+     */
+    public function checkKodeSekolah(Request $request)
+    {
+        $request->validate([
+            'kode_sekolah' => 'required|string',
+        ]);
+
+        $sekolah = Sekolah::where('kode_sekolah', $request->input('kode_sekolah'))->first();
+
+        return response()->json([
+            'exists' => $sekolah !== null,
+            'message' => $sekolah ? 'Kode sekolah sudah digunakan oleh <b>' . $sekolah->nama . '</b>.' : 'Kode sekolah tersedia.'
+        ]);
+    }
 }

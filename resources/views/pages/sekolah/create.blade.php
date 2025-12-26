@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Page Content -->
-    <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
+    <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900" x-data="sekolahForm()">
         <!-- Page Header -->
         <div class="mb-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -25,7 +25,7 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ route('sekolah.store') }}" method="POST" id="sekolahForm" enctype="multipart/form-data" x-data="{ isSubmitting: false }"
+        <form action="{{ route('sekolah.store') }}" method="POST" id="sekolahForm" enctype="multipart/form-data"
             x-on:submit="isSubmitting = true">
             @csrf
 
@@ -37,9 +37,13 @@
                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                             Kode Sekolah <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="kode_sekolah" value="{{ old('kode_sekolah') }}"
+                        <input type="text" name="kode_sekolah" id="kodeSekolahInput" 
+                            x-model="kodeSekolah"
+                            x-on:blur="checkKodeSekolah"
                             placeholder="Contoh: ALK-001"
+                            :class="kodeSekolahError ? 'border-red-500' : ''"
                             class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('kode_sekolah') border-red-500 @enderror">
+                        <div class="mt-1 text-sm" x-show="kodeSekolahStatus" x-html="kodeSekolahStatus"></div>
                         @error('kode_sekolah')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
@@ -50,7 +54,7 @@
                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                             Nama Sekolah <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Nama lengkap sekolah"
+                        <input type="text" name="nama" x-model="namaSekolah" placeholder="Nama lengkap sekolah"
                             class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('nama') border-red-500 @enderror">
                         @error('nama')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
@@ -239,6 +243,8 @@
                                 Provinsi <span class="text-red-500">*</span>
                             </label>
                             <select name="id_provinsi" id="provinsi"
+                                x-model="selectedProvinsi"
+                                x-on:change="loadKabupaten"
                                 class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('id_provinsi') border-red-500 @enderror">
                                 <option value="">Pilih Provinsi</option>
                                 @foreach ($provinsi as $prov)
@@ -258,9 +264,14 @@
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                 Kabupaten/Kota <span class="text-red-500">*</span>
                             </label>
-                            <select name="id_kabupaten" id="kabupaten" disabled
+                            <select name="id_kabupaten" id="kabupaten"
+                                :disabled="!selectedProvinsi"
+                                x-model="selectedKabupaten"
                                 class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 disabled:opacity-50 disabled:cursor-not-allowed @error('id_kabupaten') border-red-500 @enderror">
                                 <option value="">Pilih Kabupaten/Kota</option>
+                                <template x-for="kabupaten in kabupatenList" :key="kabupaten.id">
+                                    <option :value="kabupaten.id" x-text="kabupaten.nama_kabupaten"></option>
+                                </template>
                             </select>
                             @error('id_kabupaten')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
@@ -515,7 +526,7 @@
                 </a>
                 <button type="submit"
                     class="bg-brand-500 hover:bg-brand-600 flex items-center justify-center rounded-lg px-6 py-3 text-sm font-medium text-white transition"
-                    :disabled="isSubmitting" x-bind:class="{ 'opacity-70 cursor-not-allowed': isSubmitting }">
+                    :disabled="isSubmitting || kodeSekolahError" x-bind:class="{ 'opacity-70 cursor-not-allowed': isSubmitting || kodeSekolahError }">
                     <template x-if="isSubmitting">
                         <svg class="mr-2 h-4 w-4 animate-spin text-white" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24">
@@ -540,50 +551,86 @@
 
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const provinsiSelect = document.getElementById('provinsi');
-            const kabupatenSelect = document.getElementById('kabupaten');
-
-            provinsiSelect.addEventListener('change', function() {
-                const provinsiId = this.value;
-
-                // Reset kabupaten select
-                kabupatenSelect.innerHTML = '<option value="">Pilih Kabupaten/Kota</option>';
-                kabupatenSelect.disabled = true;
-
-                if (provinsiId) {
-                    // Fetch kabupaten data
-                    fetch(`{{ route('sekolah.get_kabupaten') }}?id_provinsi=${provinsiId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.forEach(kabupaten => {
-                                const option = new Option(kabupaten.nama_kabupaten, kabupaten
-                                    .id);
-                                kabupatenSelect.add(option);
-                            });
-                            kabupatenSelect.disabled = false;
-                        })
-                        .catch(error => {
-                            console.error('Error fetching kabupaten:', error);
-                            kabupatenSelect.disabled = false;
+        function sekolahForm() {
+            return {
+                isSubmitting: false,
+                kodeSekolah: '{{ old('kode_sekolah') }}',
+                namaSekolah: '{{ old('nama') }}',
+                kodeSekolahStatus: '',
+                kodeSekolahError: false,
+                selectedProvinsi: '{{ old('id_provinsi') }}',
+                selectedKabupaten: '{{ old('id_kabupaten') }}',
+                kabupatenList: [],
+                kodeCheckController: null,
+                
+                init() {
+                    // Load kabupaten if provinsi is already selected
+                    if (this.selectedProvinsi) {
+                        this.loadKabupaten();
+                    }
+                },
+                
+                async checkKodeSekolah() {
+                    const kode = this.kodeSekolah.trim();
+                    if (!kode) {
+                        this.kodeSekolahStatus = '';
+                        this.kodeSekolahError = false;
+                        return;
+                    }
+                    
+                    this.kodeSekolahStatus = '<span class="text-gray-500">Mengecek kode sekolah...</span>';
+                    
+                    // Cancel previous request if any
+                    if (this.kodeCheckController) {
+                        this.kodeCheckController.abort();
+                    }
+                    
+                    this.kodeCheckController = new AbortController();
+                    
+                    try {
+                        const response = await fetch("{{ route('sekolah.check-kode') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value,
+                            },
+                            body: JSON.stringify({ kode_sekolah: kode }),
+                            signal: this.kodeCheckController.signal
                         });
-                }
-            });
-
-            // Auto-generate kode sekolah if needed
-            const namaInput = document.querySelector('input[name="nama"]');
-            const kodeInput = document.querySelector('input[name="kode_sekolah"]');
-
-            namaInput.addEventListener('input', function() {
-                if (!kodeInput.value) {
-                    // Simple auto-generation logic - you can customize this
-                    const words = this.value.split(' ');
-                    const initials = words.map(word => word.charAt(0)).join('').toUpperCase();
-                    if (initials.length >= 2) {
-                        kodeInput.value = 'ALK-' + initials.slice(0, 3);
+                        
+                        const data = await response.json();
+                        
+                        if (data.exists) {
+                            this.kodeSekolahStatus = '<span class="text-red-500">' + data.message + '</span>';
+                            this.kodeSekolahError = true;
+                        } else {
+                            this.kodeSekolahStatus = '<span class="text-green-600">Kode sekolah tersedia.</span>';
+                            this.kodeSekolahError = false;
+                        }
+                    } catch (error) {
+                        if (error.name !== 'AbortError') {
+                            this.kodeSekolahStatus = '<span class="text-red-500">Gagal mengecek kode sekolah.</span>';
+                            this.kodeSekolahError = false;
+                        }
+                    }
+                },
+                
+                async loadKabupaten() {
+                    // Reset kabupaten select
+                    this.kabupatenList = [];
+                    this.selectedKabupaten = '';
+                    
+                    if (this.selectedProvinsi) {
+                        try {
+                            const response = await fetch(`{{ route('sekolah.get_kabupaten') }}?id_provinsi=${this.selectedProvinsi}`);
+                            const data = await response.json();
+                            this.kabupatenList = data;
+                        } catch (error) {
+                            console.error('Error fetching kabupaten:', error);
+                        }
                     }
                 }
-            });
-        });
+            }
+        }
     </script>
 @endpush

@@ -119,6 +119,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/kabupaten/{kabupaten}', [App\Http\Controllers\KabupatenController::class, 'destroy'])->name('kabupaten.destroy');
     
     // Sekolah CRUD
+    Route::post('/sekolah/check-kode', [App\Http\Controllers\SekolahController::class, 'checkKodeSekolah'])->name('sekolah.check-kode');
     Route::get('/sekolah', [App\Http\Controllers\SekolahController::class, 'index'])->name('sekolah.index');
     Route::get('/sekolah/create', [App\Http\Controllers\SekolahController::class, 'create'])->name('sekolah.create');
     Route::post('/sekolah', [App\Http\Controllers\SekolahController::class, 'store'])->name('sekolah.store');
