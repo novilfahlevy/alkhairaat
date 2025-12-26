@@ -117,7 +117,9 @@ trait GuruSekolahTrait
      */
     public function getExistingGuru(Request $request, Sekolah $sekolah)
     {
-        $query = Guru::query();
+        $query = Guru::whereDoesntHave('jabatanGuru', function ($q) use ($sekolah) {
+            $q->where('id_sekolah', $sekolah->id);
+        });
 
         // Apply search filter (nama, nik, nuptk) - Select2 sends search term as 'q'
         if ($request->query('q')) {

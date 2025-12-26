@@ -153,19 +153,19 @@ class GuruImport implements ToCollection, WithHeadingRow, WithChunkReading
     {
         return $rows->map(function ($row) {
             $row = $row->toArray();
-            if (empty($row['nik']) || empty($row['nama'])) {
+            if (empty($row['nik']) || empty($row['nama']) || empty($row['jenis_kelamin'])) {
                 return null;
             }
             return [
+                'nama' => trim($row['nama']),
                 'nik' => trim((string)$row['nik']),
+                'jenis_kelamin' => strtoupper(trim($row['jenis_kelamin'] ?? '')) === 'P' ? 'P' : 'L',
                 'nuptk' => isset($row['nuptk']) ? trim((string)$row['nuptk']) : null,
                 'npk' => isset($row['npk']) ? trim((string)$row['npk']) : null,
                 'gelar_depan' => $row['gelar_depan'] ?? null,
-                'nama' => trim($row['nama']),
                 'gelar_belakang' => $row['gelar_belakang'] ?? null,
                 'tempat_lahir' => $row['tempat_lahir'] ?? null,
                 'tanggal_lahir' => $this->transformDate($row['tanggal_lahir'] ?? null),
-                'jenis_kelamin' => strtoupper($row['jenis_kelamin'] ?? 'L') === 'P' ? 'P' : 'L',
                 'status_perkawinan' => $row['status_perkawinan'] ?? null,
                 'status_kepegawaian' => $row['status_kepegawaian'] ?? null,
                 'kontak_wa_hp' => $row['kontak_wa_hp'] ?? null,

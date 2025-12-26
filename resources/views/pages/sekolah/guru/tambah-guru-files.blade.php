@@ -13,7 +13,9 @@
                 <div class="mb-6 rounded-lg bg-red-100 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">
                     <p class="font-medium mb-2">
                         <svg class="inline-block w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd" />
                         </svg>
                         Terjadi kesalahan:
                     </p>
@@ -24,7 +26,9 @@
                                 @if ($errors->first('file') === 'File harus diunggah.')
                                     <li>Pastikan Anda memilih file terlebih dahulu</li>
                                 @elseif (str_contains($errors->first('file'), 'Format file'))
-                                    <li>Format yang didukung: <code class="bg-red-200 px-1 rounded">.xlsx</code>, <code class="bg-red-200 px-1 rounded">.xls</code>, atau <code class="bg-red-200 px-1 rounded">.csv</code></li>
+                                    <li>Format yang didukung: <code class="bg-red-200 px-1 rounded">.xlsx</code>, <code
+                                            class="bg-red-200 px-1 rounded">.xls</code>, atau <code
+                                            class="bg-red-200 px-1 rounded">.csv</code></li>
                                 @elseif (str_contains($errors->first('file'), 'file'))
                                     <li>Input harus berupa file yang valid (bukan folder atau shortcut)</li>
                                 @endif
@@ -133,13 +137,16 @@
                         <input type="file" id="file" name="file" x-ref="fileInput" accept=".xlsx,.xls,.csv"
                             @change="handleFileSelect($event)" class="hidden" required>
                     </div>
-                    
+
                     <!-- File Validation Errors -->
                     @error('file')
                         <div class="mt-3 rounded-lg bg-red-50 p-3 border border-red-200 dark:bg-red-900/20 dark:border-red-800">
                             <div class="flex items-start">
-                                <svg class="h-5 w-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                <svg class="h-5 w-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                        clip-rule="evenodd" />
                                 </svg>
                                 <div>
                                     <p class="text-sm font-medium text-red-800 dark:text-red-200">{{ $message }}</p>
@@ -159,7 +166,7 @@
                             </div>
                         </div>
                     @enderror
-                    
+
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
                         Ukuran file maksimal: 5MB • Hanya satu file per upload
                     </p>
@@ -171,11 +178,14 @@
                         <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">File yang Sudah Diunggah</h3>
                         <div class="space-y-2">
                             @foreach ($uploadedFiles as $uploadedFile)
-                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800">
                                     <div class="flex items-start gap-3 min-w-0 flex-1">
                                         <!-- File Icon -->
-                                        <svg class="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        <svg class="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
 
                                         <!-- File Info -->
@@ -192,23 +202,31 @@
                                     <!-- Status Badge -->
                                     <div class="flex items-center gap-2 flex-shrink-0">
                                         @if ($uploadedFile->is_finished === null)
-                                            <span class="inline-flex items-center rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
-                                                <svg class="mr-1 h-2 w-2 animate-pulse" fill="currentColor" viewBox="0 0 8 8">
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
+                                                <svg class="mr-1 h-2 w-2 animate-pulse" fill="currentColor"
+                                                    viewBox="0 0 8 8">
                                                     <circle cx="4" cy="4" r="3" />
                                                 </svg>
                                                 Menunggu Proses
                                             </span>
                                         @elseif ($uploadedFile->is_finished === true)
-                                            <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300">
                                                 <svg class="mr-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                        clip-rule="evenodd" />
                                                 </svg>
                                                 Berhasil
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-300">
                                                 <svg class="mr-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                        clip-rule="evenodd" />
                                                 </svg>
                                                 Gagal
                                             </span>
@@ -248,6 +266,7 @@
         <!-- Template Information Card -->
         <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
             <h2 class="mb-4 text-lg font-semibold text-gray-800 dark:text-white/90">Format File Template</h2>
+
             <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
                 File Anda harus memiliki kolom-kolom berikut (sesuai urutan):
             </p>
@@ -265,14 +284,14 @@
                             </th>
                             <th
                                 class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Wajib
+                                Status
                             </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
                         <tr>
                             <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Nama
                             </td>
                             <td
@@ -282,31 +301,14 @@
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 <span
-                                    class="rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
-                                    Ya
+                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                    Wajib
                                 </span>
                             </td>
                         </tr>
                         <tr>
                             <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                NISN
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor Induk Siswa Nasional (10 digit)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
-                                    Ya
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 NIK
                             </td>
                             <td
@@ -316,48 +318,14 @@
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 <span
-                                    class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                    Wajib
                                 </span>
                             </td>
                         </tr>
                         <tr>
                             <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Tempat Lahir
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Tempat lahir guru
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Tanggal Lahir
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Tanggal lahir (format: DD/MM/YYYY atau YYYY-MM-DD)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Jenis Kelamin
                             </td>
                             <td
@@ -367,48 +335,150 @@
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 <span
-                                    class="rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
-                                    Ya
+                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                    Wajib
                                 </span>
                             </td>
                         </tr>
                         <tr>
                             <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Tahun Masuk
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                NUPTK
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Tahun masuk guru (format: YYYY)
+                                Nomor Unik Pendidik dan Tenaga Kependidikan
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 <span
-                                    class="rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
-                                    Ya
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
                             <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kelas
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                NPK
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kelas guru (contoh: X A, 1 B, dll)
+                                Nomor Pokok Kepegawaian
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 <span
-                                    class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
                             <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Gelar Depan
+                            </td>
+                            <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Gelar depan guru (contoh: Drs., Ir., dll)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Gelar Belakang
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Gelar belakang guru (contoh: S.Pd, M.Pd, M.Si, dll)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tempat Lahir
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tempat lahir guru
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tanggal Lahir
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tanggal lahir (format: DD/MM/YYYY atau YYYY-MM-DD)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Status Perkawinan
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Status perkawinan (Lajang, Menikah)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Status Kepegawaian
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Status kepegawaian guru (PNS, Non PNS, PPPK)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kontak WA/HP
                             </td>
                             <td
@@ -418,14 +488,14 @@
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 <span
-                                    class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
                             <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Email
                             </td>
                             <td
@@ -435,164 +505,195 @@
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 <span
-                                    class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nama Ayah
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Nomor Rekening
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nama lengkap ayah guru
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Nomor rekening bank guru
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor HP Ayah
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Rekening Atas Nama
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor HP/WA ayah guru
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Nama pemilik rekening bank
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nama Ibu
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Bank Rekening
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nama lengkap ibu guru
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Nama bank rekening guru (contoh: Bank BRI, Bank Mandiri, dll)
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor HP Ibu
-                            </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor HP/WA ibu guru
-                            </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Provinsi
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Provinsi tempat tinggal guru (contoh: DKI Jakarta, Jawa Barat)
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kabupaten
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kabupaten/Kota tempat tinggal guru (contoh: Jakarta Pusat, Bandung)
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kecamatan
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kecamatan tempat tinggal guru
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kelurahan
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kelurahan tempat tinggal guru
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 RT
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Nomor RT (Rukun Tetangga)
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 RW
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Nomor RW (Rukun Warga)
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kode Pos
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kode pos tempat tinggal guru (5 digit)
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Alamat Lengkap
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Alamat lengkap guru (contoh: Jl. Pendidikan No. 123)
                             </td>
-                            <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Tidak
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
