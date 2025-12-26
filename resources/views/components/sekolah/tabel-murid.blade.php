@@ -61,6 +61,9 @@
                             class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                             Status Kelulusan
                         </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
@@ -79,13 +82,13 @@
                                 {{ $item->jenis_kelamin_label }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                {{ $item->pivot->tahun_masuk }}
+                                {{ $item->pivot?->tahun_masuk }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                {{ $item->pivot->kelas ?? '-' }}
+                                {{ $item->pivot?->kelas ?? '-' }}
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                @if ($item->pivot->status_kelulusan === 'ya')
+                                @if ($item->pivot?->status_kelulusan === 'ya')
                                     <span
                                         class="inline-flex rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400">
                                         Lulus
@@ -96,6 +99,12 @@
                                         Belum Lulus
                                     </span>
                                 @endif
+                            </td>
+                            <td class="px-6 py-4 text-sm font-medium">
+                                <a href="#"
+                                    class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">
+                                    Lihat Detail
+                                </a>
                             </td>
                         </tr>
                     @endforeach
@@ -125,16 +134,16 @@
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600 dark:text-gray-400">Tahun Masuk:</span>
-                            <span class="text-gray-900 dark:text-white">{{ $item->pivot->tahun_masuk }}</span>
+                            <span class="text-gray-900 dark:text-white">{{ $item->pivot?->tahun_masuk }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600 dark:text-gray-400">Kelas:</span>
-                            <span class="text-gray-900 dark:text-white">{{ $item->pivot->kelas ?? '-' }}</span>
+                            <span class="text-gray-900 dark:text-white">{{ $item->pivot?->kelas ?? '-' }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600 dark:text-gray-400">Status:</span>
                             <span>
-                                @if ($item->pivot->status_kelulusan === 'ya')
+                                @if ($item->pivot?->status_kelulusan === 'ya')
                                     <span
                                         class="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400">
                                         Lulus
@@ -146,6 +155,12 @@
                                     </span>
                                 @endif
                             </span>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <a href="#"
+                                class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">
+                                Lihat Detail
+                            </a>
                         </div>
                     </div>
                 </div>

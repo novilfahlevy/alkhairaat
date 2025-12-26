@@ -3,7 +3,7 @@
 <!-- Guru Table Section -->
 <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-white/90">Daftar Guru</h2>
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-white/90">Daftar Guru dan Jabatannya</h2>
     </div>
 
     <!-- Search and Per-Page Controls -->
@@ -39,16 +39,22 @@
                             NIK</th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                            NUPTK</th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                            Jenis Kelamin</th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                             Status Kepegawaian</th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            NPK</th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            NUPTK</th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            Jabatan</th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                             No. HP/WA</th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
@@ -57,14 +63,37 @@
                             <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{{ $item->nama }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $item->nik ?? '-' }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $item->nuptk ?? '-' }}
+                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                                {{ $item->status_kepegawaian ?? '-' }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                {{ $item->jenis_kelamin_label ?? '-' }}</td>
+                                {{ $item->npk ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                {{ $item->status_kepegawaian ?? '-' }}</td>
+                                {{ $item->nuptk ?? '-' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400 flex gap-2 items-center">
+                                <div class="space-y-2">
+                                    <span
+                                        class="inline-block rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-700 dark:bg-brand-500/20 dark:text-brand-400">
+                                        {{ $item->pivot?->jenis_jabatan ?? '-' }}
+                                    </span>
+                                    @if (
+                                        $item->pivot?->keterangan_jabatan &&
+                                            strtolower(trim($item->pivot?->keterangan_jabatan)) != strtolower(trim($item->pivot?->jenis_jabatan)))
+                                        <span
+                                            class="inline-block rounded-full bg-blue-light-100 px-3 py-1 text-xs font-medium text-blue-light-700 dark:bg-blue-light-500/20 dark:text-blue-light-400">
+                                            {{ $item->pivot?->keterangan_jabatan }}
+                                        </span>
+                                    @endif
+                                </div>
+                            </td>
                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
                                 {{ $item->kontak_wa_hp ?? '-' }}</td>
+                            <td class="px-6 py-4 text-sm font-medium">
+                                <a href="#"
+                                    class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">
+                                    Lihat Detail
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -93,9 +122,31 @@
                             <span class="text-gray-600 dark:text-gray-400">Status Kepegawaian:</span>
                             <span class="text-gray-900 dark:text-white">{{ $item->status_kepegawaian ?? '-' }}</span>
                         </div>
+                        <div class="flex flex-col gap-2">
+                            <span class="text-gray-600 dark:text-gray-400">Jabatan:</span>
+                            <div class="space-y-2">
+                                <span
+                                    class="inline-block rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-700 dark:bg-brand-500/20 dark:text-brand-400">
+                                    {{ $item->pivot?->jenis_jabatan ?? '-' }}
+                                </span>
+                                @if ($item->pivot?->keterangan_jabatan &&
+                                            strtolower(trim($item->pivot?->keterangan_jabatan)) != strtolower(trim($item->pivot?->jenis_jabatan)))
+                                    <span
+                                        class="inline-block ml-2 rounded-full bg-blue-light-100 px-3 py-1 text-xs font-medium text-blue-light-700 dark:bg-blue-light-500/20 dark:text-blue-light-400">
+                                        {{ $item->pivot?->keterangan_jabatan }}
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600 dark:text-gray-400">No. HP/WA:</span>
                             <span class="text-gray-900 dark:text-white">{{ $item->kontak_wa_hp ?? '-' }}</span>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <a href="#"
+                                class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">
+                                Lihat Detail
+                            </a>
                         </div>
                     </div>
                 </div>

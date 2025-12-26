@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Traits;
 
 use App\Http\Requests\StoreGuruRequest;
+use App\Http\Requests\StoreExistingGuruRequest;
 use App\Http\Requests\StoreBulkFileRequest;
 use App\Jobs\ProcessGuruBulkFile;
 use App\Models\Guru;
@@ -112,106 +113,76 @@ trait GuruSekolahTrait
     }
 
     /**
-     * Get guru that exist in the system but not yet assigned to this sekolah (AJAX endpoint)
+     * Get guru that exist in the system but not yet assigned to this sekolah (AJAX endpoint for Select2)
      */
     public function getExistingGuru(Request $request, Sekolah $sekolah)
     {
-        $query = Guru::whereDoesntHave('jabatanGuru', function ($q) use ($sekolah) {
-            $q->where('id_sekolah', $sekolah->id);
-        });
+        $query = Guru::query();
 
-        // Apply search filter (nama, nik, nuptk)
-        if ($request->filled('search')) {
-            $search = $request->input('search');
+        // Apply search filter (nama, nik, nuptk) - Select2 sends search term as 'q'
+        if ($request->query('q')) {
+            $search = $request->query('q');
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%$search%")
                     ->orWhere('nik', 'like', "%$search%")
-                    ->orWhere('nuptk', 'like', "%$search%")
-                    ->orWhere('kontak_wa_hp', 'like', "%$search%")
-                    ->orWhere('status_kepegawaian', 'like', "%$search%")
-                    ->orWhere('jenis_kelamin', 'like', "%$search%")
-                ;
+                    ->orWhere('nuptk', 'like', "%$search%");
             });
         }
 
-        $perPage = $request->input('per_page', 20);
-        $guru = $query->orderBy('nama')->paginate($perPage);
+        $guru = $query->orderBy('nama')->limit(20)->get();
 
-        // Format for Alpine.js
-        return response()->json([
-            'data' => $guru->items(),
-            'pagination' => [
-                'current_page' => $guru->currentPage(),
-                'last_page' => $guru->lastPage(),
-                'per_page' => $guru->perPage(),
-                'total' => $guru->total(),
-                'from' => $guru->firstItem(),
-                'to' => $guru->lastItem(),
-            ],
+        // Format for Select2
+        return response()
+            ->json([
+            'results' => $guru->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'text' => $item->nama . ' (NIK: ' . ($item->nik ?? '-') . ')'
+                ];
+            })->values()->all(),
         ]);
     }
 
     /**
      * Store selected existing Guru to sekolah (assign JabatanGuru).
      */
-    public function storeExistingGuru(Request $request, $sekolah): RedirectResponse
+    public function storeExistingGuru(StoreExistingGuruRequest $request, Sekolah $sekolah): RedirectResponse
     {
-        $validated = $request->validate([
-            'guru_ids' => 'required|json',
-        ]);
-
-        $guruIds = json_decode($validated['guru_ids'], true);
-
-        if (!is_array($guruIds) || empty($guruIds)) {
-            return redirect()->back()->with('error', 'Tidak ada guru yang dipilih');
-        }
+        $validated = $request->validated();
+        $guruId = $validated['id_guru'];
 
         try {
-            $successCount = 0;
-            $skipCount = 0;
-            $errors = [];
-
-            foreach ($guruIds as $guruId) {
-                // Check if guru exists
-                $guru = Guru::find($guruId);
-                if (!$guru) {
-                    $errors[] = "Guru dengan ID {$guruId} tidak ditemukan";
-                    continue;
-                }
-
-                // Check if guru already assigned to this sekolah
-                $exists = JabatanGuru::where('id_sekolah', $sekolah->id)
-                    ->where('id_guru', $guruId)
-                    ->where('jenis_jabatan', JabatanGuru::JENIS_JABATAN_GURU)
-                    ->exists();
-
-                if ($exists) {
-                    $skipCount++;
-                    continue;
-                }
-
-                // Assign guru ke sekolah (JabatanGuru)
-                JabatanGuru::create([
-                    'id_guru' => $guruId,
-                    'id_sekolah' => $sekolah->id,
-                    'jenis_jabatan' => JabatanGuru::JENIS_JABATAN_GURU,
-                ]);
-
-                $successCount++;
+            // Check if guru exists
+            $guru = Guru::find($guruId);
+            if (!$guru) {
+                return redirect()->back()->with('error', 'Guru yang dipilih tidak ditemukan.');
             }
 
-            $message = "Berhasil menambahkan {$successCount} guru";
-            if ($skipCount > 0) {
-                $message .= " ({$skipCount} guru sudah terdaftar)";
+            // Check if guru already assigned to this sekolah with same position
+            $exists = JabatanGuru::where('id_sekolah', $sekolah->id)
+                ->where('id_guru', $guruId)
+                ->where('jenis_jabatan', $validated['jenis_jabatan'])
+                ->where('keterangan_jabatan', $validated['keterangan_jabatan'])
+                ->exists();
+
+            if ($exists) {
+                return redirect()->back()
+                    ->with('error', "{$guru->nama} sudah terdaftar dengan jabatan ini di sekolah ini.");
             }
-            if (!empty($errors)) {
-                $message .= ". " . implode('; ', $errors);
-            }
+
+            // Assign guru ke sekolah (JabatanGuru)
+            JabatanGuru::create([
+                'id_guru' => $guruId,
+                'id_sekolah' => $sekolah->id,
+                'jenis_jabatan' => $validated['jenis_jabatan'],
+                'keterangan_jabatan' => $validated['keterangan_jabatan'],
+            ]);
 
             return redirect()->route('sekolah.show', $sekolah)
-                ->with('success', $message);
+                ->with('success', "{$guru->nama} berhasil ditambahkan ke sekolah ini.");
         } catch (\Exception $e) {
             return redirect()->back()
+                ->withInput()
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }

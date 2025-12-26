@@ -9,6 +9,7 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+@import 'select2/dist/css/select2.min.css';
 
 @custom-variant dark (&:is(.dark *));
 

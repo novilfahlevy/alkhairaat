@@ -5,10 +5,15 @@ import ApexCharts from 'apexcharts';
 // flatpickr
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+
 // FullCalendar
 import { Calendar } from '@fullcalendar/core';
 
+import $ from 'jquery';
+window.$ = window.jQuery = $;
 
+import select2 from 'select2';
+select2();
 
 window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
