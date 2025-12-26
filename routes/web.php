@@ -25,40 +25,40 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 
 /*
 |--------------------------------------------------------------------------
-| Protected Routes (require authentication)
+| Main Application Routes (require authentication)
 |--------------------------------------------------------------------------
 */
 
 Route::middleware('auth')->group(function () {
-    // dashboard pages
+    // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    // calender pages
-    Route::get('/calendar', function () {
-        return view('pages.calender', ['title' => 'Calendar']);
-    })->name('calendar');
-
-    // profile pages
+    // Profile
     Route::get('/profile', function () {
         return view('pages.profile', ['title' => 'Profile']);
     })->name('profile');
 
-    // form pages
+    // Calendar
+    Route::get('/calendar', function () {
+        return view('pages.calender', ['title' => 'Calendar']);
+    })->name('calendar');
+
+    // Form Elements
     Route::get('/form-elements', function () {
         return view('pages.form.form-elements', ['title' => 'Form Elements']);
     })->name('form-elements');
 
-    // tables pages
+    // Tables
     Route::get('/basic-tables', function () {
         return view('pages.tables.basic-tables', ['title' => 'Basic Tables']);
     })->name('basic-tables');
 
-    // pages
+    // Blank Page
     Route::get('/blank', function () {
         return view('pages.blank', ['title' => 'Blank']);
     })->name('blank');
 
-    // chart pages
+    // Charts
     Route::get('/line-chart', function () {
         return view('pages.chart.line-chart', ['title' => 'Line Chart']);
     })->name('line-chart');
@@ -67,7 +67,7 @@ Route::middleware('auth')->group(function () {
         return view('pages.chart.bar-chart', ['title' => 'Bar Chart']);
     })->name('bar-chart');
 
-    // ui elements pages
+    // UI Elements
     Route::get('/alerts', function () {
         return view('pages.ui-elements.alerts', ['title' => 'Alerts']);
     })->name('alerts');
@@ -95,12 +95,12 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Role-based Routes 
+| Master Data Routes
 |--------------------------------------------------------------------------
 */
 
 Route::middleware(['auth'])->group(function () {
-    // Provinsi CRUD with specific permissions
+    // Provinsi
     Route::get('/provinsi', [App\Http\Controllers\ProvinsiController::class, 'index'])->name('provinsi.index');
     Route::get('/provinsi/create', [App\Http\Controllers\ProvinsiController::class, 'create'])->name('provinsi.create');
     Route::post('/provinsi', [App\Http\Controllers\ProvinsiController::class, 'store'])->name('provinsi.store');
@@ -109,7 +109,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/provinsi/{provinsi}', [App\Http\Controllers\ProvinsiController::class, 'update'])->name('provinsi.update');
     Route::delete('/provinsi/{provinsi}', [App\Http\Controllers\ProvinsiController::class, 'destroy'])->name('provinsi.destroy');
     
-    // Kabupaten CRUD with specific permissions
+    // Kabupaten
     Route::get('/kabupaten', [App\Http\Controllers\KabupatenController::class, 'index'])->name('kabupaten.index');
     Route::get('/kabupaten/create', [App\Http\Controllers\KabupatenController::class, 'create'])->name('kabupaten.create');
     Route::post('/kabupaten', [App\Http\Controllers\KabupatenController::class, 'store'])->name('kabupaten.store');
@@ -117,7 +117,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/kabupaten/{kabupaten}/edit', [App\Http\Controllers\KabupatenController::class, 'edit'])->name('kabupaten.edit');
     Route::put('/kabupaten/{kabupaten}', [App\Http\Controllers\KabupatenController::class, 'update'])->name('kabupaten.update');
     Route::delete('/kabupaten/{kabupaten}', [App\Http\Controllers\KabupatenController::class, 'destroy'])->name('kabupaten.destroy');
-    
+});
+
+/*
+|--------------------------------------------------------------------------
+| Sekolah Management Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function () {
     // Sekolah CRUD
     Route::post('/sekolah/check-kode', [App\Http\Controllers\SekolahController::class, 'checkKodeSekolah'])->name('sekolah.check-kode');
     Route::get('/sekolah', [App\Http\Controllers\SekolahController::class, 'index'])->name('sekolah.index');
@@ -128,6 +136,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sekolah/{sekolah}/edit', [App\Http\Controllers\SekolahController::class, 'edit'])->name('sekolah.edit');
     Route::put('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'update'])->name('sekolah.update');
     Route::delete('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'destroy'])->name('sekolah.destroy');
+
+    // Murid Management
     Route::get('/sekolah/{sekolah}/tambah-murid', [App\Http\Controllers\SekolahController::class, 'createMurid'])->name('sekolah.create-murid');
     Route::post('/sekolah/{sekolah}/tambah-murid', [App\Http\Controllers\SekolahController::class, 'storeMurid'])->name('sekolah.store-murid');
     Route::post('/sekolah/{sekolah}/check-nisn', [App\Http\Controllers\SekolahController::class, 'checkNisn'])->name('sekolah.check-nisn');
@@ -135,15 +145,23 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sekolah/{sekolah}/store-existing-murid', [App\Http\Controllers\SekolahController::class, 'storeExistingMurid'])->name('sekolah.store-existing-murid');
     Route::post('/sekolah/{sekolah}/tambah-murid-file', [App\Http\Controllers\SekolahController::class, 'storeMuridFile'])->name('sekolah.store-murid-file');
     Route::get('/sekolah/template/download', [App\Http\Controllers\SekolahController::class, 'downloadTemplate'])->name('sekolah.download-template');
-
-    // Tambah Guru (manual, pilih, file)
+    
+    // Guru Management
     Route::get('/sekolah/{sekolah}/tambah-guru', [App\Http\Controllers\SekolahController::class, 'createGuru'])->name('sekolah.create-guru');
     Route::post('/sekolah/{sekolah}/tambah-guru', [App\Http\Controllers\SekolahController::class, 'storeGuru'])->name('sekolah.store-guru');
     Route::get('/sekolah/{sekolah}/get-existing-guru', [App\Http\Controllers\SekolahController::class, 'getExistingGuru'])->name('sekolah.get-existing-guru');
     Route::post('/sekolah/{sekolah}/store-existing-guru', [App\Http\Controllers\SekolahController::class, 'storeExistingGuru'])->name('sekolah.store-existing-guru');
     Route::post('/sekolah/{sekolah}/tambah-guru-file', [App\Http\Controllers\SekolahController::class, 'storeGuruFile'])->name('sekolah.store-guru-file');
-    Route::get('/sekolah/guru/template/download', [App\Http\Controllers\SekolahController::class, 'downloadGuruTemplate'])->name('sekolah.download-guru-template');
-    
+    Route::get('/sekolah/template-guru/download', [App\Http\Controllers\SekolahController::class, 'downloadGuruTemplate'])->name('sekolah.download-guru-template');
+});
+
+/*
+|--------------------------------------------------------------------------
+| External School Management Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function () {
     // Sekolah External CRUD
     Route::get('/sekolah-external', [App\Http\Controllers\SekolahExternalController::class, 'index'])->name('sekolah-external.index');
     Route::get('/sekolah-external/create', [App\Http\Controllers\SekolahExternalController::class, 'create'])->name('sekolah-external.create');
@@ -152,7 +170,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sekolah-external/{sekolahExternal}/edit', [App\Http\Controllers\SekolahExternalController::class, 'edit'])->name('sekolah-external.edit');
     Route::put('/sekolah-external/{sekolahExternal}', [App\Http\Controllers\SekolahExternalController::class, 'update'])->name('sekolah-external.update');
     Route::delete('/sekolah-external/{sekolahExternal}', [App\Http\Controllers\SekolahExternalController::class, 'destroy'])->name('sekolah-external.destroy');
-    
+});
+
+/*
+|--------------------------------------------------------------------------
+| Role-based Management Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function () {
     // User management (superuser only)
     Route::middleware('role:'.User::ROLE_SUPERUSER)->group(function () {
         Route::resource('user', App\Http\Controllers\UserController::class);
@@ -178,8 +204,15 @@ Route::middleware(['auth'])->group(function () {
             'as' => 'manajemen'
         ]);
     });
-    
-    // Reports and export
+});
+
+/*
+|--------------------------------------------------------------------------
+| Reports and Export Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function () {
     Route::get('/reports', function () {
         return 'Admin Reports';
     })->name('reports');
@@ -189,27 +222,12 @@ Route::middleware(['auth'])->group(function () {
     })->name('export');
 });
 
-// error pages (public)
+/*
+|--------------------------------------------------------------------------
+| Error Pages (public)
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/error-404', function () {
     return view('pages.errors.error-404', ['title' => 'Error 404']);
 })->name('error-404');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

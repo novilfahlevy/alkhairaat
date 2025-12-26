@@ -95,7 +95,9 @@ class MuridImport implements ToCollection, WithHeadingRow, WithChunkReading
                         try {
                             DB::table('murid')->insert($data);
                         } catch (Exception $e2) {
-                            if ($e2->errorInfo[1] != 1062) {
+                            if ($e2 instanceof \Illuminate\Database\QueryException && isset($e2->errorInfo[1]) && $e2->errorInfo[1] == 1062) {
+                                // Duplicate entry, ignore
+                            } else {
                                 throw $e2;
                             }
                         }

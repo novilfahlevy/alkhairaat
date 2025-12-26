@@ -39,12 +39,12 @@
                 <i class="fas fa-users mr-2"></i>
                 Pilih Guru yang Ada
             </a>
-            {{-- <a href="{{ route('sekolah.create-guru', ['sekolah' => $sekolah, 'tab' => 'file']) }}" role="tab"
-                aria-selected="{{ $currentTab === 'file' ? 'true' : 'false' }}"
-                class="inline-block min-w-[180px] border-b-2 px-6 py-4 text-sm font-medium transition {{ $currentTab === 'file' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white' }}">
-                <i class="fas fa-file-upload mr-2"></i>
-                Tambah Guru dengan File
-            </a> --}}
+                <a href="{{ route('sekolah.create-guru', ['sekolah' => $sekolah, 'tab' => 'file']) }}" role="tab"
+                    aria-selected="{{ $currentTab === 'file' ? 'true' : 'false' }}"
+                    class="inline-block min-w-[180px] border-b-2 px-6 py-4 text-sm font-medium transition {{ $currentTab === 'file' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white' }}">
+                    <i class="fas fa-file-upload mr-2"></i>
+                    Tambah Guru dengan File
+                </a>
         </div>
     </div>
 </div>
