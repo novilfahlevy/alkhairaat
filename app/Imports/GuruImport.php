@@ -26,109 +26,163 @@ class GuruImport implements ToCollection, WithHeadingRow, WithChunkReading
             return;
         }
 
-        // Ambil semua NIK dari chunk ini
+        // Ambil semua NIK, NPK, dan NUPTK dari chunk ini
         $nikList = $validRows->pluck('nik')->filter()->unique()->toArray();
+        $npkList = $validRows->pluck('npk')->filter()->unique()->toArray();
+        $nuptkList = $validRows->pluck('nuptk')->filter()->unique()->toArray();
 
-        // Bulk query - ambil NIK yang sudah ada dalam 1 query
-        $existingNik = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)
+        // Bulk query - ambil guru yang sudah ada berdasarkan NIK, NPK, atau NUPTK
+        $existingGurus = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)
             ->whereIn('nik', $nikList)
-            // ->whereHas('jabatanGuru', function ($query) {
-            //     $query->where('id_sekolah', $this->idSekolah);
-            // })
-            ->pluck('nik')
-            ->toArray();
+            ->orWhereIn('npk', $npkList)
+            ->orWhereIn('nuptk', $nuptkList)
+            ->get()
+            ->keyBy(function($guru) {
+                return $guru->nik . '_' . ($guru->npk ?? '') . '_' . ($guru->nuptk ?? '');
+            });
 
-        // Filter hanya guru dengan NIK yang belum ada
-        $newGuruRows = $validRows->reject(function ($row) use ($existingNik) {
-            return in_array($row['nik'], $existingNik);
+        // Filter guru baru dan guru yang sudah ada
+        $newGuruRows = $validRows->reject(function ($row) use ($existingGurus) {
+            $key = $row['nik'] . '_' . ($row['npk'] ?? '') . '_' . ($row['nuptk'] ?? '');
+            return $existingGurus->has($key);
         });
 
-        // Skip jika tidak ada guru baru untuk diproses
-        if ($newGuruRows->isEmpty()) {
-            Log::channel('guru_bulk_import')->info('No new guru to import - all NIK already exist', [
-                'existing_count' => count($existingNik),
-                'total_rows' => $validRows->count()
-            ]);
+        $existingGuruRows = $validRows->filter(function ($row) use ($existingGurus) {
+            $key = $row['nik'] . '_' . ($row['npk'] ?? '') . '_' . ($row['nuptk'] ?? '');
+            return $existingGurus->has($key);
+        });
+
+        // Skip jika tidak ada data untuk diproses
+        if ($newGuruRows->isEmpty() && $existingGuruRows->isEmpty()) {
+            Log::channel('guru_bulk_import')->info('No valid guru data to import');
             return;
         }
 
-        DB::transaction(function () use ($newGuruRows, $validRows) {
+        DB::transaction(function () use ($newGuruRows, $existingGuruRows, $existingGurus) {
             $jabatanGuruData = [];
             $alamatData = [];
             $newGuruData = [];
+            $updatedGuruIds = [];
+            $newJabatanGuruIds = [];
 
-            foreach ($newGuruRows as $row) {
-                // Siapkan data untuk bulk insert guru baru
-                $newGuruData[] = [
-                    'status' => $row['status'] ?? Guru::STATUS_AKTIF,
-                    'nama_gelar_depan' => $row['gelar_depan'],
-                    'nama' => $row['nama'],
-                    'nama_gelar_belakang' => $row['gelar_belakang'],
-                    'tempat_lahir' => $row['tempat_lahir'],
-                    'tanggal_lahir' => $row['tanggal_lahir'],
-                    'jenis_kelamin' => strtoupper($row['jenis_kelamin']) === 'P' ? 'P' : 'L',
-                    'status_perkawinan' => $row['status_perkawinan'],
-                    'nik' => $row['nik'],
-                    'status_kepegawaian' => $row['status_kepegawaian'],
-                    'npk' => $row['npk'],
-                    'nuptk' => $row['nuptk'],
-                    'kontak_wa_hp' => $row['kontak_wa_hp'],
-                    'kontak_email' => $row['email'],
-                    'nomor_rekening' => $row['nomor_rekening'],
-                    'rekening_atas_nama' => $row['rekening_atas_nama'],
-                    'bank_rekening' => $row['bank_rekening'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
+            // Proses guru baru
+            if (!$newGuruRows->isEmpty()) {
+                foreach ($newGuruRows as $row) {
+                    // Siapkan data untuk bulk insert guru baru
+                    $newGuruData[] = [
+                        'status' => $row['status'] ?? Guru::STATUS_AKTIF,
+                        'nama_gelar_depan' => $row['gelar_depan'],
+                        'nama' => $row['nama'],
+                        'nama_gelar_belakang' => $row['gelar_belakang'],
+                        'tempat_lahir' => $row['tempat_lahir'],
+                        'tanggal_lahir' => $row['tanggal_lahir'],
+                        'jenis_kelamin' => strtoupper($row['jenis_kelamin']) === 'P' ? 'P' : 'L',
+                        'status_perkawinan' => $row['status_perkawinan'],
+                        'nik' => $row['nik'],
+                        'status_kepegawaian' => $row['status_kepegawaian'],
+                        'npk' => $row['npk'],
+                        'nuptk' => $row['nuptk'],
+                        'kontak_wa_hp' => $row['kontak_wa_hp'],
+                        'kontak_email' => $row['email'],
+                        'nomor_rekening' => $row['nomor_rekening'],
+                        'rekening_atas_nama' => $row['rekening_atas_nama'],
+                        'bank_rekening' => $row['bank_rekening'],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
 
-            // Bulk insert guru baru
-            try {
-                DB::table('guru')->insert($newGuruData);
-                
-                // Ambil guru yang baru saja diinsert untuk mendapatkan ID
-                $nikList = collect($newGuruData)->pluck('nik')->toArray();
-                $insertedGuru = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)
-                    ->whereIn('nik', $nikList)
-                    ->get()
-                    ->keyBy('nik');
-                
-                Log::channel('guru_bulk_import')->info('Bulk inserted new guru', ['count' => count($newGuruData)]);
-            } catch (Exception $e) {
-                // Jika bulk insert gagal (mungkin ada duplicate dari chunk lain yang concurrent)
-                // Fallback ke insert satu-satu dengan error handling
-                Log::channel('guru_bulk_import')->warning('Bulk insert failed, fallback to individual inserts', ['error' => $e->getMessage()]);
-                
-                foreach ($newGuruData as $data) {
-                    try {
-                        DB::table('guru')->insert($data);
-                    } catch (Exception $e2) {
-                        if ($e2 instanceof \Illuminate\Database\QueryException && isset($e2->errorInfo[1]) && $e2->errorInfo[1] == 1062) {
-                            // Duplicate entry, ignore
-                        } else {
-                            throw $e2;
+                // Bulk insert guru baru
+                try {
+                    DB::table('guru')->insert($newGuruData);
+                    Log::channel('guru_bulk_import')->info('Bulk inserted new guru', ['count' => count($newGuruData)]);
+                } catch (Exception $e) {
+                    // Jika bulk insert gagal, fallback ke insert satu-satu
+                    Log::channel('guru_bulk_import')->warning('Bulk insert failed, fallback to individual inserts', ['error' => $e->getMessage()]);
+                    
+                    foreach ($newGuruData as $data) {
+                        try {
+                            DB::table('guru')->insert($data);
+                        } catch (Exception $e2) {
+                            if ($e2 instanceof \Illuminate\Database\QueryException && isset($e2->errorInfo[1]) && $e2->errorInfo[1] == 1062) {
+                                // Duplicate entry, log and continue
+                                Log::channel('guru_bulk_import')->warning('Duplicate NPK, NIK, or NUPTK found, skipping', [
+                                    'nik' => $data['nik'],
+                                    'npk' => $data['npk'],
+                                    'nuptk' => $data['nuptk']
+                                ]);
+                                continue;
+                            } else {
+                                throw $e2;
+                            }
                         }
                     }
                 }
-                
+
                 // Refresh untuk mendapatkan ID guru yang berhasil diinsert
                 $nikList = collect($newGuruData)->pluck('nik')->toArray();
-                $insertedGuru = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)
+                $insertedGurus = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)
                     ->whereIn('nik', $nikList)
                     ->get()
                     ->keyBy('nik');
+                
+                // Gabungkan dengan guru yang sudah ada
+                $allGurus = $existingGurus->merge($insertedGurus);
+            } else {
+                $allGurus = $existingGurus;
             }
 
-            // Siapkan data jabatan_guru dan alamat hanya untuk guru baru
-            foreach ($newGuruRows as $row) {
-                $guru = $insertedGuru->get($row['nik']);
+            // Proses data JabatanGuru dan Alamat untuk semua guru (baru dan yang sudah ada)
+            $allGuruRows = $newGuruRows->merge($existingGuruRows);
+            
+            foreach ($allGuruRows as $row) {
+                // Cari guru berdasarkan NIK (prioritas), NPK, atau NUPTK
+                $guru = $allGurus->first(function ($g) use ($row) {
+                    return $g->nik === $row['nik'] || 
+                           ($g->npk && $g->npk === $row['npk']) || 
+                           ($g->nuptk && $g->nuptk === $row['nuptk']);
+                });
                 
                 if (!$guru) {
-                    Log::channel('guru_bulk_import')->warning('Guru not found after insert', ['nik' => $row['nik']]);
+                    Log::channel('guru_bulk_import')->warning('Guru not found', [
+                        'nik' => $row['nik'],
+                        'npk' => $row['npk'],
+                        'nuptk' => $row['nuptk']
+                    ]);
                     continue;
                 }
-                
-                // Data jabatan_guru
+
+                // Update data guru yang sudah ada
+                if ($existingGuruRows->contains(function ($existingRow) use ($row) {
+                    return $existingRow['nik'] === $row['nik'] || 
+                           ($existingRow['npk'] && $existingRow['npk'] === $row['npk']) || 
+                           ($existingRow['nuptk'] && $existingRow['nuptk'] === $row['nuptk']);
+                })) {
+                    $updatedGuruIds[] = $guru->id;
+                    
+                    // Update data guru
+                    $guru->update([
+                        'status' => $row['status'] ?? Guru::STATUS_AKTIF,
+                        'nama_gelar_depan' => $row['gelar_depan'],
+                        'nama' => $row['nama'],
+                        'nama_gelar_belakang' => $row['gelar_belakang'],
+                        'tempat_lahir' => $row['tempat_lahir'],
+                        'tanggal_lahir' => $row['tanggal_lahir'],
+                        'jenis_kelamin' => strtoupper($row['jenis_kelamin']) === 'P' ? 'P' : 'L',
+                        'status_perkawinan' => $row['status_perkawinan'],
+                        'status_kepegawaian' => $row['status_kepegawaian'],
+                        'npk' => $row['npk'],
+                        'nuptk' => $row['nuptk'],
+                        'kontak_wa_hp' => $row['kontak_wa_hp'],
+                        'kontak_email' => $row['email'],
+                        'nomor_rekening' => $row['nomor_rekening'],
+                        'rekening_atas_nama' => $row['rekening_atas_nama'],
+                        'bank_rekening' => $row['bank_rekening'],
+                    ]);
+                }
+
+                // SELALU buat record JabatanGuru baru untuk setiap baris data
+                // Ini memungkinkan guru memiliki multiple jabatan di sekolah yang sama
                 $jabatanGuruData[] = [
                     'id_guru' => $guru->id,
                     'id_sekolah' => $this->idSekolah,
@@ -137,41 +191,63 @@ class GuruImport implements ToCollection, WithHeadingRow, WithChunkReading
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
+                $newJabatanGuruIds[] = $guru->id;
                 
-                // Data alamat jika ada
+                // Cek dan update alamat
                 if ($row['alamat_lengkap'] || $row['provinsi']) {
-                    $alamatData[] = [
-                        'id_guru' => $guru->id,
-                        'jenis' => 'domisili',
-                        'provinsi' => $row['provinsi'],
-                        'kabupaten' => $row['kabupaten'],
-                        'kecamatan' => $row['kecamatan'],
-                        'kelurahan' => $row['kelurahan'],
-                        'rt' => $row['rt'],
-                        'rw' => $row['rw'],
-                        'kode_pos' => $row['kode_pos'],
-                        'alamat_lengkap' => $row['alamat_lengkap'],
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
+                    $alamat = Alamat::where('id_guru', $guru->id)
+                        ->where('jenis', 'domisili')
+                        ->first();
+
+                    if ($alamat) {
+                        // Update alamat yang sudah ada
+                        $alamat->update([
+                            'provinsi' => $row['provinsi'],
+                            'kabupaten' => $row['kabupaten'],
+                            'kecamatan' => $row['kecamatan'],
+                            'kelurahan' => $row['kelurahan'],
+                            'rt' => $row['rt'],
+                            'rw' => $row['rw'],
+                            'kode_pos' => $row['kode_pos'],
+                            'alamat_lengkap' => $row['alamat_lengkap'],
+                        ]);
+                    } else {
+                        // Data alamat baru
+                        $alamatData[] = [
+                            'id_guru' => $guru->id,
+                            'jenis' => 'domisili',
+                            'provinsi' => $row['provinsi'],
+                            'kabupaten' => $row['kabupaten'],
+                            'kecamatan' => $row['kecamatan'],
+                            'kelurahan' => $row['kelurahan'],
+                            'rt' => $row['rt'],
+                            'rw' => $row['rw'],
+                            'kode_pos' => $row['kode_pos'],
+                            'alamat_lengkap' => $row['alamat_lengkap'],
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }
                 }
             }
-            // Batch insert jabatan_guru untuk guru baru
+
+            // Batch insert jabatan_guru baru
             if (!empty($jabatanGuruData)) {
                 DB::table('jabatan_guru')->insert($jabatanGuruData);
-                Log::channel('guru_bulk_import')->info('Processed jabatan_guru for new guru', ['count' => count($jabatanGuruData)]);
+                Log::channel('guru_bulk_import')->info('Processed new jabatan_guru', ['count' => count($jabatanGuruData)]);
             }
             
-            // Batch insert alamat untuk guru baru
+            // Batch insert alamat baru
             if (!empty($alamatData)) {
                 DB::table('alamat')->insert($alamatData);
-                Log::channel('guru_bulk_import')->info('Processed alamat for new guru', ['count' => count($alamatData)]);
+                Log::channel('guru_bulk_import')->info('Processed new alamat', ['count' => count($alamatData)]);
             }
             
             Log::channel('guru_bulk_import')->info('Import completed', [
                 'new_guru_count' => count($newGuruData),
-                'skipped_existing_count' => $validRows->count() - $newGuruRows->count(),
-                'total_processed' => $validRows->count()
+                'updated_guru_count' => count($updatedGuruIds),
+                'new_jabatan_count' => count($newJabatanGuruIds),
+                'total_processed' => $allGuruRows->count()
             ]);
         });
     }
@@ -180,6 +256,7 @@ class GuruImport implements ToCollection, WithHeadingRow, WithChunkReading
     {
         return $rows->map(function ($row) {
             $row = $row->toArray();
+            
             // Validasi field wajib: nama, nik, jenis_kelamin, status, status_kepegawaian, keterangan_jabatan
             if (empty($row['nik']) || empty($row['nama']) || empty($row['jenis_kelamin']) || 
                 empty($row['status']) || empty($row['status_kepegawaian']) || empty($row['keterangan_jabatan'])) {
@@ -191,16 +268,36 @@ class GuruImport implements ToCollection, WithHeadingRow, WithChunkReading
                 return null;
             }
             
+            // Pastikan NIK, NPK, dan NUPTK adalah string, bukan angka
+            $nik = isset($row['nik']) ? (string)$row['nik'] : '';
+            $npk = isset($row['npk']) ? (string)$row['npk'] : null;
+            $nuptk = isset($row['nuptk']) ? (string)$row['nuptk'] : null;
+            
+            // Jika NIK dalam format notasi ilmiah (scientific notation), konversi ke string
+            if (is_numeric($nik) && strpos($nik, 'E') !== false) {
+                $nik = number_format($nik, 0, '', '');
+            }
+            
+            // Jika NPK dalam format notasi ilmiah, konversi ke string
+            if (is_numeric($npk) && strpos($npk, 'E') !== false) {
+                $npk = number_format($npk, 0, '', '');
+            }
+            
+            // Jika NUPTK dalam format notasi ilmiah, konversi ke string
+            if (is_numeric($nuptk) && strpos($nuptk, 'E') !== false) {
+                $nuptk = number_format($nuptk, 0, '', '');
+            }
+            
             return [
                 'jenis_jabatan' => $row['jenis_jabatan'] ?? JabatanGuru::JENIS_JABATAN_GURU,
                 'keterangan_jabatan' => $row['keterangan_jabatan'],
                 'nama' => trim($row['nama']),
-                'nik' => trim((string)$row['nik']),
+                'nik' => trim($nik),
                 'jenis_kelamin' => strtoupper(trim($row['jenis_kelamin'] ?? '')) === 'P' ? 'P' : 'L',
                 'status' => $row['status'] ?? Guru::STATUS_AKTIF,
                 'status_kepegawaian' => $row['status_kepegawaian'],
-                'nuptk' => isset($row['nuptk']) ? trim((string)$row['nuptk']) : null,
-                'npk' => isset($row['npk']) ? trim((string)$row['npk']) : null,
+                'nuptk' => trim($nuptk),
+                'npk' => trim($npk),
                 'gelar_depan' => $row['gelar_depan'] ?? null,
                 'gelar_belakang' => $row['gelar_belakang'] ?? null,
                 'tempat_lahir' => $row['tempat_lahir'] ?? null,
