@@ -29,207 +29,220 @@
             x-on:submit="isSubmitting = true">
             @csrf
 
-            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                <!-- Left Column -->
-                <div class="space-y-6">
-                    <!-- Kode Sekolah -->
-                    <div>
-                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                            Kode Sekolah <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="kode_sekolah" id="kodeSekolahInput" 
-                            x-model="kodeSekolah"
-                            x-on:blur="checkKodeSekolah"
-                            placeholder="Contoh: ALK-001"
-                            :class="kodeSekolahError ? 'border-red-500' : ''"
-                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('kode_sekolah') border-red-500 @enderror">
-                        <div class="mt-1 text-sm" x-show="kodeSekolahStatus" x-html="kodeSekolahStatus"></div>
-                        @error('kode_sekolah')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
+            <!-- Basic Information Section (Always Visible) -->
+            <div class="mb-8">
+                <h2 class="mb-6 text-lg font-semibold text-gray-800 dark:text-white/90">
+                    Informasi Dasar Sekolah
+                </h2>
 
-                    <!-- Nama Sekolah -->
-                    <div>
-                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                            Nama Sekolah <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="nama" x-model="namaSekolah" placeholder="Nama lengkap sekolah"
-                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('nama') border-red-500 @enderror">
-                        @error('nama')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
+                <!-- Dynamic Grid Layout -->
+                <div
+                    :class="showOptionalFields ? 'grid grid-cols-1 gap-6 lg:grid-cols-2' :
+                        'grid grid-cols-1 gap-6 md:grid-cols-2'">
+                    <!-- Left Column - Basic Required Fields -->
+                    <div :class="showOptionalFields ? 'space-y-6' : 'space-y-6 md:col-span-2 lg:col-span-2'">
+                        <!-- Kode Sekolah -->
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                Kode Sekolah <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="kode_sekolah" id="kodeSekolahInput" x-model="kodeSekolah"
+                                x-on:blur="checkKodeSekolah" placeholder="Contoh: ALK-001"
+                                :class="kodeSekolahError ? 'border-red-500' : ''"
+                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('kode_sekolah') border-red-500 @enderror">
+                            <div class="mt-1 text-sm" x-show="kodeSekolahStatus" x-html="kodeSekolahStatus"></div>
+                            @error('kode_sekolah')
+                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <!-- Jenis Sekolah -->
-                    <div>
-                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                            Jenis Sekolah <span class="text-red-500">*</span>
-                        </label>
-                        <select name="jenis_sekolah"
-                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('jenis_sekolah') border-red-500 @enderror">
-                            <option value="">Pilih Jenis Sekolah</option>
-                            @foreach ($jenisSekolahOptions as $key => $label)
-                                <option value="{{ $key }}"
-                                    {{ old('jenis_sekolah') == $key ? 'selected' : '' }}>
-                                    {{ $label }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('jenis_sekolah')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <!-- Nama Sekolah -->
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                Nama Sekolah <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="nama" x-model="namaSekolah" placeholder="Nama lengkap sekolah"
+                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('nama') border-red-500 @enderror">
+                            @error('nama')
+                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <!-- Bentuk Pendidikan -->
-                    <div>
-                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                            Bentuk Pendidikan <span class="text-red-500">*</span>
-                        </label>
-                        <select name="bentuk_pendidikan"
-                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('bentuk_pendidikan') border-red-500 @enderror">
-                            <option value="">Pilih Bentuk Pendidikan</option>
-                            @foreach ($bentukPendidikanOptions as $key => $label)
-                                <option value="{{ $key }}"
-                                    {{ old('bentuk_pendidikan') == $key ? 'selected' : '' }}>
-                                    {{ $label }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('bentuk_pendidikan')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <!-- Jenis Sekolah -->
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                Jenis Sekolah <span class="text-red-500">*</span>
+                            </label>
+                            <select name="jenis_sekolah"
+                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('jenis_sekolah') border-red-500 @enderror">
+                                <option value="">Pilih Jenis Sekolah</option>
+                                @foreach ($jenisSekolahOptions as $key => $label)
+                                    <option value="{{ $key }}"
+                                        {{ old('jenis_sekolah') == $key ? 'selected' : '' }}>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('jenis_sekolah')
+                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <!-- Status -->
-                    <div x-data="{ radioValue: '{{ old('status') ?? 'aktif' }}' }">
-                        <label class="mb-3 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                            Status <span class="text-red-500">*</span>
-                        </label>
-                        <div class="flex flex-wrap gap-4">
-                            @foreach ($statusOptions as $status => $label)
-                                <label for="status_{{ $status }}"
-                                    class="flex cursor-pointer items-center text-sm font-medium text-gray-700 select-none dark:text-gray-400">
-                                    <div class="relative">
-                                        <input type="radio" id="status_{{ $status }}" name="status"
-                                            value="{{ $status }}" class="sr-only"
-                                            @change="radioValue = '{{ $status }}'"
-                                            {{ old('status', 'aktif') == $status ? 'checked' : '' }} />
-                                        <div :class="radioValue === '{{ $status }}' ? 'border-brand-500 bg-brand-500' :
-                                            'bg-transparent border-gray-300 dark:border-gray-700'"
-                                            class="hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-full border-[1.25px]">
-                                            <span class="h-2 w-2 rounded-full"
-                                                :class="radioValue === '{{ $status }}' ? 'bg-white' : 'bg-white dark:bg-[#171f2e]'"></span>
+                        <!-- Bentuk Pendidikan -->
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                Bentuk Pendidikan <span class="text-red-500">*</span>
+                            </label>
+                            <select name="bentuk_pendidikan"
+                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('bentuk_pendidikan') border-red-500 @enderror">
+                                <option value="">Pilih Bentuk Pendidikan</option>
+                                @foreach ($bentukPendidikanOptions as $key => $label)
+                                    <option value="{{ $key }}"
+                                        {{ old('bentuk_pendidikan') == $key ? 'selected' : '' }}>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('bentuk_pendidikan')
+                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Status -->
+                        <div x-data="{ radioValue: '{{ old('status') ?? 'aktif' }}' }">
+                            <label class="mb-3 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                Status <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex flex-wrap gap-4">
+                                @foreach ($statusOptions as $status => $label)
+                                    <label for="status_{{ $status }}"
+                                        class="flex cursor-pointer items-center text-sm font-medium text-gray-700 select-none dark:text-gray-400">
+                                        <div class="relative">
+                                            <input type="radio" id="status_{{ $status }}" name="status"
+                                                value="{{ $status }}" class="sr-only"
+                                                @change="radioValue = '{{ $status }}'"
+                                                {{ old('status', 'aktif') == $status ? 'checked' : '' }} />
+                                            <div :class="radioValue === '{{ $status }}' ? 'border-brand-500 bg-brand-500' :
+                                                'bg-transparent border-gray-300 dark:border-gray-700'"
+                                                class="hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-full border-[1.25px]">
+                                                <span class="h-2 w-2 rounded-full"
+                                                    :class="radioValue === '{{ $status }}' ? 'bg-white' :
+                                                        'bg-white dark:bg-[#171f2e]'"></span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    {{ $label }}
+                                        {{ $label }}
+                                    </label>
+                                @endforeach
+                            </div>
+                            @error('status')
+                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Optional Fields or Empty Space -->
+                    <div x-show="showOptionalFields" class="space-y-6">
+                        <!-- Kontak -->
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <!-- Telepon -->
+                            <div>
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    Telepon
                                 </label>
-                            @endforeach
-                        </div>
-                        @error('status')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
+                                <input type="text" name="telepon" value="{{ old('telepon') }}"
+                                    placeholder="Nomor telepon"
+                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('telepon') border-red-500 @enderror">
+                                @error('telepon')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                <!-- Right Column -->
-                <div class="space-y-6">
-                    <!-- Kontak -->
-                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <!-- Telepon -->
+                            <!-- Email -->
+                            <div>
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    Email
+                                </label>
+                                <input type="email" name="email" value="{{ old('email') }}"
+                                    placeholder="email@sekolah.com"
+                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('email') border-red-500 @enderror">
+                                @error('email')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Website -->
                         <div>
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                Telepon
+                                Website
                             </label>
-                            <input type="text" name="telepon" value="{{ old('telepon') }}" placeholder="Nomor telepon"
-                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('telepon') border-red-500 @enderror">
-                            @error('telepon')
+                            <input type="url" name="website" value="{{ old('website') }}"
+                                placeholder="https://sekolah.com"
+                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('website') border-red-500 @enderror">
+                            @error('website')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <!-- Email -->
+                        <!-- Informasi Rekening -->
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                            <!-- Bank -->
+                            <div>
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    Bank
+                                </label>
+                                <input type="text" name="bank_rekening" value="{{ old('bank_rekening') }}"
+                                    placeholder="Nama bank"
+                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('bank_rekening') border-red-500 @enderror">
+                                @error('bank_rekening')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Nomor Rekening -->
+                            <div>
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    Nomor Rekening
+                                </label>
+                                <input type="text" name="nomor_rekening" value="{{ old('nomor_rekening') }}"
+                                    placeholder="No. rekening"
+                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('nomor_rekening') border-red-500 @enderror">
+                                @error('nomor_rekening')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Atas Nama -->
+                            <div>
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    Atas Nama
+                                </label>
+                                <input type="text" name="rekening_atas_nama" value="{{ old('rekening_atas_nama') }}"
+                                    placeholder="Nama pemilik rekening"
+                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('rekening_atas_nama') border-red-500 @enderror">
+                                @error('rekening_atas_nama')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Keterangan -->
                         <div>
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                Email
+                                Keterangan
                             </label>
-                            <input type="email" name="email" value="{{ old('email') }}"
-                                placeholder="email@sekolah.com"
-                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('email') border-red-500 @enderror">
-                            @error('email')
+                            <textarea name="keterangan" rows="3" placeholder="Keterangan tambahan tentang sekolah"
+                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('keterangan') border-red-500 @enderror">{{ old('keterangan') }}</textarea>
+                            @error('keterangan')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                             @enderror
                         </div>
-                    </div>
-
-                    <!-- Website -->
-                    <div>
-                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                            Website
-                        </label>
-                        <input type="url" name="website" value="{{ old('website') }}"
-                            placeholder="https://sekolah.com"
-                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('website') border-red-500 @enderror">
-                        @error('website')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Informasi Rekening -->
-                    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-                        <!-- Bank -->
-                        <div>
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                Bank
-                            </label>
-                            <input type="text" name="bank_rekening" value="{{ old('bank_rekening') }}" placeholder="Nama bank"
-                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('bank_rekening') border-red-500 @enderror">
-                            @error('bank_rekening')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Nomor Rekening -->
-                        <div>
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                Nomor Rekening
-                            </label>
-                            <input type="text" name="nomor_rekening" value="{{ old('nomor_rekening') }}" placeholder="No. rekening"
-                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('nomor_rekening') border-red-500 @enderror">
-                            @error('nomor_rekening')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Atas Nama -->
-                        <div>
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                Atas Nama
-                            </label>
-                            <input type="text" name="rekening_atas_nama" value="{{ old('rekening_atas_nama') }}" placeholder="Nama pemilik rekening"
-                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('rekening_atas_nama') border-red-500 @enderror">
-                            @error('rekening_atas_nama')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!-- Keterangan -->
-                    <div>
-                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                            Keterangan
-                        </label>
-                        <textarea name="keterangan" rows="3" placeholder="Keterangan tambahan tentang sekolah"
-                            class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('keterangan') border-red-500 @enderror">{{ old('keterangan') }}</textarea>
-                        @error('keterangan')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
                     </div>
                 </div>
             </div>
 
-            <!-- Alamat Sekolah Section -->
-            <div class="mt-8 border-t border-gray-200 pt-8 dark:border-gray-700">
+            <!-- Alamat Sekolah Section - Optional -->
+            <div x-transition class="mb-8">
                 <h2 class="mb-6 text-lg font-semibold text-gray-800 dark:text-white/90">
                     Alamat Sekolah
                 </h2>
@@ -242,8 +255,7 @@
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                 Provinsi <span class="text-red-500">*</span>
                             </label>
-                            <select name="id_provinsi" id="provinsi"
-                                x-model="selectedProvinsi"
+                            <select name="id_provinsi" id="provinsi" x-model="selectedProvinsi"
                                 x-on:change="loadKabupaten"
                                 class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 @error('id_provinsi') border-red-500 @enderror">
                                 <option value="">Pilih Provinsi</option>
@@ -259,27 +271,45 @@
                             @enderror
                         </div>
 
-                        <!-- Kabupaten -->
-                        <div>
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                Kabupaten/Kota <span class="text-red-500">*</span>
-                            </label>
-                            <select name="id_kabupaten" id="kabupaten"
-                                :disabled="!selectedProvinsi"
-                                x-model="selectedKabupaten"
-                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 disabled:opacity-50 disabled:cursor-not-allowed @error('id_kabupaten') border-red-500 @enderror">
-                                <option value="">Pilih Kabupaten/Kota</option>
-                                <template x-for="kabupaten in kabupatenList" :key="kabupaten.id">
-                                    <option :value="kabupaten.id" x-text="kabupaten.nama_kabupaten"></option>
-                                </template>
-                            </select>
-                            @error('id_kabupaten')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
+                        <!-- RT/RW/Kode Pos -->
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-3" x-show="showOptionalFields">
+                            <div>
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    RT
+                                </label>
+                                <input type="text" name="alamat_rt" value="{{ old('alamat_rt') }}" placeholder="RT"
+                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat_rt') border-red-500 @enderror">
+                                @error('alamat_rt')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    RW
+                                </label>
+                                <input type="text" name="alamat_rw" value="{{ old('alamat_rw') }}" placeholder="RW"
+                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat_rw') border-red-500 @enderror">
+                                @error('alamat_rw')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    Kode Pos
+                                </label>
+                                <input type="text" name="alamat_kode_pos" value="{{ old('alamat_kode_pos') }}"
+                                    placeholder="Kode Pos"
+                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat_kode_pos') border-red-500 @enderror">
+                                @error('alamat_kode_pos')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
 
                         <!-- Kecamatan -->
-                        <div>
+                        <div x-show="showOptionalFields">
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                 Kecamatan
                             </label>
@@ -292,7 +322,7 @@
                         </div>
 
                         <!-- Kelurahan -->
-                        <div>
+                        <div x-show="showOptionalFields">
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                 Kelurahan
                             </label>
@@ -307,73 +337,53 @@
 
                     <!-- Right Column -->
                     <div class="space-y-6">
-                        <!-- RT -->
-                        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-                            <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                    RT
-                                </label>
-                                <input type="text" name="alamat_rt" value="{{ old('alamat_rt') }}" placeholder="RT"
-                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat_rt') border-red-500 @enderror">
-                                @error('alamat_rt')
-                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- RW -->
-                            <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                    RW
-                                </label>
-                                <input type="text" name="alamat_rw" value="{{ old('alamat_rw') }}" placeholder="RW"
-                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat_rw') border-red-500 @enderror">
-                                @error('alamat_rw')
-                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Kode Pos -->
-                            <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                    Kode Pos
-                                </label>
-                                <input type="text" name="alamat_kode_pos" value="{{ old('alamat_kode_pos') }}"
-                                    placeholder="Kode Pos"
-                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat_kode_pos') border-red-500 @enderror">
-                                @error('alamat_kode_pos')
-                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Koordinat X (Latitude) -->
+                        <!-- Kabupaten -->
                         <div>
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                Koordinat X (Latitude)
+                                Kabupaten/Kota <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" name="alamat_koordinat_x" value="{{ old('alamat_koordinat_x') }}"
-                                placeholder="-0.5417"
-                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat_koordinat_x') border-red-500 @enderror">
-                            @error('alamat_koordinat_x')
+                            <select name="id_kabupaten" id="kabupaten" :disabled="!selectedProvinsi"
+                                x-model="selectedKabupaten"
+                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 disabled:opacity-50 disabled:cursor-not-allowed @error('id_kabupaten') border-red-500 @enderror">
+                                <option value="">Pilih Kabupaten/Kota</option>
+                                <template x-for="kabupaten in kabupatenList" :key="kabupaten.id">
+                                    <option :value="kabupaten.id" x-text="kabupaten.nama_kabupaten"></option>
+                                </template>
+                            </select>
+                            @error('id_kabupaten')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <!-- Koordinat Y (Longitude) -->
-                        <div>
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                Koordinat Y (Longitude)
-                            </label>
-                            <input type="text" name="alamat_koordinat_y" value="{{ old('alamat_koordinat_y') }}"
-                                placeholder="120.8243"
-                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat_koordinat_y') border-red-500 @enderror">
-                            @error('alamat_koordinat_y')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
+                        <!-- Koordinat -->
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2" x-show="showOptionalFields">
+                            <div>
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    Koordinat X (Latitude)
+                                </label>
+                                <input type="text" name="alamat_koordinat_x" value="{{ old('alamat_koordinat_x') }}"
+                                    placeholder="-0.5417"
+                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat_koordinat_x') border-red-500 @enderror">
+                                @error('alamat_koordinat_x')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    Koordinat Y (Longitude)
+                                </label>
+                                <input type="text" name="alamat_koordinat_y" value="{{ old('alamat_koordinat_y') }}"
+                                    placeholder="120.8243"
+                                    class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat_koordinat_y') border-red-500 @enderror">
+                                @error('alamat_koordinat_y')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
-                        
+
                         <!-- Alamat Lengkap -->
-                        <div>
+                        <div x-show="showOptionalFields">
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                 Alamat Lengkap
                             </label>
@@ -387,12 +397,8 @@
                 </div>
             </div>
 
-            <!-- Galeri Sekolah Section -->
-            <div class="mt-8 border-t border-gray-200 pt-8 dark:border-gray-700">
-                <h2 class="mb-6 text-lg font-semibold text-gray-800 dark:text-white/90">
-                    Galeri Sekolah
-                </h2>
-
+            <!-- Galeri Sekolah Section - Only for Sekolah Role -->
+            <div x-show="showGallerySection" x-transition class="mb-8">
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                         Upload Foto Sekolah
@@ -402,65 +408,56 @@
                     </p>
 
                     <!-- Dropzone -->
-                    <div 
-                        x-data="{
-                            isDragging: false,
-                            files: [],
-                            fileInput: null,
-                            handleDrop(e) {
-                                this.isDragging = false;
-                                const droppedFiles = Array.from(e.dataTransfer.files);
-                                this.handleFiles(droppedFiles);
-                            },
-                            handleFiles(selectedFiles) {
-                                const validTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
-                                const validFiles = selectedFiles.filter(file => validTypes.includes(file.type) && file.size <= 5120000);
-                                
-                                if (validFiles.length > 0) {
-                                    this.files = [...this.files, ...validFiles];
-                                    this.updateFileInput();
-                                }
-                            },
-                            updateFileInput() {
-                                const dataTransfer = new DataTransfer();
-                                this.files.forEach(file => dataTransfer.items.add(file));
-                                this.fileInput.files = dataTransfer.files;
-                            },
-                            removeFile(index) {
-                                this.files.splice(index, 1);
+                    <div x-data="{
+                        isDragging: false,
+                        files: [],
+                        fileInput: null,
+                        handleDrop(e) {
+                            this.isDragging = false;
+                            const droppedFiles = Array.from(e.dataTransfer.files);
+                            this.handleFiles(droppedFiles);
+                        },
+                        handleFiles(selectedFiles) {
+                            const validTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+                            const validFiles = selectedFiles.filter(file => validTypes.includes(file.type) && file.size <= 5120000);
+                    
+                            if (validFiles.length > 0) {
+                                this.files = [...this.files, ...validFiles];
                                 this.updateFileInput();
                             }
-                        }"
-                        class="transition border border-gray-300 border-dashed cursor-pointer dark:hover:border-brand-500 dark:border-gray-700 rounded-xl hover:border-brand-500"
-                    >
-                        <div 
-                            @drop.prevent="handleDrop($event)"
-                            @dragover.prevent="isDragging = true"
-                            @dragleave.prevent="isDragging = false"
-                            @click="$refs.galeriFileInput.click()"
-                            :class="isDragging 
-                                ? 'border-brand-500 bg-gray-100 dark:bg-gray-800' 
-                                : 'border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-900'"
-                            class="dropzone rounded-xl border-dashed border-gray-300 p-7 lg:p-10 transition-colors cursor-pointer"
-                        >
+                        },
+                        updateFileInput() {
+                            const dataTransfer = new DataTransfer();
+                            this.files.forEach(file => dataTransfer.items.add(file));
+                            this.fileInput.files = dataTransfer.files;
+                        },
+                        removeFile(index) {
+                            this.files.splice(index, 1);
+                            this.updateFileInput();
+                        }
+                    }"
+                        class="transition border border-gray-300 border-dashed cursor-pointer dark:hover:border-brand-500 dark:border-gray-700 rounded-xl hover:border-brand-500">
+                        <div @drop.prevent="handleDrop($event)" @dragover.prevent="isDragging = true"
+                            @dragleave.prevent="isDragging = false" @click="$refs.galeriFileInput.click()"
+                            :class="isDragging
+                                ?
+                                'border-brand-500 bg-gray-100 dark:bg-gray-800' :
+                                'border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-900'"
+                            class="dropzone rounded-xl border-dashed border-gray-300 p-7 lg:p-10 transition-colors cursor-pointer">
                             <!-- Hidden File Input -->
-                            <input 
-                                x-ref="galeriFileInput"
-                                type="file" 
-                                name="galeri_files[]"
+                            <input x-ref="galeriFileInput" type="file" name="galeri_files[]"
                                 @change="handleFiles(Array.from($event.target.files)); $event.target.value = ''; fileInput = $el"
-                                accept="image/png,image/jpeg,image/webp,image/gif"
-                                multiple
-                                class="hidden"
-                                @click.stop
-                            />
+                                accept="image/png,image/jpeg,image/webp,image/gif" multiple class="hidden" @click.stop />
 
                             <div class="flex flex-col items-center m-0">
                                 <!-- Icon Container -->
                                 <div class="mb-[22px] flex justify-center">
-                                    <div class="flex h-[68px] w-[68px] items-center justify-center rounded-full bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-400">
-                                        <svg class="fill-current" width="29" height="28" viewBox="0 0 29 28" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5019 3.91699C14.2852 3.91699 14.0899 4.00891 13.953 4.15589L8.57363 9.53186C8.28065 9.82466 8.2805 10.2995 8.5733 10.5925C8.8661 10.8855 9.34097 10.8857 9.63396 10.5929L13.7519 6.47752V18.667C13.7519 19.0812 14.0877 19.417 14.5019 19.417C14.9161 19.417 15.2519 19.0812 15.2519 18.667V6.48234L19.3653 10.5929C19.6583 10.8857 20.1332 10.8855 20.426 10.5925C20.7188 10.2995 20.7186 9.82463 20.4256 9.53184L15.0838 4.19378C14.9463 4.02488 14.7367 3.91699 14.5019 3.91699ZM5.91626 18.667C5.91626 18.2528 5.58047 17.917 5.16626 17.917C4.75205 17.917 4.41626 18.2528 4.41626 18.667V21.8337C4.41626 23.0763 5.42362 24.0837 6.66626 24.0837H22.3339C23.5766 24.0837 24.5839 23.0763 24.5839 21.8337V18.667C24.5839 18.2528 24.2482 17.917 23.8339 17.917C23.4197 17.917 23.0839 18.2528 23.0839 18.667V21.8337C23.0839 22.2479 22.7482 22.5837 22.3339 22.5837H6.66626C6.25205 22.5837 5.91626 22.2479 5.91626 21.8337V18.667Z" />
+                                    <div
+                                        class="flex h-[68px] w-[68px] items-center justify-center rounded-full bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-400">
+                                        <svg class="fill-current" width="29" height="28" viewBox="0 0 29 28"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M14.5019 3.91699C14.2852 3.91699 14.0899 4.00891 13.953 4.15589L8.57363 9.53186C8.28065 9.82466 8.2805 10.2995 8.5733 10.5925C8.8661 10.8855 9.34097 10.8857 9.63396 10.5929L13.7519 6.47752V18.667C13.7519 19.0812 14.0877 19.417 14.5019 19.417C14.9161 19.417 15.2519 19.0812 15.2519 18.667V6.48234L19.3653 10.5929C19.6583 10.8857 20.1332 10.8855 20.426 10.5925C20.7188 10.2995 20.7186 9.82463 20.4256 9.53184L15.0838 4.19378C14.9463 4.02488 14.7367 3.91699 14.5019 3.91699ZM5.91626 18.667C5.91626 18.2528 5.58047 17.917 5.16626 17.917C4.75205 17.917 4.41626 18.2528 4.41626 18.667V21.8337C4.41626 23.0763 5.42362 24.0837 6.66626 24.0837H22.3339C23.5766 24.0837 24.5839 23.0763 24.5839 21.8337V18.667C24.5839 18.2528 24.2482 17.917 23.8339 17.917C23.4197 17.917 23.0839 18.2528 23.0839 18.667V21.8337C23.0839 22.2479 22.7482 22.5837 22.3339 22.5837H6.66626C6.25205 22.5837 5.91626 22.2479 5.91626 21.8337V18.667Z" />
                                         </svg>
                                     </div>
                                 </div>
@@ -471,7 +468,8 @@
                                     <span x-show="isDragging" x-cloak>Drop Foto di Sini</span>
                                 </h4>
 
-                                <span class="text-center mb-5 block w-full max-w-[290px] text-sm text-gray-700 dark:text-gray-400">
+                                <span
+                                    class="text-center mb-5 block w-full max-w-[290px] text-sm text-gray-700 dark:text-gray-400">
                                     Drag and drop foto PNG, JPG, GIF, atau WebP di sini atau klik untuk browse
                                 </span>
 
@@ -482,27 +480,32 @@
                         </div>
 
                         <!-- File Preview List -->
-                        <div x-show="files.length > 0" class="mt-4 p-4 border-t border-gray-200 dark:border-gray-700" x-cloak>
+                        <div x-show="files.length > 0" class="mt-4 p-4 border-t border-gray-200 dark:border-gray-700"
+                            x-cloak>
                             <h5 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Foto yang dipilih:</h5>
                             <ul class="space-y-2">
                                 <template x-for="(file, index) in files" :key="index">
-                                    <li class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                    <li
+                                        class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                                         <div class="flex items-center gap-3 flex-1">
-                                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                             </svg>
                                             <div class="flex-1">
-                                                <span class="text-sm text-gray-700 dark:text-gray-300" x-text="file.name"></span>
-                                                <span class="text-xs text-gray-500 dark:text-gray-400 ml-2" x-text="'(' + (file.size / 1024).toFixed(2) + ' KB)'"></span>
+                                                <span class="text-sm text-gray-700 dark:text-gray-300"
+                                                    x-text="file.name"></span>
+                                                <span class="text-xs text-gray-500 dark:text-gray-400 ml-2"
+                                                    x-text="'(' + (file.size / 1024).toFixed(2) + ' KB)'"></span>
                                             </div>
                                         </div>
-                                        <button 
-                                            @click.stop="removeFile(index)"
-                                            type="button"
-                                            class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 ml-2"
-                                        >
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        <button @click.stop="removeFile(index)" type="button"
+                                            class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 ml-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12" />
                                             </svg>
                                         </button>
                                     </li>
@@ -518,15 +521,15 @@
             </div>
 
             <!-- Submit Buttons -->
-            <div
-                class="mt-8 flex flex-col-reverse gap-4 border-t border-gray-200 pt-6 dark:border-gray-700 sm:flex-row sm:justify-end">
+            <div class="mt-8 flex flex-col-reverse gap-4 border-gray-200 dark:border-gray-700 sm:flex-row sm:justify-end">
                 <a href="{{ route('sekolah.index') }}"
                     class="flex items-center justify-center rounded-lg border border-gray-300 px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
                     Batal
                 </a>
                 <button type="submit"
                     class="bg-brand-500 hover:bg-brand-600 flex items-center justify-center rounded-lg px-6 py-3 text-sm font-medium text-white transition"
-                    :disabled="isSubmitting || kodeSekolahError" x-bind:class="{ 'opacity-70 cursor-not-allowed': isSubmitting || kodeSekolahError }">
+                    :disabled="isSubmitting || kodeSekolahError"
+                    x-bind:class="{ 'opacity-70 cursor-not-allowed': isSubmitting || kodeSekolahError }">
                     <template x-if="isSubmitting">
                         <svg class="mr-2 h-4 w-4 animate-spin text-white" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24">
@@ -562,14 +565,28 @@
                 selectedKabupaten: '{{ old('id_kabupaten') }}',
                 kabupatenList: [],
                 kodeCheckController: null,
-                
+                userRole: '{{ auth()->user()->getFirstRole() }}',
+                showOptionalFields: false,
+                showGallerySection: false,
+
                 init() {
+                    // Set visibility based on user role
+                    this.setFieldVisibility();
+
                     // Load kabupaten if provinsi is already selected
                     if (this.selectedProvinsi) {
                         this.loadKabupaten();
                     }
                 },
-                
+
+                setFieldVisibility() {
+                    // Show optional fields for Komisariat Wilayah, Komisariat Daerah, and Sekolah
+                    this.showOptionalFields = ['sekolah'].includes(this.userRole);
+
+                    // Show gallery section only for Sekolah role
+                    this.showGallerySection = this.userRole === 'sekolah';
+                },
+
                 async checkKodeSekolah() {
                     const kode = this.kodeSekolah.trim();
                     if (!kode) {
@@ -577,16 +594,16 @@
                         this.kodeSekolahError = false;
                         return;
                     }
-                    
+
                     this.kodeSekolahStatus = '<span class="text-gray-500">Mengecek kode sekolah...</span>';
-                    
+
                     // Cancel previous request if any
                     if (this.kodeCheckController) {
                         this.kodeCheckController.abort();
                     }
-                    
+
                     this.kodeCheckController = new AbortController();
-                    
+
                     try {
                         const response = await fetch("{{ route('sekolah.check-kode') }}", {
                             method: 'POST',
@@ -594,12 +611,14 @@
                                 'Content-Type': 'application/json',
                                 'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value,
                             },
-                            body: JSON.stringify({ kode_sekolah: kode }),
+                            body: JSON.stringify({
+                                kode_sekolah: kode
+                            }),
                             signal: this.kodeCheckController.signal
                         });
-                        
+
                         const data = await response.json();
-                        
+
                         if (data.exists) {
                             this.kodeSekolahStatus = '<span class="text-red-500">' + data.message + '</span>';
                             this.kodeSekolahError = true;
@@ -614,15 +633,16 @@
                         }
                     }
                 },
-                
+
                 async loadKabupaten() {
                     // Reset kabupaten select
                     this.kabupatenList = [];
                     this.selectedKabupaten = '';
-                    
+
                     if (this.selectedProvinsi) {
                         try {
-                            const response = await fetch(`{{ route('sekolah.get_kabupaten') }}?id_provinsi=${this.selectedProvinsi}`);
+                            const response = await fetch(
+                                `{{ route('sekolah.get_kabupaten') }}?id_provinsi=${this.selectedProvinsi}`);
                             const data = await response.json();
                             this.kabupatenList = data;
                         } catch (error) {

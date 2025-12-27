@@ -51,7 +51,7 @@ class MenuHelper
                     [
                         'icon' => 'sekolah',
                         'name' => 'Sekolah',
-                        'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_DAERAH, User::ROLE_KOMISARIAT_WILAYAH],
+                        'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_DAERAH, User::ROLE_KOMISARIAT_WILAYAH, User::ROLE_SEKOLAH],
                         'path' => '/sekolah'
                     ],
                     [

@@ -13,8 +13,7 @@ class UpdateSekolahRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->hasRole(['superuser', 'pengurus_besar', 'komisariat_wilayah']) && 
-               auth()->user()->canAccessSekolah($this->route('sekolah')->id);
+        return auth()->user()->hasRole(['superuser', 'pengurus_besar', 'komisariat_wilayah', 'komisariat_daerah', 'sekolah']);
     }
 
     /**
