@@ -1,6 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900 mb-6">
+        <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <a href="{{ route('sekolah.index') }}" class="hover:text-brand-600 dark:hover:text-brand-400">
+                Sekolah
+            </a>
+            <span>/</span>
+            <a href="{{ route('sekolah.show', $sekolah) }}" class="hover:text-brand-600 dark:hover:text-brand-400">
+                {{ $sekolah->nama }}
+            </a>
+            <span>/</span>
+            <span class="text-gray-900 dark:text-white">Edit Sekolah</span>
+        </div>
+    </div>
+
     <!-- Page Content -->
     <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
         <!-- Page Header -->
@@ -38,10 +52,8 @@
                         <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                             Kode Sekolah <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="kode_sekolah" id="kodeSekolahInput"
-                            x-model="kodeSekolah"
-                            x-on:blur="checkKodeSekolah"
-                            placeholder="Contoh: ALK-001"
+                        <input type="text" name="kode_sekolah" id="kodeSekolahInput" x-model="kodeSekolah"
+                            x-on:blur="checkKodeSekolah" placeholder="Contoh: ALK-001"
                             :class="kodeSekolahError ? 'border-red-500' : ''"
                             class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('kode_sekolah') border-red-500 @enderror">
                         <div class="mt-1 text-sm" x-show="kodeSekolahStatus" x-html="kodeSekolahStatus"></div>
@@ -581,7 +593,8 @@
                 </a>
                 <button type="submit"
                     class="bg-brand-500 hover:bg-brand-600 flex items-center justify-center rounded-lg px-6 py-3 text-sm font-medium text-white transition"
-                    :disabled="isSubmitting || kodeSekolahError" x-bind:class="{ 'opacity-70 cursor-not-allowed': isSubmitting || kodeSekolahError }">
+                    :disabled="isSubmitting || kodeSekolahError"
+                    x-bind:class="{ 'opacity-70 cursor-not-allowed': isSubmitting || kodeSekolahError }">
                     <template x-if="isSubmitting">
                         <svg class="mr-2 h-4 w-4 animate-spin text-white" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24">
@@ -606,56 +619,59 @@
 
 @push('scripts')
     <script>
-    function sekolahEditForm() {
-        return {
-            isSubmitting: false,
-            kodeSekolah: @json(old('kode_sekolah', $sekolah->kode_sekolah)),
-            kodeSekolahStatus: '',
-            kodeSekolahError: false,
-            sekolahId: @json($sekolah->id),
-            kodeCheckController: null,
-            init() {},
-            async checkKodeSekolah() {
-                const kode = this.kodeSekolah.trim();
-                if (!kode) {
-                    this.kodeSekolahStatus = '';
-                    this.kodeSekolahError = false;
-                    return;
-                }
-                this.kodeSekolahStatus = '<span class="text-gray-500">Mengecek kode sekolah...</span>';
-                if (this.kodeCheckController) {
-                    this.kodeCheckController.abort();
-                }
-                this.kodeCheckController = new AbortController();
-                try {
-                    const response = await fetch("{{ route('sekolah.check-kode') }}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value,
-                        },
-                        body: JSON.stringify({ kode_sekolah: kode }),
-                        signal: this.kodeCheckController.signal
-                    });
-
-                    const data = await response.json();
-
-                    // Jika kode sudah ada, tapi milik sekolah ini sendiri, jangan error
-                    if (data.exists && kode !== @json($sekolah->kode_sekolah)) {
-                        this.kodeSekolahStatus = `<span class="text-red-500">${data.message}</span>`;
-                        this.kodeSekolahError = true;
-                    } else if (!data.exists || kode === @json($sekolah->kode_sekolah)) {
-                        this.kodeSekolahStatus = !data.exists ? `<span class="text-green-500">${data.message}</span>` : '';
+        function sekolahEditForm() {
+            return {
+                isSubmitting: false,
+                kodeSekolah: @json(old('kode_sekolah', $sekolah->kode_sekolah)),
+                kodeSekolahStatus: '',
+                kodeSekolahError: false,
+                sekolahId: @json($sekolah->id),
+                kodeCheckController: null,
+                init() {},
+                async checkKodeSekolah() {
+                    const kode = this.kodeSekolah.trim();
+                    if (!kode) {
+                        this.kodeSekolahStatus = '';
                         this.kodeSekolahError = false;
+                        return;
                     }
-                } catch (error) {
-                    if (error.name !== 'AbortError') {
-                        this.kodeSekolahStatus = '<span class="text-red-500">Gagal mengecek kode sekolah.</span>';
-                        this.kodeSekolahError = false;
+                    this.kodeSekolahStatus = '<span class="text-gray-500">Mengecek kode sekolah...</span>';
+                    if (this.kodeCheckController) {
+                        this.kodeCheckController.abort();
+                    }
+                    this.kodeCheckController = new AbortController();
+                    try {
+                        const response = await fetch("{{ route('sekolah.check-kode') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value,
+                            },
+                            body: JSON.stringify({
+                                kode_sekolah: kode
+                            }),
+                            signal: this.kodeCheckController.signal
+                        });
+
+                        const data = await response.json();
+
+                        // Jika kode sudah ada, tapi milik sekolah ini sendiri, jangan error
+                        if (data.exists && kode !== @json($sekolah->kode_sekolah)) {
+                            this.kodeSekolahStatus = `<span class="text-red-500">${data.message}</span>`;
+                            this.kodeSekolahError = true;
+                        } else if (!data.exists || kode === @json($sekolah->kode_sekolah)) {
+                            this.kodeSekolahStatus = !data.exists ?
+                                `<span class="text-green-500">${data.message}</span>` : '';
+                            this.kodeSekolahError = false;
+                        }
+                    } catch (error) {
+                        if (error.name !== 'AbortError') {
+                            this.kodeSekolahStatus = '<span class="text-red-500">Gagal mengecek kode sekolah.</span>';
+                            this.kodeSekolahError = false;
+                        }
                     }
                 }
             }
         }
-    }
     </script>
 @endpush

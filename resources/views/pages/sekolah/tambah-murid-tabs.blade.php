@@ -1,3 +1,21 @@
+<div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
+    <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+        <a href="{{ route('sekolah.index') }}" class="hover:text-brand-600 dark:hover:text-brand-400">
+            Sekolah
+        </a>
+        <span>/</span>
+        <a href="{{ route('sekolah.show', $sekolah) }}" class="hover:text-brand-600 dark:hover:text-brand-400">
+            {{ $sekolah->nama }}
+        </a>
+        <span>/</span>
+        <a href="{{ route('sekolah.show-murid', $sekolah) }}" class="hover:text-brand-600 dark:hover:text-brand-400">
+            Data Murid
+        </a>
+        <span>/</span>
+        <span class="text-gray-900 dark:text-white">Tambah Murid</span>
+    </div>
+</div>
+
 <!-- Page Header Card -->
 <div
     class="flex flex-col gap-y-4 md:flex-row md:justify-between md:items-center rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">

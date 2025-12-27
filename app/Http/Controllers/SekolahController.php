@@ -147,28 +147,6 @@ class SekolahController extends Controller
     {
         $sekolah->load(['kabupaten.provinsi', 'alamatList']);
 
-        // Fetch murid with sekolah_murid relationship
-        $muridQuery = $sekolah->murid();
-
-        // Apply search filter
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $muridQuery->where(function ($q) use ($search) {
-                $q->where('nama', 'like', "%{$search}%")
-                    ->orWhere('nisn', 'like', "%{$search}%")
-                    ->orWhere('nik', 'like', "%{$search}%");
-            });
-        }
-
-        // Get per_page parameter, default to 10
-        $perPage = $request->input('per_page', 10);
-        if ($perPage === 'all') {
-            $murid = $muridQuery->paginate(PHP_INT_MAX);
-        } else {
-            $perPage = (int) $perPage;
-            $murid = $muridQuery->paginate($perPage);
-        }
-
         // Fetch guru dengan relasi jabatan_guru
         $guruQuery = $sekolah->guru();
         if ($request->filled('search_guru')) {
@@ -193,10 +171,45 @@ class SekolahController extends Controller
         return view('pages.sekolah.show', [
             'title' => 'Detail Sekolah',
             'sekolah' => $sekolah,
-            'murid' => $murid,
             'guru' => $guru,
             'jenisSekolahOptions' => Sekolah::JENIS_SEKOLAH_OPTIONS,
             'statusOptions' => Sekolah::STATUS_LABELS,
+        ]);
+    }
+
+    /**
+     * Display murid list for the specified sekolah.
+     */
+    public function showMurid(Sekolah $sekolah, Request $request): View
+    {
+        $sekolah->load(['kabupaten.provinsi']);
+
+        // Fetch murid with sekolah_murid relationship
+        $muridQuery = $sekolah->murid();
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $muridQuery->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('nisn', 'like', "%{$search}%")
+                    ->orWhere('nik', 'like', "%{$search}%");
+            });
+        }
+
+        // Get per_page parameter, default to 10
+        $perPage = $request->input('per_page', 10);
+        if ($perPage === 'all') {
+            $murid = $muridQuery->paginate(PHP_INT_MAX);
+        } else {
+            $perPage = (int) $perPage;
+            $murid = $muridQuery->paginate($perPage);
+        }
+
+        return view('pages.sekolah.murid', [
+            'title' => 'Daftar Murid - ' . $sekolah->nama,
+            'sekolah' => $sekolah,
+            'murid' => $murid,
         ]);
     }
 
