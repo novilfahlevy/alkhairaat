@@ -78,7 +78,7 @@
                                             <label for="checkboxLabelOne"
                                                 class="flex cursor-pointer items-center text-sm font-normal text-gray-700 select-none dark:text-gray-400">
                                                 <div class="relative">
-                                                    <input type="checkbox" id="checkboxLabelOne" name="remember" class="sr-only" @change="checkboxToggle = !checkboxToggle" {{ old('remember') ? 'checked' : '' }} />
+                                                    <input type="checkbox" id="checkboxLabelOne" name="remember" value="1" class="sr-only" @change="checkboxToggle = !checkboxToggle" {{ old('remember') ? 'checked' : '' }} />
                                                     <div :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
                                                         'bg-transparent border-gray-300 dark:border-gray-700'"
                                                         class="mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px]">

@@ -30,7 +30,7 @@ class LoginController extends Controller
 
         // Try to authenticate with email or username
         $credentials = filter_var($login, FILTER_VALIDATE_EMAIL) 
-            ? ['email' => $login, 'password' => $password]
+            ? ['email' => $login, 'password' => $password]  
             : ['username' => $login, 'password' => $password];
 
         if (Auth::attempt($credentials, $remember)) {
@@ -52,7 +52,13 @@ class LoginController extends Controller
      */
     public function logout(Request $request): RedirectResponse
     {
-        Auth::logout();
+        Auth::guard('web')->logout();
+
+        if ($request->user()) {
+            $request->user()->forceFill([
+                'remember_token' => null,
+            ])->save();
+        }
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
