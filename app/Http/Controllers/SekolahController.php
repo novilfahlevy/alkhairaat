@@ -206,10 +206,46 @@ class SekolahController extends Controller
             $murid = $muridQuery->paginate($perPage);
         }
 
-        return view('pages.sekolah.murid', [
+        return view('pages.sekolah.murid.murid', [
             'title' => 'Daftar Murid - ' . $sekolah->nama,
             'sekolah' => $sekolah,
             'murid' => $murid,
+        ]);
+    }
+
+    /**
+     * Display guru list for the specified sekolah.
+     */
+    public function showGuru(Sekolah $sekolah, Request $request): View
+    {
+        $sekolah->load(['kabupaten.provinsi']);
+
+        // Fetch guru with jabatan_guru relationship
+        $guruQuery = $sekolah->guru();
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $guruQuery->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('nik', 'like', "%{$search}%")
+                    ->orWhere('nuptk', 'like', "%{$search}%");
+            });
+        }
+
+        // Get per_page parameter, default to 10
+        $perPage = $request->input('per_page', 10);
+        if ($perPage === 'all') {
+            $guru = $guruQuery->paginate(PHP_INT_MAX);
+        } else {
+            $perPage = (int) $perPage;
+            $guru = $guruQuery->paginate($perPage);
+        }
+
+        return view('pages.sekolah.guru.guru', [
+            'title' => 'Daftar Guru - ' . $sekolah->nama,
+            'sekolah' => $sekolah,
+            'guru' => $guru,
         ]);
     }
 

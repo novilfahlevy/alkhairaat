@@ -33,7 +33,7 @@ trait MuridSekolahTrait
                 ->limit(10)
                 ->get();
 
-            return view('pages.sekolah.tambah-murid-files', [
+            return view('pages.sekolah.murid.tambah-murid-files', [
                 'title' => 'Tambah Murid dengan File - ' . $sekolah->nama,
                 'sekolah' => $sekolah,
                 'uploadedFiles' => $uploadedFiles,
@@ -41,13 +41,13 @@ trait MuridSekolahTrait
         }
 
         if ($tab === 'existing') {
-            return view('pages.sekolah.tambah-murid-existing', [
+            return view('pages.sekolah.murid.tambah-murid-existing', [
                 'title' => 'Pilih Murid yang Ada - ' . $sekolah->nama,
                 'sekolah' => $sekolah
             ]);
         }
 
-        return view('pages.sekolah.tambah-murid', [
+        return view('pages.sekolah.murid.tambah-murid', [
             'title' => 'Tambah Murid - ' . $sekolah->nama,
             'sekolah' => $sekolah,
             'jenisKelaminOptions' => Murid::JENIS_KELAMIN_OPTIONS

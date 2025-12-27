@@ -4,7 +4,7 @@
     <!-- Page Content -->
     <div class="space-y-6 pb-60">
         <!-- Tab Navigation -->
-        @include('pages.sekolah.tambah-murid-tabs', compact('sekolah'))
+        @include('pages.sekolah.murid.tambah-murid-tabs', compact('sekolah'))
 
         <!-- Form Card -->
         <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">

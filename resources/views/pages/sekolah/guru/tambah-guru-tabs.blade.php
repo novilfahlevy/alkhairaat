@@ -1,3 +1,21 @@
+<div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
+    <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+        <a href="{{ route('sekolah.index') }}" class="hover:text-brand-600 dark:hover:text-brand-400">
+            Sekolah
+        </a>
+        <span>/</span>
+        <a href="{{ route('sekolah.show', $sekolah) }}" class="hover:text-brand-600 dark:hover:text-brand-400">
+            {{ $sekolah->nama }}
+        </a>
+        <span>/</span>
+        <a href="{{ route('sekolah.show-guru', $sekolah) }}" class="hover:text-brand-600 dark:hover:text-brand-400">
+            Data Guru
+        </a>
+        <span>/</span>
+        <span class="text-gray-900 dark:text-white">Tambah Guru</span>
+    </div>
+</div>
+
 <!-- Page Header Card -->
 <div
     class="flex flex-col gap-y-4 md:flex-row md:justify-between md:items-center rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
@@ -33,18 +51,18 @@
                 <i class="fas fa-user-plus mr-2"></i>
                 Tambah Guru Manual
             </a>
-            <a href="{{ route('sekolah.create-guru', ['sekolah' => $sekolah, 'tab' => 'existing']) }}"
-                role="tab" aria-selected="{{ $currentTab === 'existing' ? 'true' : 'false' }}"
+            <a href="{{ route('sekolah.create-guru', ['sekolah' => $sekolah, 'tab' => 'existing']) }}" role="tab"
+                aria-selected="{{ $currentTab === 'existing' ? 'true' : 'false' }}"
                 class="inline-block min-w-[180px] border-b-2 px-6 py-4 text-sm font-medium transition {{ $currentTab === 'existing' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white' }}">
                 <i class="fas fa-users mr-2"></i>
                 Pilih Guru yang Ada
             </a>
-                <a href="{{ route('sekolah.create-guru', ['sekolah' => $sekolah, 'tab' => 'file']) }}" role="tab"
-                    aria-selected="{{ $currentTab === 'file' ? 'true' : 'false' }}"
-                    class="inline-block min-w-[180px] border-b-2 px-6 py-4 text-sm font-medium transition {{ $currentTab === 'file' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white' }}">
-                    <i class="fas fa-file-upload mr-2"></i>
-                    Tambah Guru dengan File
-                </a>
+            <a href="{{ route('sekolah.create-guru', ['sekolah' => $sekolah, 'tab' => 'file']) }}" role="tab"
+                aria-selected="{{ $currentTab === 'file' ? 'true' : 'false' }}"
+                class="inline-block min-w-[180px] border-b-2 px-6 py-4 text-sm font-medium transition {{ $currentTab === 'file' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white' }}">
+                <i class="fas fa-file-upload mr-2"></i>
+                Tambah Guru dengan File
+            </a>
         </div>
     </div>
 </div>
