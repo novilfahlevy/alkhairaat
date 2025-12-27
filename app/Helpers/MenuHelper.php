@@ -36,6 +36,14 @@ class MenuHelper
         });
     }
 
+    /**
+     * Check if menu group has items after role filtering
+     */
+    public static function hasVisibleItems(array $items): bool
+    {
+        return count(self::filterItemsByRole($items)) > 0;
+    }
+
     public static function getMenuGroups()
     {
         return [
