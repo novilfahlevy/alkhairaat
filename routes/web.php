@@ -155,6 +155,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sekolah/{sekolah}/store-existing-guru', [App\Http\Controllers\SekolahController::class, 'storeExistingGuru'])->name('sekolah.store-existing-guru');
     Route::post('/sekolah/{sekolah}/tambah-guru-file', [App\Http\Controllers\SekolahController::class, 'storeGuruFile'])->name('sekolah.store-guru-file');
     Route::get('/sekolah/template-guru/download', [App\Http\Controllers\SekolahController::class, 'downloadGuruTemplate'])->name('sekolah.download-guru-template');
+    Route::delete('/sekolah/{sekolah}/guru/{guru}', [App\Http\Controllers\SekolahController::class, 'deleteGuru'])->name('sekolah.delete-guru');
 });
 
 /*

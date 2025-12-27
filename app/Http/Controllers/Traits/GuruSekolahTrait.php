@@ -235,4 +235,32 @@ trait GuruSekolahTrait
             'message' => $guru ? 'NIK sudah digunakan oleh <b>' . $guru->nama . '</b>.' : 'NIK tersedia.'
         ]);
     }
+
+    /**
+     * Remove guru from sekolah (delete JabatanGuru record only).
+     */
+    public function deleteGuru(Request $request, Sekolah $sekolah, Guru $guru): RedirectResponse
+    {
+        try {
+            // Find and delete the JabatanGuru record
+            $jabatanGuru = JabatanGuru::where('id_sekolah', $sekolah->id)
+                ->where('id_guru', $guru->id)
+                ->first();
+
+            if (!$jabatanGuru) {
+                return redirect()->back()
+                    ->with('error', 'Data guru tidak ditemukan di sekolah ini.');
+            }
+
+            $namaGuru = $guru->nama;
+            $jabatanGuru->delete();
+
+            return redirect()->route('sekolah.show', ['sekolah' => $sekolah->id])
+                ->with('success', 'Guru ' . $namaGuru . ' berhasil dihapus dari sekolah ini.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat menghapus guru: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
 }
