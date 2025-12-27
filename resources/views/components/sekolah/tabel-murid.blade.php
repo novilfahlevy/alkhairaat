@@ -1,7 +1,35 @@
 @props(['murid', 'sekolah'])
 
 <!-- Murid Table Section -->
-<div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
+<div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900" x-data="{
+    showDeleteModal: false,
+    selectedMurid: null,
+    confirmationText: '',
+    countdown: 10,
+    countdownActive: false,
+    openDeleteModal(muridId, muridNama) {
+        this.selectedMurid = { id: muridId, nama: muridNama };
+        this.showDeleteModal = true;
+        this.confirmationText = '';
+        this.startCountdown();
+    },
+    startCountdown() {
+        this.countdownActive = true;
+        this.countdown = 10;
+        const interval = setInterval(() => {
+            this.countdown--;
+            if (this.countdown <= 0) {
+                this.countdownActive = false;
+                clearInterval(interval);
+            }
+        }, 1000);
+    },
+    deleteMurid() {
+        if (this.selectedMurid) {
+            document.getElementById('delete-murid-form-' + this.selectedMurid.id).submit();
+        }
+    }
+}" @keydown.escape.window="showDeleteModal = false">
     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 class="text-lg font-semibold text-gray-800 dark:text-white/90">Daftar Murid</h2>
     </div>
@@ -101,10 +129,23 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-sm font-medium">
-                                <a href="#"
-                                    class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">
-                                    Lihat Detail
-                                </a>
+                                <div class="flex items-center gap-2">
+                                    <a href="#"
+                                        class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">
+                                        Lihat Detail
+                                    </a>
+                                    <form id="delete-murid-form-{{ $item->id }}"
+                                        action="{{ route('sekolah.delete-murid', ['sekolah' => $sekolah->id, 'murid' => $item->id]) }}"
+                                        method="POST" style="display: none;">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                    <button type="button"
+                                        @click="openDeleteModal({{ $item->id }}, '{{ addslashes($item->nama) }}')"
+                                        class="rounded-md bg-red-50 px-3 py-2 text-center text-sm font-medium text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30 text-nowrap">
+                                        Hapus
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -156,11 +197,22 @@
                                 @endif
                             </span>
                         </div>
-                        <div class="mt-4 text-center">
+                        <div class="mt-4 flex gap-2">
                             <a href="#"
                                 class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">
                                 Lihat Detail
                             </a>
+                            <form id="delete-murid-form-{{ $item->id }}"
+                                action="{{ route('sekolah.delete-murid', ['sekolah' => $sekolah->id, 'murid' => $item->id]) }}"
+                                method="POST" style="display: none;">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                            <button type="button"
+                                @click="openDeleteModal({{ $item->id }}, '{{ addslashes($item->nama) }}')"
+                                class="flex-1 rounded-md bg-red-50 px-3 py-2 text-center text-sm font-medium text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30">
+                                Hapus
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -334,4 +386,104 @@
             </p>
         </div>
     @endif
+
+    <!-- Delete Confirmation Modal -->
+    <div x-show="showDeleteModal" x-cloak @keydown.escape.window="showDeleteModal = false"
+        class="fixed inset-0 z-99999 flex items-center justify-center overflow-y-auto p-5">
+
+        <!-- Backdrop -->
+        <div @click="showDeleteModal = false"
+            class="fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[32px]"
+            x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        </div>
+
+        <!-- Modal Content -->
+        <div @click.stop class="relative w-full max-w-lg rounded-3xl bg-white dark:bg-gray-900"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 transform scale-95"
+            x-transition:enter-end="opacity-100 transform scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 transform scale-100"
+            x-transition:leave-end="opacity-0 transform scale-95">
+
+            <!-- Close Button -->
+            <button @click="showDeleteModal = false"
+                class="absolute right-4 top-4 rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="p-6">
+                <!-- Icon -->
+                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                    <svg class="h-8 w-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+
+                <!-- Title -->
+                <h3 class="mt-4 text-center text-xl font-semibold text-gray-900 dark:text-white">
+                    Hapus Murid dari Sekolah?
+                </h3>
+
+                <!-- Description -->
+                <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+                    Anda akan menghapus murid <strong x-text="selectedMurid?.nama"></strong> dari sekolah ini.
+                </p>
+                <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+                    <strong class="text-red-600 dark:text-red-400">Catatan:</strong> Data murid tidak akan dihapus
+                    dari sistem, hanya hubungannya dengan sekolah ini saja yang akan dihapus.
+                </p>
+
+                <!-- Confirmation Input -->
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Ketik <span class="font-bold">HAPUS</span> untuk konfirmasi
+                    </label>
+                    <input type="text" x-model="confirmationText"
+                        class="mt-2 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+                        placeholder="Ketik HAPUS" />
+                </div>
+
+                <!-- Countdown Warning -->
+                <div x-show="countdownActive" class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+                    Tunggu <span x-text="countdown" class="font-bold text-red-600 dark:text-red-400"></span> detik
+                    untuk melanjutkan
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-6 flex gap-3">
+                    <button @click="showDeleteModal = false"
+                        class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+                        Batal
+                    </button>
+                    <button @click="deleteMurid()"
+                        :disabled="confirmationText !== 'HAPUS' || countdownActive"
+                        :class="{
+                            'bg-red-600 hover:bg-red-700 text-white': confirmationText === 'HAPUS' && !
+                                countdownActive,
+                            'bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500': confirmationText !==
+                                'HAPUS' || countdownActive
+                        }"
+                        class="flex-1 rounded-lg px-4 py-2.5 text-sm font-medium transition">
+                        Hapus Murid
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add CSS for x-cloak -->
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
 </div>
+

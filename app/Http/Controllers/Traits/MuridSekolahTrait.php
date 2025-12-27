@@ -306,4 +306,32 @@ trait MuridSekolahTrait
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }
+
+    /**
+     * Remove murid from sekolah (delete SekolahMurid record only).
+     */
+    public function deleteMurid(Request $request, Sekolah $sekolah, Murid $murid): RedirectResponse
+    {
+        try {
+            // Find and delete the SekolahMurid record
+            $sekolahMurid = SekolahMurid::where('id_sekolah', $sekolah->id)
+                ->where('id_murid', $murid->id)
+                ->first();
+
+            if (!$sekolahMurid) {
+                return redirect()->back()
+                    ->with('error', 'Data murid tidak ditemukan di sekolah ini.');
+            }
+
+            $namaMusid = $murid->nama;
+            $sekolahMurid->delete();
+
+            return redirect()->route('sekolah.show', ['sekolah' => $sekolah->id])
+                ->with('success', 'Murid ' . $namaMusid . ' berhasil dihapus dari sekolah ini.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat menghapus murid: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
 }
