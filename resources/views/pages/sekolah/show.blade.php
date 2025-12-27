@@ -68,8 +68,8 @@
                 <div class="my-4 border-b border-gray-200 dark:border-gray-700"></div>
                 <div class="flex flex-col gap-2 sm:flex-row">
                     <a href="{{ route('sekolah.show-murid', $sekolah) }}"
-                        class="bg-green-500 hover:bg-green-600 flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white transition">
-                        <i class="fas fa-graduation-cap mr-2"></i>
+                        class="bg-blue-500 hover:bg-blue-600 flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white transition">
+                        <i class="fas fa-users-line mr-2"></i>
                         Lihat Data Murid
                     </a>
                     <a href="{{ route('sekolah.show-guru', $sekolah) }}"
@@ -117,7 +117,7 @@
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <div class="bg-blue-500 flex h-12 w-12 items-center justify-center rounded-lg">
-                                <i class="fas fa-graduation-cap text-white"></i>
+                                <i class="fas fa-users-line text-white"></i>
                             </div>
                         </div>
                         <div class="ml-4">
