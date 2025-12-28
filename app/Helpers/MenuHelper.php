@@ -136,8 +136,8 @@ class MenuHelper
     public static function getIconSvg($iconName)
     {
         $icons = [
-            'dashboard' => '<i class="fas fa-tachometer-alt"></i>',
-            'sekolah' => '<i class="fas fa-building-columns"></i>',
+            'dashboard' => '<i class="fas fa-square-poll-vertical"></i>',
+            'sekolah' => '<i class="fa-regular fa-building"></i>',
             'students' => '<i class="fas fa-users-line"></i>',
             'graduates' => '<i class="fas fa-graduation-cap"></i>',
             'kabupaten' => '<i class="fas fa-city"></i>',

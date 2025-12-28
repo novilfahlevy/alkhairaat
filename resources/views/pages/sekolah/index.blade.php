@@ -22,9 +22,12 @@
         </div>
     </div>
 
-    <!-- Filters & Desktop Table Card -->
-    <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900 mb-6">
-        <!-- Filters -->
+    <!-- Filters Card -->
+    <x-ui.card>
+        <x-slot:header>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Filter Data</h2>
+        </x-slot:header>
+
         <form method="GET" class="mb-6" x-data="{ isSubmitting: false, isClearing: false }" x-on:submit="isSubmitting = true">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
                 <!-- Search -->
@@ -46,8 +49,7 @@
                         class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                         <option value="">Semua Jenis Sekolah</option>
                         @foreach ($jenisSekolahOptions as $key => $label)
-                            <option value="{{ $key }}"
-                                {{ request('jenis_sekolah') == $key ? 'selected' : '' }}>
+                            <option value="{{ $key }}" {{ request('jenis_sekolah') == $key ? 'selected' : '' }}>
                                 {{ $label }}
                             </option>
                         @endforeach
@@ -121,9 +123,9 @@
         @endif
 
         <!-- Desktop Table View -->
-        <div class="hidden md:block overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-50 dark:bg-gray-800">
+        <div class="hidden md:block">
+            <x-ui.table>
+                <x-slot:thead>
                     <tr>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-300">
@@ -145,8 +147,8 @@
                             class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-300">
                         </th>
                     </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
+                </x-slot:thead>
+                <x-slot:tbody>
                     @forelse($sekolah as $item)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
                             <td class="px-6 py-4">
@@ -204,17 +206,17 @@
                             </td>
                         </tr>
                     @endforelse
-                </tbody>
-            </table>
+                </x-slot:tbody>
+            </x-ui.table>
         </div>
-    </div>
+    </x-ui.card>
+
 
     <!-- Mobile Card List -->
     <div class="block md:hidden">
         <div class="space-y-4">
             @forelse($sekolah as $item)
-                <div
-                    class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                     <div class="mb-3 flex items-start justify-between">
                         <div class="flex-1">
                             <h3 class="font-medium text-gray-900 dark:text-white">
@@ -304,9 +306,5 @@
     </div>
 
     <!-- Pagination -->
-    @if ($sekolah->hasPages())
-        <div class="mt-6">
-            {{ $sekolah->withQueryString()->links() }}
-        </div>
-    @endif
+    <x-pagination :paginator="$sekolah" />
 @endsection
