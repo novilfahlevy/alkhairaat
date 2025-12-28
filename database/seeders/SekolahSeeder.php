@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Sekolah;
 use App\Models\Kabupaten;
+use App\Models\Scopes\GuruSekolahNauanganScope;
+use App\Models\Scopes\NauanganSekolahScope;
 use Illuminate\Database\Seeder;
 
 class SekolahSeeder extends Seeder
@@ -260,9 +262,9 @@ class SekolahSeeder extends Seeder
             }
 
             $data['id_kabupaten'] = $kabupaten->id;
-
+            
             // Use updateOrCreate to avoid duplicate data
-            $sekolah = Sekolah::updateOrCreate(
+            $sekolah = Sekolah::withoutGlobalScope(NauanganSekolahScope::class)->firstOrCreate(
                 ['kode_sekolah' => $data['kode_sekolah']],
                 $data
             );

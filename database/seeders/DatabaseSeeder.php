@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             ProvinsiKabupatenSeeder::class,
             SekolahSeeder::class,
             SekolahExternalSeeder::class,
+            MuridSeeder::class,
+            GuruSeeder::class,
         ]);
     }
 }
