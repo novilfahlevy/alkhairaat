@@ -194,7 +194,7 @@
                                                 {{ basename($uploadedFile->file_path) }}
                                             </p>
                                             <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                {{ $uploadedFile->created_at->format('d M Y H:i') }}
+                                                {{ $uploadedFile->created_at->translatedFormat('d M Y H:i') }}
                                             </p>
                                         </div>
                                     </div>

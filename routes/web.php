@@ -147,6 +147,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sekolah/{sekolah}/store-existing-murid', [App\Http\Controllers\SekolahController::class, 'storeExistingMurid'])->name('sekolah.store-existing-murid');
     Route::post('/sekolah/{sekolah}/tambah-murid-file', [App\Http\Controllers\SekolahController::class, 'storeMuridFile'])->name('sekolah.store-murid-file');
     Route::get('/sekolah/template/download', [App\Http\Controllers\SekolahController::class, 'downloadTemplate'])->name('sekolah.download-template');
+    Route::get('/sekolah/{sekolah}/murid/{murid}', [App\Http\Controllers\SekolahController::class, 'showDetailMurid'])->name('sekolah.show-detail-murid');
+    Route::get('/sekolah/{sekolah}/murid/{murid}/edit', [App\Http\Controllers\SekolahController::class, 'editMurid'])->name('sekolah.edit-murid');
+    Route::put('/sekolah/{sekolah}/murid/{murid}', [App\Http\Controllers\SekolahController::class, 'updateMurid'])->name('sekolah.update-murid');
     Route::delete('/sekolah/{sekolah}/murid/{murid}', [App\Http\Controllers\SekolahController::class, 'deleteMurid'])->name('sekolah.delete-murid');
     
     // Guru Management
