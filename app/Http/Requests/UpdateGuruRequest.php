@@ -28,7 +28,6 @@ class UpdateGuruRequest extends FormRequest
             'nik' => 'required|string|max:16|unique:guru,nik,' . $this->route('guru')->id,
             'jenis_kelamin' => 'required|in:L,P',
             'status' => 'required|in:aktif,tidak',
-            'jenis_jabatan' => 'required|in:Kepala Sekolah,Wakil Kepala Sekolah,Guru,Staff / TU,Pengasuh Asrama',
 
             // Data Guru - opsional fields
             'nama_gelar_depan' => 'nullable|string|max:50',
@@ -44,9 +43,6 @@ class UpdateGuruRequest extends FormRequest
             'nomor_rekening' => 'nullable|string|max:50',
             'rekening_atas_nama' => 'nullable|string|max:100',
             'bank_rekening' => 'nullable|string|max:50',
-
-            // JabatanGuru
-            'keterangan_jabatan' => 'nullable|string|max:255',
 
             // Alamat Asli
             'alamat_asli_provinsi' => 'nullable|string|max:100',

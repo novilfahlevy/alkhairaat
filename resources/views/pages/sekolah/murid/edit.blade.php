@@ -65,7 +65,7 @@
         @endif
 
         <form action="{{ route('sekolah.update-murid', ['sekolah' => $sekolah->id, 'murid' => $murid->id]) }}"
-            method="POST" class="space-y-6" x-data="{ isSubmitting: false }" x-on:submit="isSubmitting = true">
+            method="POST" class="space-y-6" x-data="formData()" x-init="init()" x-on:submit="isSubmitting = true">
             @csrf
             @method('PUT')
 
@@ -95,10 +95,32 @@
                         <label for="nisn" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             NISN <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" id="nisn" name="nisn" value="{{ old('nisn', $murid->nisn) }}"
-                            required
-                            class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
-                            placeholder="Nomor Identitas Siswa Nasional" />
+                        <div class="relative">
+                            <input type="text" id="nisn" name="nisn" x-model="nisnValue" @blur="checkNisn()"
+                                value="{{ old('nisn', $murid->nisn) }}" required
+                                class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 {{ $errors->has('nisn') ? 'border-red-500' : '' }}"
+                                :class="{ 'border-red-500 dark:border-red-500': nisnExists }"
+                                :disabled="isCheckingNisn" />
+                            <template x-if="isCheckingNisn">
+                                <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                                    <svg class="h-5 w-5 animate-spin text-brand-500"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                            stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                        </path>
+                                    </svg>
+                                </div>
+                            </template>
+                        </div>
+                        <template x-if="nisnCheckMessage">
+                            <p :class="nisnExists ? 'text-red-600 dark:text-red-400' :
+                                'text-green-600 dark:text-green-400'"
+                                class="mt-1 text-sm">
+                                <span x-html="nisnCheckMessage"></span>
+                            </p>
+                        </template>
                         @error('nisn')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
@@ -812,7 +834,9 @@
                         Batal
                     </a>
                     <button type="submit"
-                        class="flex items-center justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600" :disalbed="isSubmitting">
+                        class="flex items-center justify-center rounded-lg bg-brand-500 px-6 py-3 text-sm font-medium text-white hover:bg-brand-600 transition"
+                        :disabled="isSubmitting || nisnExists"
+                        x-bind:class="{ 'opacity-70 cursor-not-allowed': isSubmitting || nisnExists }">
                         <template x-if="isSubmitting">
                             <svg class="mr-2 h-4 w-4 animate-spin text-white" xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24">
@@ -824,9 +848,12 @@
                             </svg>
                         </template>
                         <template x-if="!isSubmitting">
-                            <i class="fas fa-check mr-3"></i>
+                            <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
                         </template>
-                        Simpan Perubahan
+                        <span>Simpan Perubahan</span>
                     </button>
                 </div>
             </div>
@@ -836,3 +863,63 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        function formData() {
+            return {
+                isSubmitting: false,
+                isCheckingNisn: false,
+                nisnExists: false,
+                nisnCheckMessage: '',
+                nisnValue: '{{ old('nisn', $murid->nisn) }}',
+                originalNisn: '{{ $murid->nisn }}',
+
+                async checkNisn() {
+                    if (!this.nisnValue || this.nisnValue.trim().length === 0) {
+                        this.nisnExists = false;
+                        this.nisnCheckMessage = '';
+                        return;
+                    }
+
+                    // If NISN hasn't changed, no need to check
+                    if (this.nisnValue === this.originalNisn) {
+                        this.nisnExists = false;
+                        this.nisnCheckMessage = '';
+                        return;
+                    }
+
+                    this.isCheckingNisn = true;
+
+                    try {
+                        const csrfToken = document.querySelector('input[name="_token"]').value;
+                        const checkNisnUrl = '{{ route('sekolah.check-nisn', $sekolah) }}';
+
+                        const response = await fetch(checkNisnUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            body: JSON.stringify({
+                                nisn: this.nisnValue
+                            })
+                        });
+
+                        const data = await response.json();
+                        this.nisnExists = data.exists;
+                        this.nisnCheckMessage = data.message;
+                    } catch (error) {
+                        console.error('Error checking NISN:', error);
+                    } finally {
+                        this.isCheckingNisn = false;
+                    }
+                },
+
+                init() {
+                    this.checkNisn();
+                }
+            };
+        }
+    </script>
+@endpush

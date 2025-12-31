@@ -39,6 +39,15 @@ class UpdateMuridRequest extends FormRequest
             'nama_ibu' => 'nullable|string|max:255',
             'nomor_hp_ibu' => 'nullable|string|max:20',
 
+            // Data sekolah & pendidikan
+            'tahun_keluar' => 'nullable|digits:4|integer|min:1900|max:' . (date('Y') + 1),
+            'kelas' => 'nullable|string|max:255',
+            'status_kelulusan' => 'nullable|in:ya,tidak',
+            'tahun_mutasi_masuk' => 'nullable|digits:4|integer|min:1900|max:' . (date('Y') + 1),
+            'alasan_mutasi_masuk' => 'nullable|string|max:255',
+            'tahun_mutasi_keluar' => 'nullable|digits:4|integer|min:1900|max:' . (date('Y') + 1),
+            'alasan_mutasi_keluar' => 'nullable|string|max:255',
+
             // Alamat asli
             'alamat_asli_provinsi' => 'nullable|string|max:255',
             'alamat_asli_kabupaten' => 'nullable|string|max:255',
@@ -86,15 +95,6 @@ class UpdateMuridRequest extends FormRequest
             'alamat_ibu_lengkap' => 'nullable|string|max:255',
             'alamat_ibu_koordinat_x' => 'nullable|numeric',
             'alamat_ibu_koordinat_y' => 'nullable|numeric',
-
-            // Data sekolah & pendidikan
-            'tahun_keluar' => 'nullable|digits:4|integer|min:1900|max:' . (date('Y') + 1),
-            'kelas' => 'nullable|string|max:255',
-            'status_kelulusan' => 'nullable|in:ya,tidak',
-            'tahun_mutasi_masuk' => 'nullable|digits:4|integer|min:1900|max:' . (date('Y') + 1),
-            'alasan_mutasi_masuk' => 'nullable|string|max:255',
-            'tahun_mutasi_keluar' => 'nullable|digits:4|integer|min:1900|max:' . (date('Y') + 1),
-            'alasan_mutasi_keluar' => 'nullable|string|max:255',
         ];
     }
 

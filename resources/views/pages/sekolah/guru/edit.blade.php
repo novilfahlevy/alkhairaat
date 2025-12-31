@@ -142,6 +142,27 @@
                         @enderror
                     </div>
 
+                    <!-- Status Kepegawaian -->
+                    <div>
+                        <label for="status_kepegawaian"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Status Kepegawaian <span class="text-red-500">*</span>
+                        </label>
+                        <select id="status_kepegawaian" name="status_kepegawaian"
+                            class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                            <option value="">Pilih Status Kepegawaian</option>
+                            @foreach ($statusKepegawaianOptions as $value => $label)
+                                <option value="{{ $value }}"
+                                    {{ old('status_kepegawaian', $guru->status_kepegawaian) === $value ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('status_kepegawaian')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Status Perkawinan -->
                     <div>
                         <label for="status_perkawinan" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -158,27 +179,6 @@
                             @endforeach
                         </select>
                         @error('status_perkawinan')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Status Kepegawaian -->
-                    <div>
-                        <label for="status_kepegawaian"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Status Kepegawaian
-                        </label>
-                        <select id="status_kepegawaian" name="status_kepegawaian"
-                            class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
-                            <option value="">Pilih Status Kepegawaian</option>
-                            @foreach ($statusKepegawaianOptions as $value => $label)
-                                <option value="{{ $value }}"
-                                    {{ old('status_kepegawaian', $guru->status_kepegawaian) === $value ? 'selected' : '' }}>
-                                    {{ $label }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('status_kepegawaian')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
@@ -285,51 +285,6 @@
                             class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
                             placeholder="Email guru" />
                         @error('kontak_email')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </x-ui.card>
-
-            <!-- Data Jabatan -->
-            <x-ui.card>
-                <x-slot name="header">
-                    <h2 class="text-lg font-semibold text-gray-800 dark:text-white/90">Data Jabatan di
-                        {{ $sekolah->nama }}</h2>
-                </x-slot>
-
-                <div class="grid gap-6 md:grid-cols-2">
-                    <!-- Jenis Jabatan -->
-                    <div>
-                        <label for="jenis_jabatan" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Jenis Jabatan <span class="text-red-500">*</span>
-                        </label>
-                        <select id="jenis_jabatan" name="jenis_jabatan" required onchange="onJenisJabatanChange()"
-                            class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
-                            <option value="">Pilih Jenis Jabatan</option>
-                            @foreach ($jenisJabatanOptions as $value => $label)
-                                <option value="{{ $value }}"
-                                    {{ old('jenis_jabatan', $jabatanGuru->jenis_jabatan) === $value ? 'selected' : '' }}>
-                                    {{ $label }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('jenis_jabatan')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Keterangan Jabatan -->
-                    <div>
-                        <label for="keterangan_jabatan"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Keterangan Jabatan
-                        </label>
-                        <input type="text" id="keterangan_jabatan" name="keterangan_jabatan"
-                            value="{{ old('keterangan_jabatan', $jabatanGuru->keterangan_jabatan) }}"
-                            class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
-                            placeholder="Mata pelajaran atau deskripsi lainnya" />
-                        @error('keterangan_jabatan')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
@@ -644,33 +599,3 @@
         </form>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        function onJenisJabatanChange() {
-            const jenisJabatan = document.querySelector('select[name="jenis_jabatan"]').value;
-            const keteranganInput = document.querySelector('input[name="keterangan_jabatan"]');
-
-            if (jenisJabatan === '{{ \App\Models\JabatanGuru::JENIS_JABATAN_KEPALA_SEKOLAH }}') {
-                keteranganInput.value = '{{ \App\Models\JabatanGuru::JENIS_JABATAN_KEPALA_SEKOLAH }}';
-            }
-
-            if (jenisJabatan === '{{ \App\Models\JabatanGuru::JENIS_JABATAN_WAKIL_KEPALA_SEKOLAH }}') {
-                keteranganInput.value = '{{ \App\Models\JabatanGuru::JENIS_JABATAN_WAKIL_KEPALA_SEKOLAH }}';
-            }
-
-            if (jenisJabatan === '{{ \App\Models\JabatanGuru::JENIS_JABATAN_GURU }}') {
-                keteranganInput.placeholder = 'Mata pelajaran yang diampu, contoh: Matematika';
-                keteranganInput.value = '';
-            }
-
-            if (jenisJabatan === '{{ \App\Models\JabatanGuru::JENIS_JABATAN_STAFF_TU }}') {
-                keteranganInput.value = '{{ \App\Models\JabatanGuru::JENIS_JABATAN_STAFF_TU }}';
-            }
-
-            if (jenisJabatan === '{{ \App\Models\JabatanGuru::JENIS_JABATAN_PENGASUH_ASRAMA }}') {
-                keteranganInput.value = '{{ \App\Models\JabatanGuru::JENIS_JABATAN_PENGASUH_ASRAMA }}';
-            }
-        }
-    </script>
-@endpush

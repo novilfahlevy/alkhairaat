@@ -92,69 +92,99 @@ trait MuridSekolahTrait
     {
         $validated = $request->validated();
 
-        try {
-            // Create or find murid by NISN
-            $murid = Murid::firstOrCreate(
-                ['nisn' => $validated['nisn']],
-                [
-                    'nama' => $validated['nama'],
-                    'nik' => $validated['nik'] ?? null,
-                    'tempat_lahir' => $validated['tempat_lahir'] ?? null,
-                    'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
-                    'jenis_kelamin' => $validated['jenis_kelamin'],
-                    'nama_ayah' => $validated['nama_ayah'] ?? null,
-                    'nomor_hp_ayah' => $validated['nomor_hp_ayah'] ?? null,
-                    'nama_ibu' => $validated['nama_ibu'] ?? null,
-                    'nomor_hp_ibu' => $validated['nomor_hp_ibu'] ?? null,
-                    'kontak_wa_hp' => $validated['kontak_wa_hp'] ?? null,
-                    'kontak_email' => $validated['kontak_email'] ?? null,
-                    'tanggal_update_data' => now(),
-                ]
-            );
+        // Simpan data murid
+        $murid = Murid::create($validated);
 
-            // Create sekolah_murid record
-            SekolahMurid::firstOrCreate(
-                [
-                    'id_murid' => $murid->id,
-                    'id_sekolah' => $sekolah->id,
-                ],
-                [
-                    'tahun_masuk' => $validated['tahun_masuk'],
-                    'kelas' => $validated['kelas'] ?? null
-                ]
-            );
+        // Simpan data sekolah murid
+        SekolahMurid::create([
+            'id_murid' => $murid->id,
+            'id_sekolah' => $sekolah->id,
+            'tahun_masuk' => $validated['tahun_masuk'],
+            'kelas' => $validated['kelas'] ?? null,
+        ]);
 
-            // Create alamat record if any address data is provided
-            $alamatData = [
-                'provinsi' => $validated['provinsi'] ?? null,
-                'kabupaten' => $validated['kabupaten'] ?? null,
-                'kecamatan' => $validated['kecamatan'] ?? null,
-                'kelurahan' => $validated['kelurahan'] ?? null,
-                'rt' => $validated['rt'] ?? null,
-                'rw' => $validated['rw'] ?? null,
-                'kode_pos' => $validated['kode_pos'] ?? null,
-                'alamat_lengkap' => $validated['alamat_lengkap'] ?? null,
-                'koordinat_x' => $validated['koordinat_x'] ?? null,
-                'koordinat_y' => $validated['koordinat_y'] ?? null,
-            ];
+        // Simpan alamat asli
+        $alamatAsliFields = [
+            'id_murid' => $murid->id,
+            'jenis' => Alamat::JENIS_ASLI,
+            'provinsi' => $validated['alamat_asli_provinsi'] ?? null,
+            'kabupaten' => $validated['alamat_asli_kabupaten'] ?? null,
+            'kecamatan' => $validated['alamat_asli_kecamatan'] ?? null,
+            'kelurahan' => $validated['alamat_asli_kelurahan'] ?? null,
+            'rt' => $validated['alamat_asli_rt'] ?? null,
+            'rw' => $validated['alamat_asli_rw'] ?? null,
+            'kode_pos' => $validated['alamat_asli_kode_pos'] ?? null,
+            'alamat_lengkap' => $validated['alamat_asli_lengkap'] ?? null,
+            'koordinat_x' => $validated['alamat_asli_koordinat_x'] ?? null,
+            'koordinat_y' => $validated['alamat_asli_koordinat_y'] ?? null,
+        ];
 
-            if (array_filter($alamatData)) {
-                Alamat::firstOrCreate(
-                    [
-                        'id_murid' => $murid->id,
-                        'jenis' => Alamat::JENIS_ASLI,
-                    ],
-                    $alamatData
-                );
-            }
-
-            return redirect()->route('sekolah.show', ['sekolah' => $sekolah->id])
-                ->with('success', 'Murid ' . $validated['nama'] . ' berhasil ditambahkan.');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Terjadi kesalahan saat menambahkan murid: ' . $e->getMessage());
+        if (array_filter($alamatAsliFields, fn($v) => $v !== null && $v !== '')) {
+            Alamat::create($alamatAsliFields);
         }
+
+        // Simpan alamat domisili
+        $alamatDomisiliFields = [
+            'id_murid' => $murid->id,
+            'jenis' => Alamat::JENIS_DOMISILI,
+            'provinsi' => $validated['alamat_domisili_provinsi'] ?? null,
+            'kabupaten' => $validated['alamat_domisili_kabupaten'] ?? null,
+            'kecamatan' => $validated['alamat_domisili_kecamatan'] ?? null,
+            'kelurahan' => $validated['alamat_domisili_kelurahan'] ?? null,
+            'rt' => $validated['alamat_domisili_rt'] ?? null,
+            'rw' => $validated['alamat_domisili_rw'] ?? null,
+            'kode_pos' => $validated['alamat_domisili_kode_pos'] ?? null,
+            'alamat_lengkap' => $validated['alamat_domisili_lengkap'] ?? null,
+            'koordinat_x' => $validated['alamat_domisili_koordinat_x'] ?? null,
+            'koordinat_y' => $validated['alamat_domisili_koordinat_y'] ?? null,
+        ];
+
+        if (array_filter($alamatDomisiliFields, fn($v) => $v !== null && $v !== '')) {
+            Alamat::create($alamatDomisiliFields);
+        }
+
+        // Simpan alamat ayah
+        $alamatAyahFields = [
+            'id_murid' => $murid->id,
+            'jenis' => Alamat::JENIS_AYAH,
+            'provinsi' => $validated['alamat_ayah_provinsi'] ?? null,
+            'kabupaten' => $validated['alamat_ayah_kabupaten'] ?? null,
+            'kecamatan' => $validated['alamat_ayah_kecamatan'] ?? null,
+            'kelurahan' => $validated['alamat_ayah_kelurahan'] ?? null,
+            'rt' => $validated['alamat_ayah_rt'] ?? null,
+            'rw' => $validated['alamat_ayah_rw'] ?? null,
+            'kode_pos' => $validated['alamat_ayah_kode_pos'] ?? null,
+            'alamat_lengkap' => $validated['alamat_ayah_lengkap'] ?? null,
+            'koordinat_x' => $validated['alamat_ayah_koordinat_x'] ?? null,
+            'koordinat_y' => $validated['alamat_ayah_koordinat_y'] ?? null,
+        ];
+
+        if (array_filter($alamatAyahFields, fn($v) => $v !== null && $v !== '')) {
+            Alamat::create($alamatAyahFields);
+        }
+
+        // Simpan alamat ibu
+        $alamatIbuFields = [
+            'id_murid' => $murid->id,
+            'jenis' => Alamat::JENIS_IBU,
+            'provinsi' => $validated['alamat_ibu_provinsi'] ?? null,
+            'kabupaten' => $validated['alamat_ibu_kabupaten'] ?? null,
+            'kecamatan' => $validated['alamat_ibu_kecamatan'] ?? null,
+            'kelurahan' => $validated['alamat_ibu_kelurahan'] ?? null,
+            'rt' => $validated['alamat_ibu_rt'] ?? null,
+            'rw' => $validated['alamat_ibu_rw'] ?? null,
+            'kode_pos' => $validated['alamat_ibu_kode_pos'] ?? null,
+            'alamat_lengkap' => $validated['alamat_ibu_lengkap'] ?? null,
+            'koordinat_x' => $validated['alamat_ibu_koordinat_x'] ?? null,
+            'koordinat_y' => $validated['alamat_ibu_koordinat_y'] ?? null,
+        ];
+
+        if (array_filter($alamatIbuFields, fn($v) => $v !== null && $v !== '')) {
+            Alamat::create($alamatIbuFields);
+        }
+
+        return redirect()->route('sekolah.show-murid', $sekolah)
+            ->with('success', 'Data murid berhasil ditambahkan.');
     }
 
     /**
@@ -456,7 +486,7 @@ trait MuridSekolahTrait
 
             foreach ($jenisAlamat as $jenis) {
                 $prefix = 'alamat_' . $jenis . '_';
-                
+
                 $alamatData = [
                     'provinsi' => $validated[$prefix . 'provinsi'] ?? null,
                     'kabupaten' => $validated[$prefix . 'kabupaten'] ?? null,

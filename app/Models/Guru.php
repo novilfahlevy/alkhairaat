@@ -253,6 +253,9 @@ class Guru extends Model
      */
     public function getStatusPerkawinanLabelAttribute(): string
     {
+        if (!$this->status_perkawinan) {
+            return '';
+        }
         return self::STATUS_PERKAWINAN_OPTIONS[$this->status_perkawinan] ?? $this->status_perkawinan;
     }
 

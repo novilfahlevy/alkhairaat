@@ -149,8 +149,8 @@ class SekolahController extends Controller
 
         // Fetch guru dengan relasi jabatan_guru
         $guruQuery = $sekolah->guru();
-        if ($request->filled('search_guru')) {
-            $searchGuru = $request->input('search_guru');
+        if ($request->filled('search')) {
+            $searchGuru = $request->input('search');
             $guruQuery->where(function ($q) use ($searchGuru) {
                 $q->where('nama', 'like', "%$searchGuru%")
                     ->orWhere('nik', 'like', "%$searchGuru%")
@@ -160,7 +160,7 @@ class SekolahController extends Controller
                     ->orWhere('jenis_kelamin', 'like', "%$searchGuru%");
             });
         }
-        $perPageGuru = $request->input('per_page_guru', 10);
+        $perPageGuru = $request->input('per_page', 10);
         if ($perPageGuru === 'all') {
             $guru = $guruQuery->paginate(PHP_INT_MAX, ['*'], 'page_guru');
         } else {

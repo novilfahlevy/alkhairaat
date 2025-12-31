@@ -164,6 +164,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sekolah/{sekolah}/guru/{guru}/edit', [App\Http\Controllers\SekolahController::class, 'editGuru'])->name('sekolah.edit-guru');
     Route::put('/sekolah/{sekolah}/guru/{guru}', [App\Http\Controllers\SekolahController::class, 'updateGuru'])->name('sekolah.update-guru');
     Route::delete('/sekolah/{sekolah}/guru/{guru}', [App\Http\Controllers\SekolahController::class, 'deleteGuru'])->name('sekolah.delete-guru');
+    
+    // Guru Jabatan Management
+    Route::post('/sekolah/{sekolah}/guru/{guru}/jabatan', [App\Http\Controllers\SekolahController::class, 'addJabatanGuru'])->name('sekolah.add-jabatan-guru');
+    Route::delete('/sekolah/{sekolah}/jabatan-guru/{jabatanGuru}', [App\Http\Controllers\SekolahController::class, 'deleteJabatanGuru'])->name('sekolah.delete-jabatan-guru');
 });
 
 /*
