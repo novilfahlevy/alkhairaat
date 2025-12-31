@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Traits;
 use App\Http\Requests\StoreGuruRequest;
 use App\Http\Requests\StoreExistingGuruRequest;
 use App\Http\Requests\StoreBulkFileRequest;
+use App\Http\Requests\UpdateGuruRequest;
 use App\Jobs\ProcessGuruBulkFile;
 use App\Models\Guru;
 use App\Models\JabatanGuru;
@@ -216,6 +217,182 @@ trait GuruSekolahTrait
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Terjadi kesalahan saat mengunggah file: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Show detail guru for a specific sekolah.
+     */
+    public function showDetailGuru(Sekolah $sekolah, Guru $guru): View
+    {
+        $sekolah->load(['kabupaten.provinsi']);
+        $guru->load(['jabatanGuru.sekolah']);
+
+        // Get the JabatanGuru record for this specific sekolah
+        $jabatanGuru = $guru->jabatanGuru()
+            ->where('id_sekolah', $sekolah->id)
+            ->first();
+
+        if (!$jabatanGuru) {
+            abort(404, 'Guru tidak ditemukan di sekolah ini.');
+        }
+
+        // Get alamat records indexed by jenis
+        $alamatRecords = Alamat::where('id_guru', $guru->id)->get()->keyBy('jenis');
+
+        return view('pages.sekolah.guru.detail', [
+            'title' => 'Detail Guru - ' . $guru->nama,
+            'sekolah' => $sekolah,
+            'guru' => $guru,
+            'jabatanGuru' => $jabatanGuru,
+            'alamatAsli' => $alamatRecords->get('asli'),
+            'alamatDomisili' => $alamatRecords->get('domisili'),
+        ]);
+    }
+
+    /**
+     * Show the form for editing a guru.
+     */
+    public function editGuru(Sekolah $sekolah, Guru $guru): View
+    {
+        $sekolah->load(['kabupaten.provinsi']);
+        $guru->load(['jabatanGuru']);
+
+        // Get the JabatanGuru record for this specific sekolah
+        $jabatanGuru = $guru->jabatanGuru()
+            ->where('id_sekolah', $sekolah->id)
+            ->first();
+
+        if (!$jabatanGuru) {
+            abort(404, 'Guru tidak ditemukan di sekolah ini.');
+        }
+
+        $alamatRecords = Alamat::where('id_guru', $guru->id)->get()->keyBy('jenis');
+
+        return view('pages.sekolah.guru.edit', [
+            'title' => 'Edit data - ' . $guru->nama,
+            'sekolah' => $sekolah,
+            'guru' => $guru,
+            'jabatanGuru' => $jabatanGuru,
+            'alamatAsli' => $alamatRecords->get('asli'),
+            'alamatDomisili' => $alamatRecords->get('domisili'),
+            'jenisKelaminOptions' => Guru::JENIS_KELAMIN_OPTIONS,
+            'statusOptions' => Guru::STATUS_OPTIONS,
+            'statusPerkawinanOptions' => Guru::STATUS_PERKAWINAN_OPTIONS,
+            'statusKepegawaianOptions' => Guru::STATUS_KEPEGAWAIAN_OPTIONS,
+            'jenisJabatanOptions' => JabatanGuru::JENIS_JABATAN_OPTIONS,
+        ]);
+    }
+
+    /**
+     * Update a guru.
+     */
+    public function updateGuru(UpdateGuruRequest $request, Sekolah $sekolah, Guru $guru): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        try {
+            // Verify that guru exists in this sekolah
+            $jabatanGuru = $guru->jabatanGuru()
+                ->where('id_sekolah', $sekolah->id)
+                ->first();
+
+            if (!$jabatanGuru) {
+                return redirect()->back()
+                    ->with('error', 'Guru tidak ditemukan di sekolah ini.');
+            }
+
+            // Update guru data
+            $guruData = [
+                'nama_gelar_depan' => $request->input('nama_gelar_depan'),
+                'nama' => $request->input('nama'),
+                'nama_gelar_belakang' => $request->input('nama_gelar_belakang'),
+                'nik' => $request->input('nik'),
+                'tempat_lahir' => $request->input('tempat_lahir'),
+                'tanggal_lahir' => $request->input('tanggal_lahir'),
+                'jenis_kelamin' => $request->input('jenis_kelamin'),
+                'status_perkawinan' => $request->input('status_perkawinan'),
+                'status_kepegawaian' => $request->input('status_kepegawaian'),
+                'status' => $request->input('status'),
+                'npk' => $request->input('npk'),
+                'nuptk' => $request->input('nuptk'),
+                'kontak_wa_hp' => $request->input('kontak_wa_hp'),
+                'kontak_email' => $request->input('kontak_email'),
+                'nomor_rekening' => $request->input('nomor_rekening'),
+                'rekening_atas_nama' => $request->input('rekening_atas_nama'),
+                'bank_rekening' => $request->input('bank_rekening'),
+            ];
+
+            $guru->update($guruData);
+
+            // Update jabatan guru
+            $jabatanGuru->update([
+                'jenis_jabatan' => $request->input('jenis_jabatan'),
+                'keterangan_jabatan' => $request->input('keterangan_jabatan'),
+            ]);
+
+            // Update alamat asli
+            $alamatAsliData = [
+                'id_guru' => $guru->id,
+                'jenis' => Alamat::JENIS_ASLI,
+                'provinsi' => $request->input('alamat_asli_provinsi'),
+                'kabupaten' => $request->input('alamat_asli_kabupaten'),
+                'kecamatan' => $request->input('alamat_asli_kecamatan'),
+                'kelurahan' => $request->input('alamat_asli_kelurahan'),
+                'rt' => $request->input('alamat_asli_rt'),
+                'rw' => $request->input('alamat_asli_rw'),
+                'kode_pos' => $request->input('alamat_asli_kode_pos'),
+                'alamat_lengkap' => $request->input('alamat_asli_lengkap'),
+                'koordinat_x' => $request->input('alamat_asli_koordinat_x'),
+                'koordinat_y' => $request->input('alamat_asli_koordinat_y'),
+            ];
+
+            if (array_filter($alamatAsliData, fn($v) => $v !== null && $v !== '')) {
+                $alamatAsli = Alamat::where('id_guru', $guru->id)
+                    ->where('jenis', Alamat::JENIS_ASLI)
+                    ->first();
+
+                if ($alamatAsli) {
+                    $alamatAsli->update($alamatAsliData);
+                } else {
+                    Alamat::create($alamatAsliData);
+                }
+            }
+
+            // Update alamat domisili
+            $alamatDomisiliData = [
+                'id_guru' => $guru->id,
+                'jenis' => Alamat::JENIS_DOMISILI,
+                'provinsi' => $request->input('alamat_domisili_provinsi'),
+                'kabupaten' => $request->input('alamat_domisili_kabupaten'),
+                'kecamatan' => $request->input('alamat_domisili_kecamatan'),
+                'kelurahan' => $request->input('alamat_domisili_kelurahan'),
+                'rt' => $request->input('alamat_domisili_rt'),
+                'rw' => $request->input('alamat_domisili_rw'),
+                'kode_pos' => $request->input('alamat_domisili_kode_pos'),
+                'alamat_lengkap' => $request->input('alamat_domisili_lengkap'),
+                'koordinat_x' => $request->input('alamat_domisili_koordinat_x'),
+                'koordinat_y' => $request->input('alamat_domisili_koordinat_y'),
+            ];
+
+            if (array_filter($alamatDomisiliData, fn($v) => $v !== null && $v !== '')) {
+                $alamatDomisili = Alamat::where('id_guru', $guru->id)
+                    ->where('jenis', Alamat::JENIS_DOMISILI)
+                    ->first();
+
+                if ($alamatDomisili) {
+                    $alamatDomisili->update($alamatDomisiliData);
+                } else {
+                    Alamat::create($alamatDomisiliData);
+                }
+            }
+
+            return redirect()->route('sekolah.show-detail-guru', ['sekolah' => $sekolah->id, 'guru' => $guru->id])
+                ->with('success', 'Data guru berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage())
+                ->withInput();
         }
     }
 

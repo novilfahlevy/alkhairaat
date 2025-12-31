@@ -121,7 +121,7 @@
                                     {{ $item->kontak_wa_hp ?? '-' }}</td>
                                 <td class="px-6 py-4 text-sm font-medium">
                                     <div class="flex items-center gap-2">
-                                        <a href="#"
+                                        <a href="{{ route('sekolah.show-detail-guru', ['sekolah' => $sekolah->id, 'guru' => $item->id]) }}"
                                             class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">
                                             Lihat Detail
                                         </a>
@@ -191,7 +191,7 @@
                                 <span class="text-gray-900 dark:text-white">{{ $item->kontak_wa_hp ?? '-' }}</span>
                             </div>
                             <div class="mt-4 flex gap-2">
-                                <a href="#"
+                                <a href="{{ route('sekolah.show-detail-guru', ['sekolah' => $sekolah->id, 'guru' => $item->id]) }}"
                                     class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">
                                     Lihat Detail
                                 </a>
