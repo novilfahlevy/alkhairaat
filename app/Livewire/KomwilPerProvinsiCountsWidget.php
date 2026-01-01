@@ -11,6 +11,14 @@ use Illuminate\Support\Collection;
 class KomwilPerProvinsiCountsWidget extends Component
 {
     /**
+     * Placeholder untuk lazy loading
+     */
+    public function placeholder()
+    {
+        return view('livewire.placeholders.komwil-per-provinsi-counts-skeleton');
+    }
+
+    /**
      * Get komwil counts per provinsi
      */
     private function getKomwilCounts(): Collection

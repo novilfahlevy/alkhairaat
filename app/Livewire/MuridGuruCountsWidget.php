@@ -9,6 +9,14 @@ use Livewire\Component;
 class MuridGuruCountsWidget extends Component
 {
     /**
+     * Placeholder untuk lazy loading
+     */
+    public function placeholder()
+    {
+        return view('livewire.placeholders.murid-guru-counts-skeleton');
+    }
+
+    /**
      * Get total counts for murid and guru
      */
     private function getCounts(): array

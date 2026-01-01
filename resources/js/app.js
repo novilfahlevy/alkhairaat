@@ -1,35 +1,35 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 import ApexCharts from 'apexcharts';
-
-// flatpickr
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-
-// FullCalendar
 import { Calendar } from '@fullcalendar/core';
-
 import $ from 'jquery';
-window.$ = window.jQuery = $;
-
 import select2 from 'select2';
-select2();
 
-window.Alpine = Alpine;
+// Bind global libraries
+window.$ = window.jQuery = $;
 window.ApexCharts = ApexCharts;
 window.flatpickr = flatpickr;
 window.FullCalendar = Calendar;
 
-Alpine.start();
+// Init Alpine
+if (!window.Alpine) {
+    window.Alpine = Alpine;
+    Alpine.start();
+}
+
+// Init select2
+select2();
 
 // Initialize components on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Map imports
+    // Map
     if (document.querySelector('#mapOne')) {
         import('./components/map').then(module => module.initMap());
     }
 
-    // Chart imports
+    // Charts
     if (document.querySelector('#chartOne')) {
         import('./components/chart/chart-1').then(module => module.initChartOne());
     }
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         import('./components/chart/chart-13').then(module => module.initChartThirteen());
     }
 
-    // Calendar init
+    // Calendar
     if (document.querySelector('#calendar')) {
         import('./components/calendar-init').then(module => module.calendarInit());
     }

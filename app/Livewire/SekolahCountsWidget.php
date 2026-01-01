@@ -8,6 +8,14 @@ use Livewire\Component;
 class SekolahCountsWidget extends Component
 {
     /**
+     * Placeholder untuk lazy loading
+     */
+    public function placeholder()
+    {
+        return view('livewire.placeholders.sekolah-counts-skeleton');
+    }
+
+    /**
      * Get total counts for sekolah by status and jenis sekolah
      */
     private function getCounts(): array

@@ -12,6 +12,14 @@ class MuridCountsWidget extends Component
     public $collapsed = [];
 
     /**
+     * Placeholder untuk lazy loading
+     */
+    public function placeholder()
+    {
+        return view('livewire.placeholders.murid-counts-skeleton');
+    }
+
+    /**
      * Get murid counts grouped by provinsi and kabupaten
      */
     private function getMuridCounts(): Collection
