@@ -1,6 +1,6 @@
 <div class="space-y-4 sm:space-y-6">
     <!-- Summary Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
+    {{-- <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
         <!-- Total Komwil -->
         <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-3 sm:p-4 lg:p-6 border border-indigo-200">
             <div class="flex items-center justify-between gap-2">
@@ -26,7 +26,7 @@
                 <i class="fas fa-map text-3xl sm:text-4xl text-blue-300 flex-shrink-0"></i>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Detail Komwil Per Provinsi -->
     {{-- <x-ui.card>
