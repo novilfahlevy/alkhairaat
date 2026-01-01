@@ -5,5 +5,6 @@
     <livewire:sekolah-counts-widget />
     <livewire:murid-counts-widget />
     <livewire:murid-guru-counts-widget />
+    <livewire:komwil-per-provinsi-counts-widget />
   </div>
 @endsection
