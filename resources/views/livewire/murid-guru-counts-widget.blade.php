@@ -1,4 +1,4 @@
-<div class="space-y-4 sm:space-y-6 mb-6">
+<div class="space-y-4 sm:space-y-6">
     <!-- Statistik Murid -->
     <x-ui.card>
         <x-slot name="header">
