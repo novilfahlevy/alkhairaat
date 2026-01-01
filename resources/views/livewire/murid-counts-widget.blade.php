@@ -5,27 +5,35 @@
 
     <div class="space-y-4">
         @forelse($provinsis as $provinsi)
-            <div x-data="{ open: {{ $loop->index == 0 ? 'true' : 'false' }} }" class="border rounded-lg overflow-hidden">
+            <div x-data="{ open: {{ $loop->first ? 'true' : 'false' }} }" class="border rounded-lg overflow-hidden">
                 <!-- Header Provinsi (Clickable) -->
                 <button @click="open = !open"
-                    class="w-full bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 transition px-4 py-4 flex items-center justify-between border-l-4 border-blue-500">
-                    <div class="flex items-center gap-3">
+                    class="w-full bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 transition px-4 py-4 flex flex-col gap-y-3 md:flex-row md:items-center md:justify-between border-l-4 border-blue-500">
+                    <div class="flex items-center gap-3 flex-1">
                         <!-- Icon Collapse/Expand -->
-                        <svg x-show="open" class="w-5 h-5 text-blue-600 transition-transform duration-200"
+                        <svg x-show="open" class="w-5 h-5 text-blue-600 transition-transform duration-200 flex-shrink-0"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
                             </path>
                         </svg>
-                        <svg x-show="!open" class="w-5 h-5 text-blue-600 transition-transform duration-200"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg x-show="!open"
+                            class="w-5 h-5 text-blue-600 transition-transform duration-200 flex-shrink-0" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
                             </path>
                         </svg>
                         <h3 class="text-lg font-semibold text-gray-700">{{ $provinsi['nama'] }}</h3>
                     </div>
-                    <span class="bg-blue-600 text-white text-sm font-bold px-3 py-1 rounded-full">
-                        {{ number_format($provinsi['total_murid']) }} murid
-                    </span>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <span
+                            class="bg-blue-600 text-white text-xs sm:text-sm font-bold px-2 sm:px-3 py-1 rounded-full">
+                            {{ number_format($provinsi['total_murid']) }} murid
+                        </span>
+                        <span
+                            class="bg-purple-600 text-white text-xs sm:text-sm font-bold px-2 sm:px-3 py-1 rounded-full">
+                            {{ number_format($provinsi['total_alumni']) }} alumni
+                        </span>
+                    </div>
                 </button>
 
                 <!-- Content Kabupaten (Collapsible) -->
@@ -39,12 +47,19 @@
                         @forelse($provinsi['kabupatens'] as $kabupaten)
                             <div
                                 class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-md p-4 hover:shadow-md transition border border-gray-200">
-                                <p class="text-sm font-medium text-gray-600">{{ $kabupaten['nama'] }}</p>
-                                <p class="flex items-center gap-x-2 text-gray-800 mt-2">
-                                    <span
-                                        class="text-2xl font-bold text-blue-600">{{ number_format($kabupaten['murid_count']) }}</span>
-                                    <span class="text-xs text-gray-500">murid</span>
-                                </p>
+                                <p class="text-sm font-medium text-gray-600 mb-3">{{ $kabupaten['nama'] }}</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs text-gray-500">Murid:</span>
+                                        <span
+                                            class="text-lg font-bold text-blue-600">{{ number_format($kabupaten['murid_count']) }}</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs text-gray-500">Alumni:</span>
+                                        <span
+                                            class="text-lg font-bold text-purple-600">{{ number_format($kabupaten['alumni_count']) }}</span>
+                                    </div>
+                                </div>
                             </div>
                         @empty
                             <p class="text-sm text-gray-500 col-span-full py-4 text-center">Tidak ada kabupaten</p>

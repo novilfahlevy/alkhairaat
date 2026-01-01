@@ -18,33 +18,39 @@ class MuridCountsWidget extends Component
     {
         return Provinsi::query()
             ->with(['kabupaten.sekolah.sekolahMurid.murid'])
-            // ->with([
-            //     'kabupaten' => fn($q) => $q->whereHas('sekolah', fn($sq) => $sq->whereHas('sekolahMurid')),
-            //     'kabupaten.sekolah' => fn($q) => $q->whereHas('sekolahMurid'),
-            //     'kabupaten.sekolah.sekolahMurid',
-            // ])
-            // ->whereHas('kabupaten', fn($q) => $q->whereHas('sekolah', fn($sq) => $sq->whereHas('sekolahMurid')))
             ->get()
             ->map(function (Provinsi $provinsi) {
                 $kabupatens = $provinsi->kabupaten->map(function ($kabupaten) {
-                    $muridCount = $kabupaten->sekolah
-                        ->flatMap(fn($sekolah) => $sekolah->sekolahMurid)
+                    $sekolahMurids = $kabupaten->sekolah
+                        ->flatMap(fn($sekolah) => $sekolah->sekolahMurid);
+
+                    $totalMurid = $sekolahMurids->count();
+                    $alumniCount = $sekolahMurids
+                        ->flatMap(fn($sm) => $sm->murid)
+                        ->filter(fn($murid) => $murid->isAlumni())
+                        ->unique('id')
                         ->count();
 
                     return [
                         'id' => $kabupaten->id,
                         'nama' => $kabupaten->nama_kabupaten ?? 'Unknown',
-                        'murid_count' => $muridCount,
+                        'murid_count' => $totalMurid,
+                        'alumni_count' => $alumniCount,
                     ];
                 });
+
+                $totalMurid = $kabupatens->sum('murid_count');
+                $totalAlumni = $kabupatens->sum('alumni_count');
 
                 return [
                     'id' => $provinsi->id,
                     'nama' => $provinsi->nama_provinsi ?? 'Unknown',
-                    'total_murid' => $kabupatens->sum('murid_count'),
+                    'total_murid' => $totalMurid,
+                    'total_alumni' => $totalAlumni,
                     'kabupatens' => $kabupatens,
                 ];
-            });
+            })
+            ->filter(fn($p) => $p['total_murid'] > 0);
     }
 
     public function render()

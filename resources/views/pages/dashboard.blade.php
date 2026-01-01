@@ -2,8 +2,8 @@
 
 @section('content')
   <div class="space-y-6 pb-60">
-    <livewire:murid-guru-counts-widget />
-    <livewire:murid-counts-widget />
     <livewire:sekolah-counts-widget />
+    <livewire:murid-counts-widget />
+    <livewire:murid-guru-counts-widget />
   </div>
 @endsection
