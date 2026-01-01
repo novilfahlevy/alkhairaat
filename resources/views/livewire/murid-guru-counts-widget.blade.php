@@ -156,5 +156,48 @@
                 </div>
             </div>
         </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4 mt-4 sm:mt-6">
+            <!-- Guru PNS -->
+            <div
+                class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg p-3 sm:p-4 lg:p-6 border border-amber-200">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p class="text-xs sm:text-sm font-medium text-amber-600 uppercase tracking-wide truncate">PNS
+                        </p>
+                        <p class="text-2xl sm:text-3xl font-bold text-amber-800 mt-1">
+                            {{ number_format($counts['guru']['pns']) }}</p>
+                    </div>
+                    <i class="fas fa-id-badge text-3xl sm:text-4xl text-amber-300 flex-shrink-0"></i>
+                </div>
+            </div>
+
+            <!-- Guru Non PNS -->
+            <div class="bg-gradient-to-br from-lime-50 to-lime-100 rounded-lg p-3 sm:p-4 lg:p-6 border border-lime-200">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p class="text-xs sm:text-sm font-medium text-lime-600 uppercase tracking-wide truncate">Non PNS
+                        </p>
+                        <p class="text-2xl sm:text-3xl font-bold text-lime-800 mt-1">
+                            {{ number_format($counts['guru']['non_pns']) }}</p>
+                    </div>
+                    <i class="fas fa-briefcase text-3xl sm:text-4xl text-lime-300 flex-shrink-0"></i>
+                </div>
+            </div>
+
+            <!-- Guru PPPK -->
+            <div
+                class="bg-gradient-to-br from-fuchsia-50 to-fuchsia-100 rounded-lg p-3 sm:p-4 lg:p-6 border border-fuchsia-200">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p class="text-xs sm:text-sm font-medium text-fuchsia-600 uppercase tracking-wide truncate">PPPK
+                        </p>
+                        <p class="text-2xl sm:text-3xl font-bold text-fuchsia-800 mt-1">
+                            {{ number_format($counts['guru']['pppk']) }}</p>
+                    </div>
+                    <i class="fas fa-certificate text-3xl sm:text-4xl text-fuchsia-300 flex-shrink-0"></i>
+                </div>
+            </div>
+        </div>
     </x-ui.card>
 </div>

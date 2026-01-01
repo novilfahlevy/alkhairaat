@@ -35,6 +35,10 @@ class MuridGuruCountsWidget extends Component
         $guruLakiLaki = Guru::byJenisKelamin(Guru::JENIS_KELAMIN_LAKI)->count();
         $guruPerempuan = Guru::byJenisKelamin(Guru::JENIS_KELAMIN_PEREMPUAN)->count();
 
+        $guruPNS = Guru::byStatusKepegawaian(Guru::STATUS_KEPEGAWAIAN_PNS)->count();
+        $guruNonPNS = Guru::byStatusKepegawaian(Guru::STATUS_KEPEGAWAIAN_NON_PNS)->count();
+        $guruPPPK = Guru::byStatusKepegawaian(Guru::STATUS_KEPEGAWAIAN_PPPK)->count();
+
         return [
             'murid' => [
                 'total' => $totalMurid,
@@ -49,6 +53,9 @@ class MuridGuruCountsWidget extends Component
                 'non_aktif' => $guruNonAktif,
                 'laki_laki' => $guruLakiLaki,
                 'perempuan' => $guruPerempuan,
+                'pns' => $guruPNS,
+                'non_pns' => $guruNonPNS,
+                'pppk' => $guruPPPK,
             ],
         ];
     }

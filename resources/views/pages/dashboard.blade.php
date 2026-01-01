@@ -5,6 +5,6 @@
     <livewire:sekolah-counts-widget lazy />
     <livewire:murid-counts-widget lazy />
     <livewire:murid-guru-counts-widget lazy />
-    <livewire:komwil-per-provinsi-counts-widget lazy />
+    {{-- <livewire:komwil-per-provinsi-counts-widget lazy /> --}}
   </div>
 @endsection
