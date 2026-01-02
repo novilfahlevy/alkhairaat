@@ -266,10 +266,15 @@
         <!-- Template Information Card -->
         <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
             <h2 class="mb-4 text-lg font-semibold text-gray-800 dark:text-white/90">Format File Template</h2>
+
             <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                File Anda harus memiliki kolom-kolom berikut (sesuai urutan):
+                File Anda harus memiliki kolom-kolom berikut (sesuai urutan). Kolom dengan status "Wajib" harus diisi. Kolom dengan status "Opsional" dapat
+                    dikosongkan jika tidak ada data dan diisi di lain waktu.
             </p>
-            <div class="overflow-x-auto">
+
+            <!-- Data Pribadi Section -->
+            <h3 class="mb-2 text-md font-semibold text-gray-700 dark:text-gray-300">Data Pribadi</h3>
+            <div class="overflow-x-auto mb-6">
                 <table class="min-w-full border-collapse border border-gray-300 dark:border-gray-700">
                     <thead class="bg-gray-100 dark:bg-gray-800">
                         <tr>
@@ -342,23 +347,6 @@
                         <tr>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Tahun Masuk
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Tahun masuk murid (format: YYYY)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
-                                    Wajib
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 NIK
                             </td>
                             <td
@@ -410,6 +398,65 @@
                         <tr>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Kontak WA/HP
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Nomor WhatsApp/HP murid
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Email
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Email murid
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Data Sekolah & Pendidikan Section -->
+            <h3 class="mb-2 text-md font-semibold text-gray-700 dark:text-gray-300">Data Sekolah & Pendidikan</h3>
+            <div class="overflow-x-auto mb-6">
+                <table class="min-w-full border-collapse border border-gray-300 dark:border-gray-700">
+                    <thead class="bg-gray-100 dark:bg-gray-800">
+                        <tr>
+                            <th
+                                class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Kolom
+                            </th>
+                            <th
+                                class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Deskripsi
+                            </th>
+                            <th
+                                class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kelas
                             </td>
                             <td
@@ -424,6 +471,133 @@
                                 </span>
                             </td>
                         </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tahun Masuk
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tahun masuk murid (format: YYYY)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                    Wajib
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tahun Keluar
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tahun keluar murid (format: YYYY)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tahun Mutasi Masuk
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tahun mutasi masuk (format: YYYY)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Alasan Mutasi Masuk
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Alasan mutasi masuk
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tahun Mutasi Keluar
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tahun mutasi keluar (format: YYYY)
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Alasan Mutasi Keluar
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Alasan mutasi keluar
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Data Orang Tua Section -->
+            <h3 class="mb-2 text-md font-semibold text-gray-700 dark:text-gray-300">Data Orang Tua</h3>
+            <div class="overflow-x-auto mb-6">
+                <table class="min-w-full border-collapse border border-gray-300 dark:border-gray-700">
+                    <thead class="bg-gray-100 dark:bg-gray-800">
+                        <tr>
+                            <th
+                                class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Kolom
+                            </th>
+                            <th
+                                class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Deskripsi
+                            </th>
+                            <th
+                                class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
                         <tr>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
@@ -492,212 +666,217 @@
                                 </span>
                             </td>
                         </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kontak WA/HP
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor WhatsApp/HP murid
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Email
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Email murid
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Provinsi
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Provinsi tempat tinggal murid (contoh: DKI Jakarta, Jawa Barat)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kabupaten
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kabupaten/Kota tempat tinggal murid (contoh: Jakarta Pusat, Bandung)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kecamatan
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kecamatan tempat tinggal murid
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kelurahan
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kelurahan tempat tinggal murid
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                RT
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor RT (Rukun Tetangga)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                RW
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor RW (Rukun Warga)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kode Pos
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kode pos tempat tinggal murid (5 digit)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Alamat Lengkap
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Alamat lengkap murid (contoh: Jl. Pendidikan No. 123)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Latitude (Koordinat X)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Koordinat latitude lokasi murid (cth: -7.2575)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Longitude (Koordinat Y)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Koordinat longitude lokasi murid (cth: 110.4324)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Data Alamat Section -->
+            <h3 class="mb-2 text-md font-semibold text-gray-700 dark:text-gray-300">Data Alamat</h3>
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                Ada 4 jenis alamat yang perlu diisi: Alamat Asli, Alamat Domisili, Alamat Ayah, dan Alamat Ibu. Setiap
+                alamat memiliki kolom yang sama.
+            </p>
+
+            <div class="mb-4">
+                <h4 class="mb-2 text-sm font-semibold text-gray-600 dark:text-gray-400">Alamat Asli</h4>
+                <div class="overflow-x-auto mb-4">
+                    <table class="min-w-full border-collapse border border-gray-300 dark:border-gray-700">
+                        <thead class="bg-gray-100 dark:bg-gray-800">
+                            <tr>
+                                <th
+                                    class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Kolom
+                                </th>
+                                <th
+                                    class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Deskripsi
+                                </th>
+                                <th
+                                    class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
+                            <tr>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Provinsi Asli
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Provinsi alamat asli murid
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    <span
+                                        class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        Opsional
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Kabupaten Asli
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Kabupaten/Kota alamat asli murid
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    <span
+                                        class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        Opsional
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Kecamatan Asli
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Kecamatan alamat asli murid
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    <span
+                                        class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        Opsional
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Kelurahan Asli
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Kelurahan alamat asli murid
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    <span
+                                        class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        Opsional
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    RT Asli
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Nomor RT alamat asli
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    <span
+                                        class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        Opsional
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    RW Asli
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Nomor RW alamat asli
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    <span
+                                        class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        Opsional
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Kode Pos Asli
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Kode pos alamat asli (5 digit)
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    <span
+                                        class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        Opsional
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Alamat Lengkap Asli
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Alamat lengkap asli (contoh: Jl. Pendidikan No. 123)
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    <span
+                                        class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        Opsional
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Latitude Asli (Koordinat X)
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Koordinat latitude alamat asli (cth: -7.2575)
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    <span
+                                        class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        Opsional
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Longitude Asli (Koordinat Y)
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    Koordinat longitude alamat asli (cth: 110.4324)
+                                </td>
+                                <td
+                                    class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                    <span
+                                        class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        Opsional
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
+                    <b>Catatan: </b>Kolom untuk alamat domisili, alamat ayah, dan alamat ibu memiliki kolom yang sama dengan Alamat Asli, tetapi dengan awalan Domisili/Ayah/Ibu.
+                </p>
             </div>
         </div>
     </div>
