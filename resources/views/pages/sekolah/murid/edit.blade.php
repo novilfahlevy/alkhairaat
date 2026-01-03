@@ -146,16 +146,15 @@
                         @enderror
                     </div>
 
-                    <!-- Tahun Masuk -->
+                    <!-- NIK -->
                     <div>
-                        <label for="tahun_masuk" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Tahun Masuk <span class="text-red-500">*</span>
+                        <label for="nik" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            NIK
                         </label>
-                        <input type="number" id="tahun_masuk" name="tahun_masuk"
-                            value="{{ old('tahun_masuk', $sekolahMurid->tahun_masuk) }}" required min="1900" max="{{ date('Y') + 1 }}"
+                        <input type="text" id="nik" name="nik" value="{{ old('nik', $murid->nik) }}"
                             class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
-                            placeholder="Contoh: {{ date('Y') }}" />
-                        @error('tahun_masuk')
+                            placeholder="Nomor Identitas Kartu" />
+                        @error('nik')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
@@ -170,19 +169,6 @@
                             class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
                             placeholder="Tempat lahir" />
                         @error('tempat_lahir')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- NIK -->
-                    <div>
-                        <label for="nik" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            NIK
-                        </label>
-                        <input type="text" id="nik" name="nik" value="{{ old('nik', $murid->nik) }}"
-                            class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
-                            placeholder="Nomor Identitas Kartu" />
-                        @error('nik')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
@@ -239,7 +225,7 @@
 
                 <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                     <!-- Kelas -->
-                    <div class="lg:col-span-2">
+                    <div class="lg:col-span-4">
                         <label for="kelas" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Kelas
                         </label>
@@ -248,6 +234,20 @@
                             class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
                             placeholder="Contoh: X-A, 10-1" />
                         @error('kelas')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Tahun Masuk -->
+                    <div class="lg:col-span-2">
+                        <label for="tahun_masuk" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Tahun Masuk <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" id="tahun_masuk" name="tahun_masuk"
+                            value="{{ old('tahun_masuk', $sekolahMurid->tahun_masuk) }}" required min="1900" max="{{ date('Y') + 1 }}"
+                            class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+                            placeholder="Contoh: {{ date('Y') }}" />
+                        @error('tahun_masuk')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
