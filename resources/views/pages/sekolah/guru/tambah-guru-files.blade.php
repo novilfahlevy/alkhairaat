@@ -264,17 +264,22 @@
         </div>
 
         <!-- Template Information Card -->
-        <!-- Template Information Card -->
         <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
             <h2 class="mb-4 text-lg font-semibold text-gray-800 dark:text-white/90">Format File Template</h2>
 
             <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                File Anda harus memiliki kolom-kolom berikut (sesuai urutan):
+                File Anda harus memiliki kolom-kolom berikut (sesuai urutan). Kolom dengan status "Wajib" harus diisi. Kolom dengan status "Opsional" dapat
+                    dikosongkan jika tidak ada data dan diisi di lain waktu.
             </p>
+
             <div class="overflow-x-auto">
                 <table class="min-w-full border-collapse border border-gray-300 dark:border-gray-700">
                     <thead class="bg-gray-100 dark:bg-gray-800">
                         <tr>
+                            <th
+                                class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                No
+                            </th>
                             <th
                                 class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kolom
@@ -284,40 +289,32 @@
                                 Deskripsi
                             </th>
                             <th
-                                class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                class="border border-gray-300 px-4 py-2 text-center text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Status
                             </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Jenis Jabatan
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Jenis jabatan guru (Kepala Sekolah, Wakil Kepala Sekolah, Guru, Staff / TU, Pengasuh Asrama)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
-                                    Wajib
-                                </span>
+                        <!-- Data Pribadi -->
+                        <tr class="bg-gray-50 dark:bg-gray-800/50">
+                            <td colspan="4"
+                                class="border border-gray-300 px-4 py-2 text-sm font-bold text-gray-800 dark:border-gray-700 dark:text-gray-200">
+                                Data Pribadi
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                1</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Nama
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nama lengkap guru
+                                Nama lengkap guru (tanpa gelar)
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
                                     Wajib
@@ -325,16 +322,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                2</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 NIK
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor Induk Kependudukan (16 digit)
+                                Nomor Induk Kependudukan (16 digit). <strong>Format sebagai TEXT di Excel!</strong>
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
                                     Wajib
@@ -342,16 +341,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                3</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Jenis Kelamin
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                L (Laki-laki) atau P (Perempuan)
+                                <strong>L</strong> (Laki-laki) atau <strong>P</strong> (Perempuan)
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
                                     Wajib
@@ -359,16 +360,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                4</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Status
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Status guru (Aktif, Tidak Aktif)
+                                Status guru: <strong>Aktif</strong> atau <strong>Tidak Aktif</strong>
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
                                     Wajib
@@ -376,16 +379,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                5</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Status Kepegawaian
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Status kepegawaian guru (PNS, Non PNS, PPPK)
+                                <strong>PNS</strong>, <strong>Non PNS</strong>, atau <strong>PPPK</strong>
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
                                     Wajib
@@ -394,134 +399,17 @@
                         </tr>
                         <tr>
                             <td
-                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Keterangan Jabatan
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Keterangan jabatan (untuk guru: mata pelajaran yang diampu)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
-                                    Wajib
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                NPK
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor Pokok Kepegawaian
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                NUPTK
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor Unik Pendidik dan Tenaga Kependidikan
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Gelar Depan
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Gelar depan guru (contoh: Drs., Ir., dll)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Gelar Belakang
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Gelar belakang guru (contoh: S.Pd, M.Pd, M.Si, dll)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Tempat Lahir
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Tempat lahir guru
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Tanggal Lahir
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Tanggal lahir (format: DD/MM/YYYY atau YYYY-MM-DD)
-                            </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                <span
-                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                    Opsional
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                6</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Status Perkawinan
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Status perkawinan (Lajang, Menikah)
+                                <strong>Lajang</strong> atau <strong>Menikah</strong>
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                     Opsional
@@ -529,16 +417,132 @@
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                7</td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Gelar Depan
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Gelar depan (contoh: Drs., Ir., Dr.)
+                            </td>
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                8</td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Gelar Belakang
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Gelar belakang (contoh: S.Pd, M.Pd, M.Si)
+                            </td>
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                9</td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tempat Lahir
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tempat lahir guru (contoh: Jakarta, Bandung)
+                            </td>
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                10</td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Tanggal Lahir
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Format: <strong>DD/MM/YYYY</strong> atau <strong>YYYY-MM-DD</strong>
+                            </td>
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                11</td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                NPK
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Nomor Pokok Kepegawaian. <strong>Format sebagai TEXT!</strong>
+                            </td>
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                12</td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                NUPTK
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Nomor Unik Pendidik dan Tenaga Kependidikan. <strong>Format sebagai TEXT!</strong>
+                            </td>
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                13</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kontak WA/HP
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor WhatsApp/HP guru
+                                Nomor WhatsApp/HP (contoh: 081234567890)
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                     Opsional
@@ -546,23 +550,84 @@
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                14</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Email
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Email guru
+                                Email guru (contoh: guru@example.com)
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                     Opsional
                                 </span>
                             </td>
                         </tr>
+
+                        <!-- Data Jabatan -->
+                        <tr class="bg-gray-50 dark:bg-gray-800/50">
+                            <td colspan="4"
+                                class="border border-gray-300 px-4 py-2 text-sm font-bold text-gray-800 dark:border-gray-700 dark:text-gray-200">
+                                Data Jabatan
+                            </td>
+                        </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                15</td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Jenis Jabatan
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Pilihan: <strong>Kepala Sekolah</strong>, <strong>Wakil Kepala Sekolah</strong>,
+                                <strong>Guru</strong>, <strong>Staff / TU</strong>, <strong>Pengasuh Asrama</strong>
+                            </td>
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
+                                <span
+                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                                    Wajib
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                16</td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Keterangan Jabatan
+                            </td>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                                Keterangan jabatan. Untuk Guru: mata pelajaran yang diampu (contoh: Matematika, Bahasa
+                                Indonesia)
+                            </td>
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
+                                <span
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
+                                </span>
+                            </td>
+                        </tr>
+
+                        <!-- Data Rekening -->
+                        <tr class="bg-gray-50 dark:bg-gray-800/50">
+                            <td colspan="4"
+                                class="border border-gray-300 px-4 py-2 text-sm font-bold text-gray-800 dark:border-gray-700 dark:text-gray-200">
+                                Data Rekening
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                17</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Nomor Rekening
@@ -571,8 +636,7 @@
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Nomor rekening bank guru
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                     Opsional
@@ -580,6 +644,9 @@
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                18</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Rekening Atas Nama
@@ -588,8 +655,7 @@
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Nama pemilik rekening bank
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                     Opsional
@@ -597,67 +663,83 @@
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                19</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Bank Rekening
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nama bank rekening guru (contoh: Bank BRI, Bank Mandiri, dll)
+                                Nama bank (contoh: Bank BRI, Bank Mandiri, Bank BNI)
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                     Opsional
                                 </span>
                             </td>
                         </tr>
+
+                        <!-- Data Alamat -->
+                        <tr class="bg-gray-50 dark:bg-gray-800/50">
+                            <td colspan="4"
+                                class="border border-gray-300 px-4 py-2 text-sm font-bold text-gray-800 dark:border-gray-700 dark:text-gray-200">
+                                Data Alamat Asli/Domisili
+                            </td>
+                        </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                20</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Provinsi
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Provinsi tempat tinggal guru (contoh: DKI Jakarta, Jawa Barat)
+                                Provinsi tempat tinggal (contoh: DKI Jakarta, Jawa Barat)
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
-                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
-                                    Wajib
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                21</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kabupaten
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kabupaten/Kota tempat tinggal guru (contoh: Jakarta Pusat, Bandung)
+                                Kabupaten/Kota (contoh: Jakarta Pusat, Bandung)
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
-                                    class="inline-block rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
-                                    Wajib
+                                    class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    Opsional
                                 </span>
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                22</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kecamatan
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kecamatan tempat tinggal guru
+                                Kecamatan
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                     Opsional
@@ -665,16 +747,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                23</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kelurahan
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kelurahan tempat tinggal guru
+                                Kelurahan
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                     Opsional
@@ -682,16 +766,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                24</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 RT
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor RT (Rukun Tetangga)
+                                RT
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                     Opsional
@@ -699,16 +785,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                25</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 RW
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Nomor RW (Rukun Warga)
+                                RW
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                     Opsional
@@ -716,16 +804,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                26</td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Kode Pos
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Kode pos tempat tinggal guru (5 digit)
+                                Kode Pos
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                     Opsional
@@ -734,15 +824,17 @@
                         </tr>
                         <tr>
                             <td
+                                class="border border-gray-300 px-4 py-2 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                                27</td>
+                            <td
                                 class="border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">
                                 Alamat Lengkap
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Alamat lengkap guru (contoh: Jl. Pendidikan No. 123)
+                                Alamat Lengkap
                             </td>
-                            <td
-                                class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                            <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
                                     class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                     Opsional
@@ -753,5 +845,4 @@
                 </table>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection

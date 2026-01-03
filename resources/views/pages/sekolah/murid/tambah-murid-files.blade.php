@@ -671,14 +671,9 @@
             </div>
 
             <!-- Data Alamat Section -->
-            <h3 class="mb-2 text-md font-semibold text-gray-700 dark:text-gray-300">Data Alamat</h3>
-            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                Ada 4 jenis alamat yang perlu diisi: Alamat Asli, Alamat Domisili, Alamat Ayah, dan Alamat Ibu. Setiap
-                alamat memiliki kolom yang sama.
-            </p>
+            <h3 class="mb-2 text-md font-semibold text-gray-700 dark:text-gray-300">Data Alamat Asli/Domisili/Ayah/Ibu</h3>
 
             <div class="mb-4">
-                <h4 class="mb-2 text-sm font-semibold text-gray-600 dark:text-gray-400">Alamat Asli</h4>
                 <div class="overflow-x-auto mb-4">
                     <table class="min-w-full border-collapse border border-gray-300 dark:border-gray-700">
                         <thead class="bg-gray-100 dark:bg-gray-800">
