@@ -191,7 +191,7 @@
                                         <!-- File Info -->
                                         <div class="min-w-0 flex-1">
                                             <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                                {{ basename($uploadedFile->file_path) }}
+                                                {{ $uploadedFile->file_original_name ?: basename($uploadedFile->file_path) }}
                                             </p>
                                             <p class="text-xs text-gray-500 dark:text-gray-400">
                                                 {{ $uploadedFile->created_at->translatedFormat('d M Y H:i') }}
@@ -268,8 +268,9 @@
             <h2 class="mb-4 text-lg font-semibold text-gray-800 dark:text-white/90">Format File Template</h2>
 
             <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                File Anda harus memiliki kolom-kolom berikut (sesuai urutan). Kolom dengan status "Wajib" harus diisi. Kolom dengan status "Opsional" dapat
-                    dikosongkan jika tidak ada data dan diisi di lain waktu.
+                File Anda harus memiliki kolom-kolom berikut (sesuai urutan). Kolom dengan status "Wajib" harus diisi. Kolom
+                dengan status "Opsional" dapat
+                dikosongkan jika tidak ada data dan diisi di lain waktu.
             </p>
 
             <div class="overflow-x-auto">
@@ -845,4 +846,5 @@
                 </table>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection
