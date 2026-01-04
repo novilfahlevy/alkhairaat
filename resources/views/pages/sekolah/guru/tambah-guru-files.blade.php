@@ -195,6 +195,12 @@
                                             </p>
                                             <p class="text-xs text-gray-500 dark:text-gray-400">
                                                 {{ $uploadedFile->created_at->translatedFormat('d M Y H:i') }}
+                                                @if ($uploadedFile->processed_rows !== null)
+                                                    • {{ $uploadedFile->processed_rows }} berhasil
+                                                    @if ($uploadedFile->error_count > 0)
+                                                        • {{ $uploadedFile->error_count }} error
+                                                    @endif
+                                                @endif
                                             </p>
                                         </div>
                                     </div>
@@ -230,9 +236,64 @@
                                                 </svg>
                                                 Gagal
                                             </span>
+
+                                            <!-- Error Details Button -->
+                                            @if ($uploadedFile->has_errors && $uploadedFile->error_count > 0)
+                                                <button type="button"
+                                                    class="inline-flex items-center rounded border border-red-300 bg-red-50 px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-100 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30"
+                                                    onclick="toggleErrorDetails('error-details-{{ $uploadedFile->id }}')">
+                                                    <svg class="mr-1 h-3 w-3" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                        </path>
+                                                    </svg>
+                                                    Lihat Error
+                                                </button>
+                                            @endif
                                         @endif
                                     </div>
                                 </div>
+
+                                <!-- Error Details (Hidden by default) -->
+                                @if ($uploadedFile->has_errors && $uploadedFile->error_count > 0)
+                                    <div id="error-details-{{ $uploadedFile->id }}"
+                                        class="hidden mt-2 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20">
+                                        <p class="text-sm font-medium text-red-800 dark:text-red-200 mb-2">Detail Error:
+                                        </p>
+                                        <div class="max-h-40 overflow-y-auto">
+                                            <table class="min-w-full text-xs">
+                                                <thead class="bg-red-100 dark:bg-red-900/30">
+                                                    <tr>
+                                                        <th class="px-2 py-1 text-left text-red-800 dark:text-red-200">
+                                                            Baris</th>
+                                                        <th class="px-2 py-1 text-left text-red-800 dark:text-red-200">NIK
+                                                        </th>
+                                                        <th class="px-2 py-1 text-left text-red-800 dark:text-red-200">Nama
+                                                        </th>
+                                                        <th class="px-2 py-1 text-left text-red-800 dark:text-red-200">
+                                                            Error</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($uploadedFile->error_details_array as $error)
+                                                        <tr class="border-b border-red-200 dark:border-red-800">
+                                                            <td class="px-2 py-1 text-red-700 dark:text-red-300">
+                                                                {{ $error['row'] ?? '-' }}</td>
+                                                            <td class="px-2 py-1 text-red-700 dark:text-red-300">
+                                                                {{ $error['nik'] ?? '-' }}</td>
+                                                            <td class="px-2 py-1 text-red-700 dark:text-red-300">
+                                                                {{ $error['nama'] ?? '-' }}</td>
+                                                            <td class="px-2 py-1 text-red-700 dark:text-red-300">
+                                                                {{ $error['error'] }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                @endif
                             @endforeach
                         </div>
                     </div>
@@ -370,7 +431,7 @@
                             </td>
                             <td
                                 class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
-                                Status guru: <strong>Aktif</strong> atau <strong>Tidak Aktif</strong>
+                                Status guru: <strong>aktif</strong> atau <strong>tidak</strong>
                             </td>
                             <td class="border border-gray-300 px-4 py-2 text-center text-sm">
                                 <span
@@ -847,4 +908,15 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleErrorDetails(id) {
+            const element = document.getElementById(id);
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+            } else {
+                element.classList.add('hidden');
+            }
+        }
+    </script>
 @endsection

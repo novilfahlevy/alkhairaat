@@ -21,6 +21,8 @@ class GuruImport implements ToCollection, WithStartRow, WithChunkReading
 {
     private ?array $headers = null;
     private ?array $columnMap = null;
+    private Collection $errors;
+    private Collection $successRows;
     
     private GuruBulkProcessor $guruProcessor;
     private JabatanGuruBulkProcessor $jabatanProcessor;
@@ -31,6 +33,8 @@ class GuruImport implements ToCollection, WithStartRow, WithChunkReading
         $this->guruProcessor = new GuruBulkProcessor();
         $this->jabatanProcessor = new JabatanGuruBulkProcessor();
         $this->alamatProcessor = new AlamatBulkProcessor();
+        $this->errors = collect();
+        $this->successRows = collect();
     }
 
     /**
@@ -39,6 +43,22 @@ class GuruImport implements ToCollection, WithStartRow, WithChunkReading
     public function startRow(): int
     {
         return 2;
+    }
+
+    /**
+     * Get errors collection
+     */
+    public function getErrors(): Collection
+    {
+        return $this->errors;
+    }
+
+    /**
+     * Get success rows count
+     */
+    public function getSuccessCount(): int
+    {
+        return $this->successRows->count();
     }
 
     /**
@@ -93,6 +113,9 @@ class GuruImport implements ToCollection, WithStartRow, WithChunkReading
                 $existingGurus
             );
             
+            // Add success rows
+            $this->successRows = $validatedData;
+            
             Log::channel('guru_bulk_import')->info('=== CHUNK COMPLETED ===', [
                 'guru_processed' => $allGurus->count(),
                 'jabatan_inserted' => $jabatanCount,
@@ -132,8 +155,9 @@ class GuruImport implements ToCollection, WithStartRow, WithChunkReading
     private function validateRows(Collection $rows): Collection
     {
         return $rows->skip(1) // Skip header row
-            ->map(function ($row) {
+            ->map(function ($row, $index) {
                 $data = $row->toArray();
+                $rowNumber = $index + 2; // +2 because we skip header and start from row 2
 
                 // Get values using column mapping
                 $nama = $this->getValueByKey($data, 'nama');
@@ -143,6 +167,59 @@ class GuruImport implements ToCollection, WithStartRow, WithChunkReading
 
                 // Validate mandatory fields
                 if (empty($nik) || empty($nama) || empty($jenisKelamin) || empty($status)) {
+                    $errorFields = [];
+                    if (empty($nik)) $errorFields[] = 'NIK';
+                    if (empty($nama)) $errorFields[] = 'Nama';
+                    if (empty($jenisKelamin)) $errorFields[] = 'Jenis Kelamin';
+                    if (empty($status)) $errorFields[] = 'Status';
+                    
+                    $this->errors->push([
+                        'row' => $rowNumber,
+                        'nik' => $nik,
+                        'nama' => $nama,
+                        'error' => 'Kolom wajib tidak lengkap: ' . implode(', ', $errorFields)
+                    ]);
+                    
+                    Log::channel('guru_bulk_import')->warning('Row validation failed - missing required fields', [
+                        'row' => $rowNumber,
+                        'nik' => $nik,
+                        'nama' => $nama,
+                        'jenis_kelamin' => $jenisKelamin,
+                        'status' => $status,
+                    ]);
+                    return null;
+                }
+
+                // Validate NIK format (should be numeric and 16 digits)
+                if (!is_numeric($nik) || strlen($nik) !== 16) {
+                    $this->errors->push([
+                        'row' => $rowNumber,
+                        'nik' => $nik,
+                        'nama' => $nama,
+                        'error' => 'NIK harus berupa angka dan 16 digit'
+                    ]);
+                    return null;
+                }
+
+                // Validate jenis kelamin
+                if (strtoupper($jenisKelamin) !== 'L' && strtoupper($jenisKelamin) !== 'P') {
+                    $this->errors->push([
+                        'row' => $rowNumber,
+                        'nik' => $nik,
+                        'nama' => $nama,
+                        'error' => 'Jenis kelamin harus "L" atau "P"'
+                    ]);
+                    return null;
+                }
+
+                // Validate status
+                if (!in_array($status, ['aktif', 'tidak'])) {
+                    $this->errors->push([
+                        'row' => $rowNumber,
+                        'nik' => $nik,
+                        'nama' => $nama,
+                        'error' => 'Status harus "aktif" atau "tidak"'
+                    ]);
                     return null;
                 }
 

@@ -20,6 +20,8 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading
 {
     private ?array $headers = null;
     private ?array $columnMap = null;
+    private Collection $errors;
+    private Collection $successRows;
     
     private MuridBulkProcessor $muridProcessor;
     private SekolahMuridBulkProcessor $sekolahMuridProcessor;
@@ -30,6 +32,8 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading
         $this->muridProcessor = new MuridBulkProcessor();
         $this->sekolahMuridProcessor = new SekolahMuridBulkProcessor();
         $this->alamatProcessor = new AlamatBulkProcessor();
+        $this->errors = collect();
+        $this->successRows = collect();
     }
 
     /**
@@ -38,6 +42,22 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading
     public function startRow(): int
     {
         return 2;
+    }
+
+    /**
+     * Get errors collection
+     */
+    public function getErrors(): Collection
+    {
+        return $this->errors;
+    }
+
+    /**
+     * Get success rows count
+     */
+    public function getSuccessCount(): int
+    {
+        return $this->successRows->count();
     }
 
     /**
@@ -92,6 +112,9 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading
                 $existingMurids
             );
             
+            // Add success rows
+            $this->successRows = $validatedData;
+            
             Log::channel('murid_bulk_import')->info('=== CHUNK COMPLETED ===', [
                 'murid_processed' => $allMurids->count(),
                 'sekolah_murid_inserted' => $sekolahMuridStats['inserted'],
@@ -120,8 +143,9 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading
     private function validateRows(Collection $rows): Collection
     {
         return $rows->skip(1) // Skip header row
-            ->map(function ($row) {
+            ->map(function ($row, $index) {
                 $data = $row->toArray();
+                $rowNumber = $index + 2; // +2 because we skip header and start from row 2
                 
                 Log::channel('murid_bulk_import')->debug('Raw row data received', [
                     'row_type' => get_class($row),
@@ -138,7 +162,21 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading
 
                 // Validate mandatory fields
                 if (empty($nisn) || empty($nama) || empty($jenisKelamin) || empty($tahunMasuk)) {
+                    $errorFields = [];
+                    if (empty($nisn)) $errorFields[] = 'NISN';
+                    if (empty($nama)) $errorFields[] = 'Nama';
+                    if (empty($jenisKelamin)) $errorFields[] = 'Jenis Kelamin';
+                    if (empty($tahunMasuk)) $errorFields[] = 'Tahun Masuk';
+                    
+                    $this->errors->push([
+                        'row' => $rowNumber,
+                        'nisn' => $nisn,
+                        'nama' => $nama,
+                        'error' => 'Kolom wajib tidak lengkap: ' . implode(', ', $errorFields)
+                    ]);
+                    
                     Log::channel('murid_bulk_import')->warning('Row validation failed - missing required fields', [
+                        'row' => $rowNumber,
                         'nisn' => $nisn,
                         'nama' => $nama,
                         'jenis_kelamin' => $jenisKelamin,
@@ -147,7 +185,43 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading
                     return null;
                 }
 
+                // Validate NISN format (should be numeric and 10 digits)
+                if (!is_numeric($nisn) || strlen($nisn) !== 10) {
+                    $this->errors->push([
+                        'row' => $rowNumber,
+                        'nisn' => $nisn,
+                        'nama' => $nama,
+                        'error' => 'NISN harus berupa angka dan 10 digit'
+                    ]);
+                    return null;
+                }
+
+                // Validate jenis kelamin
+                if (strtoupper($jenisKelamin) !== 'L' && strtoupper($jenisKelamin) !== 'P') {
+                    $this->errors->push([
+                        'row' => $rowNumber,
+                        'nisn' => $nisn,
+                        'nama' => $nama,
+                        'error' => 'Jenis kelamin harus "L" atau "P"'
+                    ]);
+                    return null;
+                }
+
+                // Validate tahun masuk
+                $tahunMasukInt = (int)$tahunMasuk;
+                $currentYear = (int)date('Y');
+                if ($tahunMasukInt < 1990 || $tahunMasukInt > $currentYear) {
+                    $this->errors->push([
+                        'row' => $rowNumber,
+                        'nisn' => $nisn,
+                        'nama' => $nama,
+                        'error' => "Tahun masuk harus antara 1990 dan {$currentYear}"
+                    ]);
+                    return null;
+                }
+
                 Log::channel('murid_bulk_import')->debug('Row validation passed', [
+                    'row' => $rowNumber,
                     'nisn' => $nisn,
                     'nama' => $nama,
                 ]);
@@ -162,7 +236,7 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading
                     'nisn' => trim((string)$nisn),
                     'nama' => trim($nama),
                     'jenis_kelamin' => strtoupper($jenisKelamin ?? 'L') === 'P' ? 'P' : 'L',
-                    'tahun_masuk' => (int)($tahunMasuk ?? date('Y')),
+                    'tahun_masuk' => $tahunMasukInt,
                     'nik' => $this->getValueByKey($data, 'nik'),
                     'tempat_lahir' => $this->getValueByKey($data, 'tempat_lahir'),
                     'tanggal_lahir' => $this->transformDate($this->getValueByKey($data, 'tanggal_lahir')),

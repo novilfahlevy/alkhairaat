@@ -31,7 +31,7 @@ trait MuridSekolahTrait
             // Fetch uploaded files for this sekolah
             $uploadedFiles = TambahMuridBulkFile::where('id_sekolah', $sekolah->id)
                 ->orderBy('created_at', 'desc')
-                ->limit(10)
+                ->limit(6)
                 ->get();
 
             return view('pages.sekolah.murid.tambah-murid-files', [
@@ -211,7 +211,7 @@ trait MuridSekolahTrait
             ProcessMuridBulkFile::dispatch($bulkFile);
 
             return redirect()->back()
-                ->with('success', 'File berhasil diunggah dan akan diproses oleh sistem dalam beberapa saat.');
+                ->with('success', 'File berhasil diunggah dan akan diproses oleh sistem dalam beberapa saat. Silakan periksa status di bawah.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()

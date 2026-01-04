@@ -38,7 +38,7 @@ trait GuruSekolahTrait
             // Fetch uploaded files for this sekolah
             $uploadedFiles = TambahGuruBulkFile::where('id_sekolah', $sekolah->id)
                 ->orderBy('created_at', 'desc')
-                ->limit(10)
+                ->limit(6)
                 ->get();
 
             return view('pages.sekolah.guru.tambah-guru-files', [
