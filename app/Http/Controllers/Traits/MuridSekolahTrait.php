@@ -202,6 +202,7 @@ trait MuridSekolahTrait
             // Create record in tambah_murid_bulk_files table
             $bulkFile = TambahMuridBulkFile::create([
                 'file_path' => $filePath,
+                'file_original_name' => $file->getClientOriginalName(),
                 'id_sekolah' => $sekolah->id,
                 'is_finished' => null,
             ]);

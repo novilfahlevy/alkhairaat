@@ -44,6 +44,7 @@ class TambahMuridBulkFile extends Model
      */
     protected $fillable = [
         'file_path',
+        'file_original_name',
         'id_sekolah',
         'is_finished', // null: belum diproses, true: berhasil, false: gagal
     ];

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 class AlamatBulkProcessor
 {
     /**
-     * Bulk upsert alamat (insert new, update existing)
+     * Bulk upsert alamat for guru
      * 
      * @param Collection $guruData Original validated data with alamat info
      * @param Collection $guruModels Collection of Guru models
@@ -33,14 +33,14 @@ class AlamatBulkProcessor
 
         // Get existing alamat untuk semua guru
         $guruIds = $guruModels->pluck('id')->toArray();
-        $existingAlamat = $this->getExistingAlamat($guruIds);
+        $existingAlamat = $this->getExistingAlamatForGuru($guruIds);
         
         Log::channel('guru_bulk_import')->info('AlamatBulkProcessor: Found existing alamat', [
             'count' => $existingAlamat->count()
         ]);
 
         // Prepare data untuk insert dan update
-        $preparation = $this->prepareAlamatData(
+        $preparation = $this->prepareAlamatDataForGuru(
             $guruData, 
             $guruModels, 
             $existingGurus,
@@ -61,21 +61,84 @@ class AlamatBulkProcessor
 
         return $stats;
     }
+    
+    /**
+     * Bulk upsert alamat for murid
+     * 
+     * @param Collection $muridData Original validated data with alamat info
+     * @param Collection $muridModels Collection of Murid models
+     * @param Collection $existingMurids Collection of existing Murid (untuk determine update vs insert)
+     * @return array ['inserted' => int, 'updated' => int]
+     */
+    public function processForMurid(
+        Collection $muridData, 
+        Collection $muridModels,
+        Collection $existingMurids
+    ): array {
+        Log::channel('murid_bulk_import')->info('AlamatBulkProcessor: Starting for murid', [
+            'total_rows' => $muridData->count()
+        ]);
+
+        $stats = [
+            'inserted' => 0,
+            'updated' => 0
+        ];
+
+        // Get existing alamat untuk semua murid
+        $muridIds = $muridModels->pluck('id')->toArray();
+        $existingAlamat = $this->getExistingAlamatForMurid($muridIds);
+        
+        Log::channel('murid_bulk_import')->info('AlamatBulkProcessor: Found existing alamat for murid', [
+            'count' => $existingAlamat->count()
+        ]);
+
+        // Prepare data untuk insert dan update
+        $preparation = $this->prepareAlamatDataForMurid(
+            $muridData, 
+            $muridModels, 
+            $existingMurids,
+            $existingAlamat
+        );
+
+        // Bulk insert new alamat
+        if (!$preparation['toInsert']->isEmpty()) {
+            $stats['inserted'] = $this->bulkInsertAlamat($preparation['toInsert']);
+        }
+
+        // Bulk update existing alamat
+        if (!$preparation['toUpdate']->isEmpty()) {
+            $stats['updated'] = $this->bulkUpdateAlamat($preparation['toUpdate']);
+        }
+
+        Log::channel('murid_bulk_import')->info('AlamatBulkProcessor: Completed for murid', $stats);
+
+        return $stats;
+    }
 
     /**
      * Get existing alamat for guru IDs
      */
-    private function getExistingAlamat(array $guruIds): Collection
+    private function getExistingAlamatForGuru(array $guruIds): Collection
     {
         return Alamat::whereIn('id_guru', $guruIds)
             ->whereIn('jenis', ['asli', 'domisili'])
             ->get();
     }
+    
+    /**
+     * Get existing alamat for murid IDs
+     */
+    private function getExistingAlamatForMurid(array $muridIds): Collection
+    {
+        return Alamat::whereIn('id_murid', $muridIds)
+            ->whereIn('jenis', ['asli', 'domisili', 'ayah', 'ibu'])
+            ->get();
+    }
 
     /**
-     * Prepare alamat data for insert and update
+     * Prepare alamat data for insert and update (guru)
      */
-    private function prepareAlamatData(
+    private function prepareAlamatDataForGuru(
         Collection $guruData,
         Collection $guruModels,
         Collection $existingGurus,
@@ -156,6 +219,91 @@ class AlamatBulkProcessor
             'toUpdate' => $toUpdate
         ];
     }
+    
+    /**
+     * Prepare alamat data for insert and update (murid)
+     */
+    private function prepareAlamatDataForMurid(
+        Collection $muridData,
+        Collection $muridModels,
+        Collection $existingMurids,
+        Collection $existingAlamat
+    ): array {
+        $toInsert = collect();
+        $toUpdate = collect();
+
+        foreach ($muridData as $data) {
+            // Find corresponding murid model
+            $murid = $this->findMuridModel($data, $muridModels);
+            
+            if (!$murid) {
+                Log::channel('murid_bulk_import')->warning('AlamatBulkProcessor: Murid not found', [
+                    'nisn' => $data['nisn']
+                ]);
+                continue;
+            }
+
+            // Check if this is existing murid
+            $isExistingMurid = $this->isExistingMurid($murid, $existingMurids);
+
+            // Process alamat asli, domisili, ayah, dan ibu
+            foreach (['asli', 'domisili', 'ayah', 'ibu'] as $jenisAlamat) {
+                $alamatKey = "alamat_{$jenisAlamat}";
+                
+                if (!isset($data[$alamatKey])) {
+                    continue;
+                }
+
+                $alamatData = $data[$alamatKey];
+                
+                // Skip if empty
+                if (!array_filter($alamatData, fn($v) => $v !== null && $v !== '')) {
+                    continue;
+                }
+
+                // Check if alamat exists
+                $existingAlamatRecord = $existingAlamat->first(function($a) use ($murid, $jenisAlamat) {
+                    return $a->id_murid === $murid->id && $a->jenis === $jenisAlamat;
+                });
+
+                $alamatRecord = [
+                    'id_murid' => $murid->id,
+                    'jenis' => $jenisAlamat,
+                    'provinsi' => $alamatData['provinsi'],
+                    'kabupaten' => $alamatData['kabupaten'],
+                    'kecamatan' => $alamatData['kecamatan'],
+                    'kelurahan' => $alamatData['kelurahan'],
+                    'rt' => $alamatData['rt'],
+                    'rw' => $alamatData['rw'],
+                    'kode_pos' => $alamatData['kode_pos'],
+                    'alamat_lengkap' => $alamatData['alamat_lengkap'],
+                    'koordinat_x' => $alamatData['koordinat_x'],
+                    'koordinat_y' => $alamatData['koordinat_y'],
+                ];
+
+                if ($existingAlamatRecord) {
+                    // Update existing
+                    $toUpdate->push([
+                        'id' => $existingAlamatRecord->id,
+                        'data' => array_merge($alamatRecord, [
+                            'updated_at' => now()
+                        ])
+                    ]);
+                } else {
+                    // Insert new
+                    $toInsert->push(array_merge($alamatRecord, [
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]));
+                }
+            }
+        }
+
+        return [
+            'toInsert' => $toInsert,
+            'toUpdate' => $toUpdate
+        ];
+    }
 
     /**
      * Find guru model by identifiers
@@ -180,6 +328,14 @@ class AlamatBulkProcessor
         
         return null;
     }
+    
+    /**
+     * Find murid model by NISN
+     */
+    private function findMuridModel(array $data, Collection $muridModels): mixed
+    {
+        return $muridModels->firstWhere('nisn', $data['nisn']);
+    }
 
     /**
      * Check if guru is existing (not newly inserted in this import)
@@ -188,6 +344,16 @@ class AlamatBulkProcessor
     {
         return $existingGurus->contains(function($existingGuru) use ($guru) {
             return $existingGuru->id === $guru->id;
+        });
+    }
+    
+    /**
+     * Check if murid is existing (not newly inserted in this import)
+     */
+    private function isExistingMurid($murid, Collection $existingMurids): bool
+    {
+        return $existingMurids->contains(function($existingMurid) use ($murid) {
+            return $existingMurid->id === $murid->id;
         });
     }
 
@@ -208,14 +374,14 @@ class AlamatBulkProcessor
                 $totalInserted += count($chunk);
             }
             
-            Log::channel('guru_bulk_import')->info('AlamatBulkProcessor: Bulk insert successful', [
+            Log::channel('murid_bulk_import')->info('AlamatBulkProcessor: Bulk insert successful', [
                 'count' => $totalInserted
             ]);
             
             return $totalInserted;
             
         } catch (\Exception $e) {
-            Log::channel('guru_bulk_import')->error('AlamatBulkProcessor: Bulk insert failed', [
+            Log::channel('murid_bulk_import')->error('AlamatBulkProcessor: Bulk insert failed', [
                 'error' => $e->getMessage()
             ]);
             
@@ -265,14 +431,14 @@ class AlamatBulkProcessor
 
             $affected = DB::update($query);
             
-            Log::channel('guru_bulk_import')->info('AlamatBulkProcessor: Bulk update successful', [
+            Log::channel('murid_bulk_import')->info('AlamatBulkProcessor: Bulk update successful', [
                 'count' => $affected
             ]);
             
             return $affected;
             
         } catch (\Exception $e) {
-            Log::channel('guru_bulk_import')->error('AlamatBulkProcessor: Bulk update failed', [
+            Log::channel('murid_bulk_import')->error('AlamatBulkProcessor: Bulk update failed', [
                 'error' => $e->getMessage()
             ]);
             
@@ -286,7 +452,7 @@ class AlamatBulkProcessor
      */
     private function fallbackIndividualInsert(Collection $alamatData): int
     {
-        Log::channel('guru_bulk_import')->warning('AlamatBulkProcessor: Using fallback individual insert');
+        Log::channel('murid_bulk_import')->warning('AlamatBulkProcessor: Using fallback individual insert');
         
         $insertedCount = 0;
         
@@ -295,8 +461,8 @@ class AlamatBulkProcessor
                 DB::table('alamat')->insert($data);
                 $insertedCount++;
             } catch (\Exception $e) {
-                Log::channel('guru_bulk_import')->error('AlamatBulkProcessor: Insert failed', [
-                    'id_guru' => $data['id_guru'],
+                Log::channel('murid_bulk_import')->error('AlamatBulkProcessor: Insert failed', [
+                    'id_guru' => $data['id_guru'] ?? $data['id_murid'] ?? null,
                     'jenis' => $data['jenis'],
                     'error' => $e->getMessage()
                 ]);
@@ -311,7 +477,7 @@ class AlamatBulkProcessor
      */
     private function fallbackIndividualUpdate(Collection $alamatData): int
     {
-        Log::channel('guru_bulk_import')->warning('AlamatBulkProcessor: Using fallback individual update');
+        Log::channel('murid_bulk_import')->warning('AlamatBulkProcessor: Using fallback individual update');
         
         $updatedCount = 0;
         
@@ -322,7 +488,7 @@ class AlamatBulkProcessor
                     ->update($item['data']);
                 $updatedCount++;
             } catch (\Exception $e) {
-                Log::channel('guru_bulk_import')->error('AlamatBulkProcessor: Update failed', [
+                Log::channel('murid_bulk_import')->error('AlamatBulkProcessor: Update failed', [
                     'id' => $item['id'],
                     'error' => $e->getMessage()
                 ]);

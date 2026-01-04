@@ -191,7 +191,7 @@
                                         <!-- File Info -->
                                         <div class="min-w-0 flex-1">
                                             <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                                {{ basename($uploadedFile->file_path) }}
+                                                {{ $uploadedFile->file_original_name ?: basename($uploadedFile->file_path) }}
                                             </p>
                                             <p class="text-xs text-gray-500 dark:text-gray-400">
                                                 {{ $uploadedFile->created_at->translatedFormat('d M Y H:i') }}
