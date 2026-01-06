@@ -189,6 +189,25 @@ Route::middleware(['auth'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| Alumni Management Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function () {
+    // Alumni CRUD
+    Route::get('/alumni', [App\Http\Controllers\AlumniController::class, 'index'])->name('alumni.index');
+    Route::get('/alumni/create', [App\Http\Controllers\AlumniController::class, 'create'])->name('alumni.create');
+    Route::post('/alumni', [App\Http\Controllers\AlumniController::class, 'store'])->name('alumni.store');
+    Route::post('/alumni/import-file', [App\Http\Controllers\AlumniController::class, 'storeFile'])->name('alumni.storeFile');
+    Route::get('/alumni/template/download', [App\Http\Controllers\AlumniController::class, 'downloadTemplate'])->name('alumni.download-template');
+    Route::get('/alumni/{alumni}', [App\Http\Controllers\AlumniController::class, 'show'])->name('alumni.show');
+    Route::get('/alumni/{alumni}/edit', [App\Http\Controllers\AlumniController::class, 'edit'])->name('alumni.edit');
+    Route::put('/alumni/{alumni}', [App\Http\Controllers\AlumniController::class, 'update'])->name('alumni.update');
+    Route::delete('/alumni/{alumni}', [App\Http\Controllers\AlumniController::class, 'destroy'])->name('alumni.destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
 | Role-based Management Routes
 |--------------------------------------------------------------------------
 */

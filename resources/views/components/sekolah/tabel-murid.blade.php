@@ -115,8 +115,7 @@
                                             class="inline-flex rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400">Lulus</span>
                                     @else
                                         <span
-                                            class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">Belum
-                                            Lulus</span>
+                                            class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">Belum Lulus</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-sm font-medium">

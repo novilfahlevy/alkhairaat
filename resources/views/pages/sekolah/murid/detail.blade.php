@@ -145,24 +145,24 @@
                         </div>
 
                         <!-- Status Alumni -->
-                        <div class="border-b border-gray-200 pb-6 last:border-0 dark:border-gray-700">
+                        {{-- <div class="border-b border-gray-200 pb-6 last:border-0 dark:border-gray-700">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 Status Kelulusan
                             </label>
                             <p class="mt-2 text-base text-gray-900 dark:text-white">
-                                @if ($murid->status_alumni)
+                                @if ($murid->status_kelulusan === 'ya')
                                     <span
                                         class="inline-flex rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800 dark:bg-green-900/30 dark:text-green-400">
                                         Sudah Alumni
                                     </span>
                                 @else
                                     <span
-                                        class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-sm font-semibold text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
-                                        Masih aktif sebagai {{ $murid->jenis_kelamin == 'L' ? 'siswa' : 'siswi' }}
+                                        class="inline-flex rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-800 dark:bg-red-900/30 dark:text-red-400">
+                                        Tidak Lulus
                                     </span>
                                 @endif
                             </p>
-                        </div>
+                        </div> --}}
                     </div>
                 </x-ui.card>
             </div>
@@ -627,15 +627,15 @@
                         Status Kelulusan
                     </label>
                     <p class="mt-2 text-base text-gray-900 dark:text-white">
-                        @if ($sekolahMurid->status_kelulusan === null)
-                            <span
-                                class="inline-flex rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 px-3 py-1 text-sm font-semibold">
-                                Belum lulus
-                            </span>
-                        @else
+                        @if ($sekolahMurid->status_kelulusan !== null)
                             <span
                                 class="inline-flex rounded-full {{ $sekolahMurid->isLulus() ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' }} px-3 py-1 text-sm font-semibold">
                                 {{ $sekolahMurid->status_kelulusan_label }}
+                            </span>
+                        @else
+                            <span
+                                class="inline-flex rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 px-3 py-1 text-sm font-semibold">
+                                Belum lulus
                             </span>
                         @endif
                     </p>
