@@ -5,6 +5,20 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Models\User;
+use App\Models\Murid;
+
+// API public: cek NIK murid (untuk validasi alumni, tanpa auth)
+Route::get('/api/cari-nik-murid', [\App\Http\Controllers\ValidasiAlumniController::class, 'cariNik'])->name('api.cari-nik-murid');
+
+// Validasi Alumni (public, tanpa login)
+Route::get('/validasi-alumni', [\App\Http\Controllers\ValidasiAlumniController::class, 'form'])->name('validasi-alumni.form');
+Route::post('/validasi-alumni', [\App\Http\Controllers\ValidasiAlumniController::class, 'store'])->name('validasi-alumni.store');
+
+// Validasi Alumni Management (authenticated)
+Route::middleware('auth')->group(function () {
+    Route::get('/manajemen/validasi-alumni', [\App\Http\Controllers\ValidasiAlumniController::class, 'index'])->name('validasi-alumni.index');
+    Route::post('/manajemen/validasi-alumni/{validasi}/approve', [\App\Http\Controllers\ValidasiAlumniController::class, 'approve'])->name('validasi-alumni.approve');
+});
 
 /*
 |--------------------------------------------------------------------------
