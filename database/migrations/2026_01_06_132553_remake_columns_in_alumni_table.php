@@ -32,8 +32,6 @@ return new class extends Migration
             $table->string('profesi_sekarang')->nullable();
             $table->string('nama_tempat_kerja')->nullable();
             $table->string('kota_tempat_kerja')->nullable();
-            $table->string('riwayat_pekerjaan')->nullable();
-            $table->timestamps();
         });
     }
 
@@ -47,10 +45,7 @@ return new class extends Migration
             $table->dropColumn([
                 'profesi_sekarang',
                 'nama_tempat_kerja',
-                'kota_tempat_kerja',
-                'riwayat_pekerjaan',
-                'created_at',
-                'updated_at'
+                'kota_tempat_kerja'
             ]);
 
             // Re-add old columns
