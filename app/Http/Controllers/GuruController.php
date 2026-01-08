@@ -219,11 +219,20 @@ class GuruController extends Controller
             }
         }
 
-        // Get all schools for assignment (including inactive ones for existing assignments)
-        $sekolah = Sekolah::orderBy('nama')->get();
-
         // Load relationships
         $guru->load(['jabatanGurus.sekolah', 'alamatList']);
+
+        // Get schools for assignment based on user role
+        if ($user->isSuperuser() || $user->isKomisariatWilayah()) {
+            // Superusers and wilayah admins can assign to all schools
+            $sekolah = Sekolah::orderBy('nama')->get();
+        } elseif ($user->isSekolah() && $user->sekolah) {
+            // School users can only assign to their own school
+            $sekolah = collect([$user->sekolah]);
+        } else {
+            // Other roles get no schools
+            $sekolah = collect();
+        }
 
         return view('pages.guru.edit', [
             'guru' => $guru,

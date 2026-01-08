@@ -167,7 +167,6 @@
                         @enderror
                     </div>
 
-
                     <!-- Status Perkawinan -->
                     <div>
                         <label for="status_perkawinan" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -302,13 +301,8 @@
             </div>
 
             <!-- Jabatan Section -->
-            <div class="mt-8 border-t border-gray-200 pt-8 dark:border-gray-700" x-data="schoolAssignments({!! json_encode($guru->jabatanGurus->map(function($jabatan) {
-                return [
-                    'id_sekolah' => $jabatan->id_sekolah,
-                    'jenis_jabatan' => $jabatan->jenis_jabatan,
-                    'keterangan_jabatan' => $jabatan->keterangan_jabatan
-                ];
-            })->toArray()) !!})">
+            <div class="mt-8 border-t border-gray-200 pt-8 dark:border-gray-700"
+                 x-data="schoolAssignments()">
                 <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6">Penugasan Sekolah</h3>
 
                 <div id="school-assignments" class="space-y-6">
@@ -335,13 +329,12 @@
                                             class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
                                         <option value="">Pilih Sekolah</option>
                                         @foreach($sekolah as $item)
-                                            <option value="{{ $item->id }}" :selected="assignment.id_sekolah == '{{ $item->id }}'">
+                                            <option value="{{ $item->id }}">
                                                 {{ $item->nama }} ({{ $item->kode_sekolah }})
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
-
 
                                 <!-- Jenis Jabatan -->
                                 <div>
@@ -353,13 +346,12 @@
                                             class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
                                         <option value="">Pilih Jabatan</option>
                                         @foreach(\App\Models\JabatanGuru::JENIS_JABATAN_OPTIONS as $key => $value)
-                                            <option value="{{ $key }}" :selected="assignment.jenis_jabatan == '{{ $key }}'">
+                                            <option value="{{ $key }}">
                                                 {{ $value }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
-
 
                                 <!-- Keterangan Jabatan -->
                                 <div class="lg:col-span-2">
@@ -388,32 +380,6 @@
                 </div>
             </div>
 
-            <script>
-                function schoolAssignments(existingAssignments = []) {
-                    return {
-                        assignments: existingAssignments.length > 0 ? existingAssignments : [
-                            {
-                                id_sekolah: '',
-                                jenis_jabatan: '',
-                                keterangan_jabatan: ''
-                            }
-                        ],
-                        addAssignment() {
-                            this.assignments.push({
-                                id_sekolah: '',
-                                jenis_jabatan: '',
-                                keterangan_jabatan: ''
-                            });
-                        },
-                        removeAssignment(index) {
-                            if (this.assignments.length > 1) {
-                                this.assignments.splice(index, 1);
-                            }
-                        }
-                    }
-                }
-            </script>
-
             <!-- Form Actions -->
             <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-end">
                 <a href="{{ route('guru.show', $guru) }}"
@@ -427,4 +393,54 @@
             </div>
         </form>
     </div>
+
+    <!-- Add Alpine.js script at the bottom of the page -->
+    @push('scripts')
+    <script>
+        // Initialize the school assignments component
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('schoolAssignments', () => ({
+                // Initialize with existing assignments or empty array
+                assignments: @json($guru->jabatanGurus->map(function($jabatan) {
+                    return [
+                        'id_sekolah' => (string)$jabatan->id_sekolah,
+                        'jenis_jabatan' => $jabatan->jenis_jabatan,
+                        'keterangan_jabatan' => $jabatan->keterangan_jabatan
+                    ];
+                })->toArray()),
+                
+                init() {
+                    // If no existing assignments, create one empty
+                    if (this.assignments.length === 0) {
+                        this.assignments = [{
+                            id_sekolah: '',
+                            jenis_jabatan: '',
+                            keterangan_jabatan: ''
+                        }];
+                    }
+                    
+                    // Ensure all IDs are strings for proper comparison in selects
+                    this.assignments = this.assignments.map(assignment => ({
+                        ...assignment,
+                        id_sekolah: assignment.id_sekolah ? String(assignment.id_sekolah) : ''
+                    }));
+                },
+                
+                addAssignment() {
+                    this.assignments.push({
+                        id_sekolah: '',
+                        jenis_jabatan: '',
+                        keterangan_jabatan: ''
+                    });
+                },
+                
+                removeAssignment(index) {
+                    if (this.assignments.length > 1) {
+                        this.assignments.splice(index, 1);
+                    }
+                }
+            }));
+        });
+    </script>
+    @endpush
 @endsection
