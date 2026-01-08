@@ -69,21 +69,14 @@
                 <div>
                     <p class="font-semibold mb-2">Untuk impor bulk, siapkan file Excel atau CSV dengan kolom berikut:</p>
                     <ul class="list-inside list-disc space-y-1">
-                        <li><strong>nik</strong> (required) - NIK murid</li>
-                        <li><strong>tahun_lulus</strong> (required) - Tahun lulus</li>
-                        <li><strong>angkatan</strong> - Angkatan</li>
-                        <li><strong>kontak</strong> - No HP</li>
-                        <li><strong>email</strong> - Email</li>
-                        <li><strong>alamat_sekarang</strong> - Alamat</li>
-                        <li><strong>lanjutan_studi</strong> - Jenjang studi lanjutan</li>
-                        <li><strong>nama_institusi</strong> - Nama universitas</li>
-                        <li><strong>jurusan</strong> - Jurusan</li>
-                        <li><strong>pekerjaan</strong> - Jenis pekerjaan</li>
-                        <li><strong>nama_perusahaan</strong> - Nama perusahaan</li>
-                        <li><strong>jabatan</strong> - Jabatan</li>
-                        <li><strong>kota_perusahaan</strong> - Kota perusahaan</li>
-                        <li><strong>riwayat_pekerjaan</strong> - Riwayat pekerjaan</li>
-                        <li><strong>keterangan</strong> - Keterangan</li>
+                        <li><strong>NIK</strong> (required) - NIK murid (tanpa spasi, format: 12345678901234)</li>
+                        <li><strong>Profesi Sekarang</strong> - Profesi alumni saat ini (Contoh: Guru, Dokter, Wiraswasta)</li>
+                        <li><strong>Nama Tempat Kerja</strong> - Nama instansi/perusahaan/tempat usaha</li>
+                        <li><strong>Kota Tempat Kerja</strong> - Kota tempat bekerja</li>
+                        <li><strong>Riwayat Pekerjaan</strong> - Riwayat pekerjaan alumni</li>
+                        <li><strong>Kontak WhatsApp</strong> - Nomor WhatsApp (format: 628xxxxxxxxx)</li>
+                        <li><strong>Kontak Email</strong> - Alamat email alumni</li>
+                        <li><strong>Alamat Sekarang</strong> - Alamat domisili/tinggal saat ini</li>
                     </ul>
                 </div>
                 <a href="{{ route('alumni.download-template') }}"

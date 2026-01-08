@@ -3,9 +3,8 @@
 namespace App\Imports;
 
 use App\Models\Alumni;
+use App\Models\Alamat;
 use App\Models\Murid;
-use App\Models\Sekolah;
-use App\Models\SekolahMurid;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -53,43 +52,54 @@ class AlumniImport implements ToCollection, WithHeadingRow, WithValidation
                     continue;
                 }
 
-                $sekolahMurid = SekolahMurid::where('id_murid', $murid?->id)
-                    ->whereHas('sekolah', function ($q) use ($row) {
-                        $q->where('kode_sekolah', $row['kode_sekolah'] ?? '');
-                    })
-                    ->first();
-
-                if (!$sekolahMurid) {
-                    $errors[] = [
-                        'row' => $rowIndex + 2,
-                        'error' => "Murid dengan NIK '{$nik}' tidak terdaftar di sekolah dengan kode '{$row['kode_sekolah']}'"
-                    ];
-                    $failureCount++;
-                    continue;
-                }
-
-                $alumniData = [
-                    'id_murid' => $murid->id,
-                    'profesi_sekarang' => trim($row['profesi_sekarang'] ?? ''),
-                    'nama_tempat_kerja' => trim($row['nama_tempat_kerja'] ?? ''),
-                    'kota_tempat_kerja' => trim($row['kota_tempat_kerja'] ?? ''),
-                    'riwayat_pekerjaan' => trim($row['riwayat_pekerjaan'] ?? ''),
-                ];
-
-                // Remove empty values
-                $alumniData = array_filter($alumniData, fn($value) => $value !== '');
-
                 // Update murid status_alumni
                 $murid->status_alumni = true;
                 $murid->save();
 
-                // Update sekolah_murid status_kelulusan
-                $sekolahMurid->status_kelulusan = 'ya';
-                $sekolahMurid->save();
+                // Create or update Alumni record (following approve() method logic)
+                $alumni = Alumni::firstOrCreate(
+                    ['id_murid' => $murid->id],
+                    [
+                        'profesi_sekarang' => trim($row['profesi_sekarang'] ?? ''),
+                        'nama_tempat_kerja' => trim($row['nama_tempat_kerja'] ?? ''),
+                        'kota_tempat_kerja' => trim($row['kota_tempat_kerja'] ?? ''),
+                        'riwayat_pekerjaan' => trim($row['riwayat_pekerjaan'] ?? ''),
+                    ]
+                );
 
-                // Create alumni record
-                if (!Alumni::where('id_murid', $murid->id)->exists()) {
-                    Alumni::create($alumniData);
+                // Update Alumni if already exists
+                if ($alumni->exists && $alumni->wasRecentlyCreated === false) {
+                    $alumni->update([
+                        'profesi_sekarang' => trim($row['profesi_sekarang'] ?? '') ?: $alumni->profesi_sekarang,
+                        'nama_tempat_kerja' => trim($row['nama_tempat_kerja'] ?? '') ?: $alumni->nama_tempat_kerja,
+                        'kota_tempat_kerja' => trim($row['kota_tempat_kerja'] ?? '') ?: $alumni->kota_tempat_kerja,
+                        'riwayat_pekerjaan' => trim($row['riwayat_pekerjaan'] ?? '') ?: $alumni->riwayat_pekerjaan,
+                    ]);
+                }
+
+                // Create or update Alamat (domisili) if alamat_sekarang provided
+                $alamatSekarang = trim($row['alamat_sekarang'] ?? '');
+                if ($alamatSekarang) {
+                    Alamat::updateOrCreate(
+                        [
+                            'id_murid' => $murid->id,
+                            'jenis' => Alamat::JENIS_DOMISILI,
+                        ],
+                        [
+                            'alamat_lengkap' => $alamatSekarang,
+                        ]
+                    );
+                }
+
+                // Update contact info on murid if provided
+                $kontakWa = trim($row['kontak_whatsapp'] ?? '');
+                $kontakEmail = trim($row['kontak_email'] ?? '');
+
+                if ($kontakWa || $kontakEmail) {
+                    $murid->update([
+                        'kontak_wa_hp' => $kontakWa ?: $murid->kontak_wa_hp,
+                        'kontak_email' => $kontakEmail ?: $murid->kontak_email,
+                    ]);
                 }
 
                 $successCount++;

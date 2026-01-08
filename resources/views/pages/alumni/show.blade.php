@@ -12,14 +12,6 @@
             </p>
         </div>
         <div class="flex gap-2">
-            <a href="{{ route('alumni.edit', $alumni) }}"
-                class="bg-blue-500 hover:bg-blue-600 flex items-center rounded-lg px-4 py-2.5 text-sm font-medium text-white transition">
-                <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Edit
-            </a>
             <a href="{{ route('alumni.index') }}"
                 class="bg-gray-500 hover:bg-gray-600 flex items-center rounded-lg px-4 py-2.5 text-sm font-medium text-white transition">
                 <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,7 +23,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 pb-50">
         <!-- Detail Card -->
         <div class="lg:col-span-2">
             <x-ui.card>
@@ -42,24 +34,6 @@
                 </x-slot:header>
 
                 <div class="space-y-6">
-                    <!-- ID & Timestamp Section -->
-                    <div class="grid grid-cols-2 gap-4 border-b border-gray-200 pb-6 dark:border-gray-700">
-                        <div>
-                            <label class="text-sm font-medium text-gray-600 dark:text-gray-400">ID Alumni</label>
-                            <p class="mt-1 text-base font-semibold text-gray-900 dark:text-white">
-                                {{ $alumni->id }}
-                            </p>
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Status</label>
-                            <p class="mt-1">
-                                <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                                    Terdaftar
-                                </span>
-                            </p>
-                        </div>
-                    </div>
-
                     <!-- Identitas Section -->
                     <div>
                         <h3 class="mb-4 text-base font-semibold text-gray-900 dark:text-white">
@@ -197,27 +171,6 @@
                         class="block w-full rounded-lg bg-red-50 px-4 py-2.5 text-center text-sm font-medium text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30">
                         Hapus
                     </button>
-                </div>
-            </x-ui.card>
-
-            <!-- Info Card -->
-            <x-ui.card>
-                <x-slot:header>
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Informasi</h2>
-                </x-slot:header>
-
-                <div class="space-y-3 text-sm">
-                    <div class="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
-                        <span class="text-gray-600 dark:text-gray-400">Total Field</span>
-                        <span class="font-semibold text-gray-900 dark:text-white">4 kolom</span>
-                    </div>
-                    <div class="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
-                        <span class="text-gray-600 dark:text-gray-400">Murid</span>
-                        <a href="{{ route('dashboard') }}"
-                            class="font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300">
-                            Lihat Detail
-                        </a>
-                    </div>
                 </div>
             </x-ui.card>
         </div>
