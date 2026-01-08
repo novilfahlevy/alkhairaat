@@ -1,131 +1,160 @@
 @extends('layouts.app')
 
 @section('content')
-  <div class="mx-auto">
-    <div class="">
-      {{-- Header & Tombol Tambah (TETAP SAMA) --}}
-      <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-        {{-- ... kode header tetap sama ... --}}
-        <h2 class="text-2xl font-bold leading-tight text-gray-800">Daftar Data Murid</h2>
-        <a href="{{ route('murid.create') }}"
-          class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded shadow transition duration-200 flex items-center gap-2">
-          <i class="fas fa-plus"></i>
-          <span>Tambah Murid</span>
-        </a>
+  {{-- Alpine Component untuk Data Murid --}}
+  <div x-data="studentData()" x-init="init()" class="container mx-auto">
+
+    {{-- Header & Tombol Tambah --}}
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+      <h2 class="text-2xl font-bold leading-tight text-gray-800 dark:text-white text-center sm:text-left">
+        Daftar Data Murid
+      </h2>
+
+      <a href="{{ route('murid.create') }}"
+        class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded shadow transition duration-200 flex items-center gap-2 w-full sm:w-auto justify-center">
+        <i class="fas fa-plus"></i>
+        <span>Tambah Murid</span>
+      </a>
+    </div>
+
+    {{-- Notification --}}
+    @if (session('success'))
+      <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" x-transition.duration.500ms
+        class="fixed top-5 right-5 z-50 flex items-center backdrop-blur-[2px] w-full max-w-xs p-4 text-green-700 bg-green-100/80 border border-green-400 rounded-lg shadow-lg dark:bg-gray-800/50 dark:text-green-400 dark:border-green-800"
+        role="alert">
+        <div class="ml-3 text-sm font-medium">
+          {{ session('success') }}
+        </div>
+        <button type="button" @click="show = false"
+          class="ml-auto -mx-1.5 -my-1.5 bg-green-100 text-green-500 rounded-lg p-1.5 hover:bg-green-200 inline-flex h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700">
+          <span class="sr-only">Close</span>
+          <i class="fas fa-times w-5 h-5 flex items-center justify-center"></i>
+        </button>
       </div>
+    @endif
 
-      {{-- Notification (TETAP SAMA) --}}
-      @if (session('success'))
-        {{-- ... kode alert tetap sama ... --}}
-      @endif
-
-      {{-- SEARCH & FILTER --}}
-      <div class="mb-4 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-        {{-- Hapus action dan method form karena kita pakai AJAX, tapi biarkan untuk fallback --}}
-        <form id="filterForm" action="{{ route('murid.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
-
-          {{-- Search Input --}}
-          <div class="flex-1">
-            <label for="search" class="text-xs font-semibold text-gray-600 uppercase">Cari</label>
-            <div class="relative mt-1">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                <i class="fas fa-search text-gray-400"></i>
-              </span>
-              {{-- PERUBAHAN: Tambahkan ID "searchInput" --}}
-              <input type="text" id="searchInput" name="search" value="{{ request('search') }}"
-                class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
-                placeholder="Cari Nama atau NISN... (Ketik untuk mencari)">
-            </div>
+    {{-- SEARCH & FILTER --}}
+    <div
+      class="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+      <div class="flex flex-col md:flex-row gap-4">
+        {{-- Search Input --}}
+        <div class="flex-1">
+          <label for="search" class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Cari</label>
+          <div class="relative mt-1">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+              <i class="fas fa-search text-gray-400 dark:text-gray-500"></i>
+            </span>
+            <input type="text" x-model.debounce.500ms="search" placeholder="Cari Nama atau NISN..."
+              class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 
+                     bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 
+                     text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 transition-colors duration-200">
           </div>
+        </div>
 
-          {{-- Filter Jenis Kelamin --}}
-          <div class="w-full md:w-1/6">
-            <label for="jenis_kelamin" class="text-xs font-semibold text-gray-600 uppercase">Gender</label>
-            {{-- PERUBAHAN: Tambahkan ID dan onchange --}}
-            <select id="genderFilter" name="jenis_kelamin"
-              class="w-full mt-1 py-2 px-3 border rounded-lg bg-white focus:outline-none focus:border-blue-500">
+        {{-- Filters --}}
+        <div class="grid grid-cols-2 md:flex md:w-auto gap-4">
+          {{-- Filter Gender --}}
+          <div class="w-full md:w-40">
+            <label class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Gender</label>
+            <select x-model="gender"
+              class="w-full mt-1 py-2 px-3 cursor-pointer border rounded-lg focus:outline-none focus:border-blue-500
+                     bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 transition-colors duration-200">
               <option value="">Semua</option>
-              <option value="L" {{ request('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
-              <option value="P" {{ request('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
+              <option value="L">Laki-laki</option>
+              <option value="P">Perempuan</option>
             </select>
           </div>
-
           {{-- Filter Status --}}
-          <div class="w-full md:w-1/6">
-            <label for="status_alumni" class="text-xs font-semibold text-gray-600 uppercase">Status</label>
-            {{-- PERUBAHAN: Tambahkan ID dan onchange --}}
-            <select id="statusFilter" name="status_alumni"
-              class="w-full mt-1 py-2 px-3 border rounded-lg bg-white focus:outline-none focus:border-blue-500">
+          <div class="w-full md:w-40">
+            <label class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Status</label>
+            <select x-model="status"
+              class="w-full mt-1 cursor-pointer py-2 px-3 border rounded-lg focus:outline-none focus:border-blue-500
+                     bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 transition-colors duration-200">
               <option value="">Semua</option>
-              <option value="0" {{ request('status_alumni') === '0' ? 'selected' : '' }}>Aktif</option>
-              <option value="1" {{ request('status_alumni') === '1' ? 'selected' : '' }}>Alumni</option>
+              <option value="0">Aktif</option>
+              <option value="1">Alumni</option>
             </select>
           </div>
-        </form>
-      </div>
-
-      {{-- CONTAINER TABEL --}}
-      <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-        {{-- PERUBAHAN: Tambahkan ID "tableContainer" --}}
-        <div id="tableContainer">
-          {{-- Panggil Partial Tabel --}}
-          @include('pages.murid._table')
         </div>
       </div>
-
     </div>
+
+    {{-- CONTAINER DATA --}}
+    {{-- PERBAIKAN DI SINI: Hapus .prevent --}}
+    <div id="tableContainer" x-html="html" :class="{ 'opacity-50 pointer-events-none': isLoading }"
+      @click="handlePagination($event)" class="w-full transition-opacity duration-200">
+      @include('pages.murid._table')
+    </div>
+
   </div>
 
-  {{-- SCRIPT AJAX --}}
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    $(document).ready(function() {
+    function studentData() {
+      return {
+        search: '{{ request('search') }}',
+        gender: '{{ request('jenis_kelamin') }}',
+        status: '{{ request('status_alumni') }}',
+        html: '',
+        isLoading: false,
 
-      // 1. Fungsi Inti: Mengambil SEMUA data input saat ini
-      function fetch_data(page = 1) {
-        // Ambil value dari Search
-        const search = $('#searchInput').val();
-        // Ambil value dari Filter Gender
-        const gender = $('#genderFilter').val();
-        // Ambil value dari Filter Status
-        const status = $('#statusFilter').val();
+        init() {
+          this.html = document.getElementById('tableContainer').innerHTML;
+          this.$watch('search', () => this.fetchData());
+          this.$watch('gender', () => this.fetchData());
+          this.$watch('status', () => this.fetchData());
+        },
 
-        // Efek loading tipis
-        $('#tableContainer').addClass('opacity-50');
-
-        // Kirim SEMUA data ke Controller
-        $.ajax({
-          url: "{{ route('murid.index') }}",
-          data: {
-            search: search, // Kirim teks pencarian
-            jenis_kelamin: gender, // Kirim pilihan gender
-            status_alumni: status, // Kirim pilihan status
+        fetchData(page = 1) {
+          this.isLoading = true;
+          const params = new URLSearchParams({
+            search: this.search,
+            jenis_kelamin: this.gender,
+            status_alumni: this.status,
             page: page
-          },
-          success: function(data) {
-            $('#tableContainer').html(data);
-            $('#tableContainer').removeClass('opacity-50');
+          });
+
+          fetch(`{{ route('murid.index') }}?${params.toString()}`, {
+              headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+              }
+            })
+            .then(response => response.text())
+            .then(data => {
+              this.html = data;
+              this.isLoading = false;
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              this.isLoading = false;
+            });
+        },
+
+        // PERBAIKAN LOGIKA DI SINI
+        handlePagination(event) {
+          // Cari elemen anchor (<a>) terdekat yang diklik
+          const link = event.target.closest('a');
+
+          // Cek apakah link tersebut valid
+          if (!link) return;
+
+          // Cek apakah link tersebut adalah link pagination
+          // Biasanya pagination Laravel memiliki URL dengan parameter ?page=X
+          const isPagination = link.href.includes('page=');
+
+          // Jika link pagination, maka kita cegah reload dan gunakan fetch
+          if (isPagination) {
+            event.preventDefault(); // Stop Browser Reload HANYA untuk pagination
+
+            const url = new URL(link.href);
+            const page = url.searchParams.get('page');
+
+            if (page) {
+              this.fetchData(page);
+            }
           }
-        });
+          // Jika BUKAN pagination (tombol edit/hapus), biarkan browser bekerja normal.
+        }
       }
-
-      // 2. Event Listener: SEARCH (Tanpa Delay / Realtime Instan)
-      $('#searchInput').on('keyup', function() {
-        fetch_data(); // Panggil fungsi utama
-      });
-
-      // 3. Event Listener: FILTER (Gender & Status)
-      $('#genderFilter, #statusFilter').on('change', function() {
-        fetch_data(); // Panggil fungsi utama
-      });
-
-      // 4. Event Listener: PAGINATION
-      $(document).on('click', '.pagination a', function(event) {
-        event.preventDefault();
-        const page = $(this).attr('href').split('page=')[1];
-        fetch_data(page); // Panggil fungsi utama dengan halaman tertentu
-      });
-
-    });
+    }
   </script>
 @endsection

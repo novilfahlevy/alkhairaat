@@ -30,14 +30,14 @@ class MuridController extends Controller
             $query->where('status_alumni', $request->status_alumni);
         }
 
-        $murids = $query->latest()->paginate(10)->withQueryString();
+        $murid = $query->latest()->paginate(100)->withQueryString();
 
         // AJAX Response
         if ($request->ajax()) {
-            return view('pages.murid._table', compact('murids'))->render();
+            return view('pages.murid._table', compact('murid'))->render();
         }
         
-        return view('pages.murid.index', compact('murids'));
+        return view('pages.murid.index', compact('murid'));
     }
 
     public function create()
@@ -47,28 +47,30 @@ class MuridController extends Controller
 
     public function store(Request $request)
     {
-        // 1. Validasi Lengkap dengan Pesan Bahasa Indonesia
+        // 1. Validasi Lengkap
         $validated = $request->validate([
-            // --- ATURAN (RULES) ---
-            'nisn' => 'required|numeric|unique:murid,nisn', 
-            'nama' => 'required|string|max:255',
-            'nik'  => 'nullable|string|digits:16',
+            // --- WAJIB DIISI (SESUAI TANDA BINTANG DI BLADE) ---
+            'nisn'          => 'required|numeric|unique:murid,nisn',
+            'nama'          => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:L,P',
-            'tempat_lahir'  => 'nullable|string|max:255',
-            'tanggal_lahir' => 'nullable|date',
-            'status_alumni' => 'nullable|boolean',
+            'tempat_lahir'  => 'required|string|max:255', // Diubah jadi required
+            'tanggal_lahir' => 'required|date',           // Diubah jadi required
+            'status_alumni' => 'required|boolean',        // Diubah jadi required
+
+            // --- OPSIONAL (BOLEH KOSONG) ---
+            'nik'           => 'nullable|string|digits:16',
             
             // Kontak
-            'kontak_wa_hp' => 'nullable|string|max:50',
-            'kontak_email' => 'nullable|email|max:255',
+            'kontak_wa_hp'  => 'nullable|string|max:50',
+            'kontak_email'  => 'nullable|email|max:255',
 
             // Data Orang Tua
-            'nama_ayah' => 'nullable|string|max:255',
+            'nama_ayah'     => 'nullable|string|max:255',
             'nomor_hp_ayah' => 'nullable|string|max:50',
-            'nama_ibu'  => 'nullable|string|max:255',
+            'nama_ibu'      => 'nullable|string|max:255',
             'nomor_hp_ibu'  => 'nullable|string|max:50',
         ], [
-            // --- PESAN ERROR (CUSTOM MESSAGES) ---
+            // --- PESAN ERROR ---
             'required' => ':attribute wajib diisi.',
             'numeric'  => ':attribute harus berupa angka.',
             'unique'   => ':attribute sudah terdaftar di sistem.',
@@ -80,9 +82,10 @@ class MuridController extends Controller
             'date'     => ':attribute bukan format tanggal yang benar.',
             'boolean'  => ':attribute harus bernilai benar atau salah.',
         ], [
-            'nisn' => 'NISN',
-            'nama' => 'Nama Lengkap',
-            'nik'  => 'NIK',
+            // --- LABEL ATRIBUT ---
+            'nisn'          => 'NISN',
+            'nama'          => 'Nama Lengkap',
+            'nik'           => 'NIK',
             'jenis_kelamin' => 'Jenis Kelamin',
             'tempat_lahir'  => 'Tempat Lahir',
             'tanggal_lahir' => 'Tanggal Lahir',
@@ -95,15 +98,10 @@ class MuridController extends Controller
             'nomor_hp_ibu'  => 'Nomor HP Ibu',
         ]);
 
-        // 2. Handling Default Value
-        if (!isset($validated['status_alumni'])) {
-            $validated['status_alumni'] = 0;
-        }
-
-        // 3. Simpan Data
+        // 2. Simpan Data
         Murid::create($validated);
 
-        // 4. Redirect
+        // 3. Redirect
         return redirect()->route('murid.index')->with('success', 'Data murid berhasil ditambahkan');
     }
 
@@ -119,30 +117,31 @@ class MuridController extends Controller
 
     public function update(Request $request, Murid $murid)
     {
-        // 1. Validasi dengan Pesan Bahasa Indonesia
+        // 1. Validasi (Sama persis dengan Store, kecuali Unique NISN)
         $validated = $request->validate([
-            // --- ATURAN (RULES) ---
-            // PENTING: 'unique' di sini mengecualikan ID murid yang sedang diedit agar tidak dianggap duplikat diri sendiri
-            'nisn' => 'required|numeric|unique:murid,nisn,' . $murid->id, 
-            
-            'nama' => 'required|string|max:255',
-            'nik'  => 'nullable|string|digits:16',
+            // --- WAJIB DIISI (SESUAI TANDA BINTANG DI BLADE) ---
+            // PENTING: Unique mengecualikan ID murid ini sendiri
+            'nisn'          => 'required|numeric|unique:murid,nisn,' . $murid->id,
+            'nama'          => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:L,P',
-            'tempat_lahir'  => 'nullable|string|max:255',
-            'tanggal_lahir' => 'nullable|date',
-            'status_alumni' => 'nullable|boolean',
+            'tempat_lahir'  => 'required|string|max:255', // Disamakan dengan Store
+            'tanggal_lahir' => 'required|date',           // Disamakan dengan Store
+            'status_alumni' => 'required|boolean',        // Disamakan dengan Store
+
+            // --- OPSIONAL (BOLEH KOSONG) ---
+            'nik'           => 'nullable|string|digits:16',
             
             // Kontak
-            'kontak_wa_hp' => 'nullable|string|max:50',
-            'kontak_email' => 'nullable|email|max:255',
+            'kontak_wa_hp'  => 'nullable|string|max:50',
+            'kontak_email'  => 'nullable|email|max:255',
 
             // Data Orang Tua
-            'nama_ayah' => 'nullable|string|max:255',
+            'nama_ayah'     => 'nullable|string|max:255',
             'nomor_hp_ayah' => 'nullable|string|max:50',
-            'nama_ibu'  => 'nullable|string|max:255',
+            'nama_ibu'      => 'nullable|string|max:255',
             'nomor_hp_ibu'  => 'nullable|string|max:50',
         ], [
-            // --- PESAN ERROR (CUSTOM MESSAGES) ---
+            // --- PESAN ERROR ---
             'required' => ':attribute wajib diisi.',
             'numeric'  => ':attribute harus berupa angka.',
             'unique'   => ':attribute sudah terdaftar di sistem.',
@@ -154,10 +153,10 @@ class MuridController extends Controller
             'date'     => ':attribute bukan format tanggal yang benar.',
             'boolean'  => ':attribute harus bernilai benar atau salah.',
         ], [
-            // --- NAMA ATRIBUT (CUSTOM ATTRIBUTES) ---
-            'nisn' => 'NISN',
-            'nama' => 'Nama Lengkap',
-            'nik'  => 'NIK',
+            // --- LABEL ATRIBUT ---
+            'nisn'          => 'NISN',
+            'nama'          => 'Nama Lengkap',
+            'nik'           => 'NIK',
             'jenis_kelamin' => 'Jenis Kelamin',
             'tempat_lahir'  => 'Tempat Lahir',
             'tanggal_lahir' => 'Tanggal Lahir',
@@ -170,20 +169,15 @@ class MuridController extends Controller
             'nomor_hp_ibu'  => 'Nomor HP Ibu',
         ]);
 
-        // 2. Handling Status Alumni
-        // Jika checkbox tidak dicentang (atau null), anggap 0.
-        $validated['status_alumni'] = $request->filled('status_alumni') ? $request->status_alumni : 0;
-
-        // 3. Proses Update
+        // 2. Proses Update
         try {
             $murid->update($validated);
         } catch (\Exception $e) {
-            // Tangkap error database jika ada (misal kolom tidak ditemukan)
             return back()->withErrors(['error' => 'Gagal menyimpan: ' . $e->getMessage()])->withInput();
         }
 
-        // 4. Redirect
-        return redirect()->route('murid.index')->with('success', 'Data murid berhasil diperbarui.');    
+        // 3. Redirect
+        return redirect()->route('murid.index')->with('success', 'Data murid berhasil diperbarui.');
     }
 
     public function destroy(Murid $murid)
