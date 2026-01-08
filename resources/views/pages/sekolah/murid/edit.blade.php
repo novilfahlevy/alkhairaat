@@ -65,7 +65,8 @@
         @endif
 
         <form action="{{ route('sekolah.update-murid', ['sekolah' => $sekolah->id, 'murid' => $murid->id]) }}"
-            method="POST" class="space-y-6" x-data="formData()" x-init="init()" x-on:submit="isSubmitting = true">
+            method="POST" class="space-y-6" x-data="formData()" x-init="init()"
+            x-on:submit="isSubmitting = true">
             @csrf
             @method('PUT')
 
@@ -99,12 +100,11 @@
                             <input type="text" id="nisn" name="nisn" x-model="nisnValue" @blur="checkNisn()"
                                 value="{{ old('nisn', $murid->nisn) }}" required
                                 class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 {{ $errors->has('nisn') ? 'border-red-500' : '' }}"
-                                :class="{ 'border-red-500 dark:border-red-500': nisnExists }"
-                                :disabled="isCheckingNisn" />
+                                :class="{ 'border-red-500 dark:border-red-500': nisnExists }" :disabled="isCheckingNisn" />
                             <template x-if="isCheckingNisn">
                                 <div class="absolute right-3 top-1/2 -translate-y-1/2">
-                                    <svg class="h-5 w-5 animate-spin text-brand-500"
-                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <svg class="h-5 w-5 animate-spin text-brand-500" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10"
                                             stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor"
@@ -175,13 +175,8 @@
 
                     <!-- Tanggal Lahir -->
                     <div>
-                        <x-form.date-picker
-                            id="tanggal_lahir"
-                            name="tanggal_lahir"
-                            label="Tanggal Lahir"
-                            placeholder="Pilih tanggal lahir"
-                            :defaultDate="old('tanggal_lahir', $murid->tanggal_lahir?->format('Y-m-d'))"
-                        />
+                        <x-form.date-picker id="tanggal_lahir" name="tanggal_lahir" label="Tanggal Lahir"
+                            placeholder="Pilih tanggal lahir" :defaultDate="old('tanggal_lahir', $murid->tanggal_lahir?->format('Y-m-d'))" />
                         @error('tanggal_lahir')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
@@ -244,7 +239,8 @@
                             Tahun Masuk <span class="text-red-500">*</span>
                         </label>
                         <input type="number" id="tahun_masuk" name="tahun_masuk"
-                            value="{{ old('tahun_masuk', $sekolahMurid->tahun_masuk) }}" required min="1900" max="{{ date('Y') + 1 }}"
+                            value="{{ old('tahun_masuk', $sekolahMurid->tahun_masuk) }}" required min="1900"
+                            max="{{ date('Y') + 1 }}"
                             class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
                             placeholder="Contoh: {{ date('Y') }}" />
                         @error('tahun_masuk')
@@ -258,7 +254,8 @@
                             Tahun Keluar
                         </label>
                         <input type="number" id="tahun_keluar" name="tahun_keluar"
-                            value="{{ old('tahun_keluar', $sekolahMurid->tahun_keluar) }}" min="1900" max="{{ date('Y') + 1 }}"
+                            value="{{ old('tahun_keluar', $sekolahMurid->tahun_keluar) }}" min="1900"
+                            max="{{ date('Y') + 1 }}"
                             class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
                             placeholder="Tahun keluar" />
                         @error('tahun_keluar')
@@ -266,13 +263,43 @@
                         @enderror
                     </div>
 
+                    <!-- Status Kelulusan -->
+                    <div class="lg:col-span-4">
+                        <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status Kelulusan</span>
+                        <div class="mt-2 flex flex-col md:flex-row md:flex-wrap md:items-center gap-4">
+                            <label class="inline-flex items-center gap-2">
+                                <input type="radio" name="status_kelulusan" value="ya"
+                                    {{ old('status_kelulusan', $sekolahMurid->status_kelulusan) === 'ya' ? 'checked' : '' }}
+                                    class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 dark:border-gray-700" />
+                                <span class="text-sm text-gray-700 dark:text-gray-300">Lulus</span>
+                            </label>
+                            <label class="inline-flex items-center gap-2">
+                                <input type="radio" name="status_kelulusan" value="tidak"
+                                    {{ old('status_kelulusan', $sekolahMurid->status_kelulusan) === 'tidak' ? 'checked' : '' }}
+                                    class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 dark:border-gray-700" />
+                                <span class="text-sm text-gray-700 dark:text-gray-300">Tidak Lulus</span>
+                            </label>
+                            <label class="inline-flex items-center gap-2">
+                                <input type="radio" name="status_kelulusan" value=""
+                                    {{ old('status_kelulusan', $sekolahMurid->status_kelulusan) == null ? 'checked' : '' }}
+                                    class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 dark:border-gray-700" />
+                                <span class="text-sm text-gray-700 dark:text-gray-300">Belum Lulus</span>
+                            </label>
+                        </div>
+                        @error('status_kelulusan')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Tahun Mutasi Masuk -->
                     <div class="lg:col-span-2">
-                        <label for="tahun_mutasi_masuk" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label for="tahun_mutasi_masuk"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Tahun Mutasi Masuk
                         </label>
                         <input type="number" id="tahun_mutasi_masuk" name="tahun_mutasi_masuk"
-                            value="{{ old('tahun_mutasi_masuk', $sekolahMurid->tahun_mutasi_masuk) }}" min="1900" max="{{ date('Y') + 1 }}"
+                            value="{{ old('tahun_mutasi_masuk', $sekolahMurid->tahun_mutasi_masuk) }}" min="1900"
+                            max="{{ date('Y') + 1 }}"
                             class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
                             placeholder="Tahun mutasi masuk" />
                         @error('tahun_mutasi_masuk')
@@ -282,7 +309,8 @@
 
                     <!-- Alasan Mutasi Masuk -->
                     <div class="lg:col-span-2">
-                        <label for="alasan_mutasi_masuk" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label for="alasan_mutasi_masuk"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Alasan Mutasi Masuk
                         </label>
                         <input type="text" id="alasan_mutasi_masuk" name="alasan_mutasi_masuk"
@@ -296,11 +324,13 @@
 
                     <!-- Tahun Mutasi Keluar -->
                     <div class="lg:col-span-2">
-                        <label for="tahun_mutasi_keluar" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label for="tahun_mutasi_keluar"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Tahun Mutasi Keluar
                         </label>
                         <input type="number" id="tahun_mutasi_keluar" name="tahun_mutasi_keluar"
-                            value="{{ old('tahun_mutasi_keluar', $sekolahMurid->tahun_mutasi_keluar) }}" min="1900" max="{{ date('Y') + 1 }}"
+                            value="{{ old('tahun_mutasi_keluar', $sekolahMurid->tahun_mutasi_keluar) }}" min="1900"
+                            max="{{ date('Y') + 1 }}"
                             class="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
                             placeholder="Tahun mutasi keluar" />
                         @error('tahun_mutasi_keluar')
@@ -310,7 +340,8 @@
 
                     <!-- Alasan Mutasi Keluar -->
                     <div class="lg:col-span-2">
-                        <label for="alasan_mutasi_keluar" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label for="alasan_mutasi_keluar"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Alasan Mutasi Keluar
                         </label>
                         <input type="text" id="alasan_mutasi_keluar" name="alasan_mutasi_keluar"

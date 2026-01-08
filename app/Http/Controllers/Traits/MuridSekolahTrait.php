@@ -478,6 +478,7 @@ trait MuridSekolahTrait
                 'alasan_mutasi_masuk' => $validated['alasan_mutasi_masuk'] ?? null,
                 'tahun_mutasi_keluar' => $validated['tahun_mutasi_keluar'] ?? null,
                 'alasan_mutasi_keluar' => $validated['alasan_mutasi_keluar'] ?? null,
+                'status_kelulusan' => $validated['status_kelulusan'] ?? null,
             ];
 
             $sekolahMurid->update($sekolahMuridData);
