@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\MuridController;
 use App\Models\User;
 use App\Models\Murid;
 
@@ -201,6 +202,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/sekolah-external/{sekolahExternal}', [App\Http\Controllers\SekolahExternalController::class, 'destroy'])->name('sekolah-external.destroy');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::resource('murid', MuridController::class);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Alumni Management Routes
@@ -219,6 +224,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/alumni/{alumni}', [App\Http\Controllers\AlumniController::class, 'update'])->name('alumni.update');
     Route::delete('/alumni/{alumni}', [App\Http\Controllers\AlumniController::class, 'destroy'])->name('alumni.destroy');
 });
+
+
 
 /*
 |--------------------------------------------------------------------------

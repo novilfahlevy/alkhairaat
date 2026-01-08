@@ -75,7 +75,7 @@ class Murid extends Model
      */
     protected static function booted(): void
     {
-        static::addGlobalScope(new MuridNauanganScope());
+        // static::addGlobalScope(new MuridNauanganScope());
     }
 
     /**
