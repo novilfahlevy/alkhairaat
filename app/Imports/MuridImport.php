@@ -248,6 +248,7 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading
                     'kontak_wa_hp' => $this->getValueByKey($data, 'kontak_wa_hp'),
                     'kontak_email' => $this->getValueByKey($data, 'kontak_email'),
                     'tahun_keluar' => $this->getValueByKey($data, 'tahun_keluar'),
+                    'status_kelulusan' => $this->transformStatusKelulusan($this->getValueByKey($data, 'status_kelulusan')),
                     'tahun_mutasi_masuk' => $this->getValueByKey($data, 'tahun_mutasi_masuk'),
                     'alasan_mutasi_masuk' => $this->getValueByKey($data, 'alasan_mutasi_masuk'),
                     'tahun_mutasi_keluar' => $this->getValueByKey($data, 'tahun_mutasi_keluar'),
@@ -289,7 +290,7 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading
 
         // Map kolom data sekolah & pendidikan
         $this->mapColumns([
-            'kelas', 'tahun_masuk', 'tahun_keluar', 'tahun_mutasi_masuk', 
+            'kelas', 'tahun_masuk', 'tahun_keluar', 'status_kelulusan', 'tahun_mutasi_masuk', 
             'alasan_mutasi_masuk', 'tahun_mutasi_keluar', 'alasan_mutasi_keluar'
         ]);
 
@@ -385,6 +386,26 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    /**
+     * Transform status kelulusan from template format to model format
+     * - "Lulus" → "ya"
+     * - "Tidak Lulus" → "tidak"
+     * - "Belum Lulus" → null
+     */
+    private function transformStatusKelulusan(?string $value): ?string
+    {
+        if (empty($value)) return null;
+        
+        $statusMap = [
+            'lulus' => 'ya',
+            'tidak lulus' => 'tidak',
+            'belum lulus' => null,
+        ];
+        
+        $normalizedValue = strtolower(trim($value));
+        return $statusMap[$normalizedValue] ?? null;
     }
 
     public function chunkSize(): int

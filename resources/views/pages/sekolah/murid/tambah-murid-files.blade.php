@@ -570,6 +570,23 @@
                 <tr>
                     <td
                         class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                        Status Kelulusan
+                    </td>
+                    <td
+                        class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                        Status kelulusan murid di sekolah ini (nilainya berupa: "Lulus", "Tidak Lulus", atau "Belum Lulus")
+                    </td>
+                    <td
+                        class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+                        <span
+                            class="inline-block rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                            Opsional
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td
+                        class="border border-gray-300 px-4 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
                         Tahun Mutasi Masuk
                     </td>
                     <td

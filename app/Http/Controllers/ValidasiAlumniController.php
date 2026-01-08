@@ -140,6 +140,8 @@ class ValidasiAlumniController extends Controller
             // Update murid data
             $murid->update([
                 'status_alumni' => true,
+                'kontak_wa_hp' => $validasi->kontak_wa ?? $murid->kontak_wa_hp,
+                'kontak_email' => $validasi->kontak_email ?? $murid->kontak_email,
             ]);
 
             // Create or update Alumni record
@@ -175,12 +177,6 @@ class ValidasiAlumniController extends Controller
                     ]
                 );
             }
-
-            // Update kontak information
-            $murid->update([
-                'kontak_wa_hp' => $validasi->kontak_wa ?? $murid->kontak_wa_hp,
-                'kontak_email' => $validasi->kontak_email ?? $murid->kontak_email,
-            ]);
 
             $validasi->is_accepted = true;
             $validasi->save();

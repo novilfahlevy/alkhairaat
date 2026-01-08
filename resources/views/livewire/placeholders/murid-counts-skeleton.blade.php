@@ -19,7 +19,7 @@
                 </div>
 
                 <!-- Content Skeleton -->
-                <div class="bg-white p-4">
+                <div class="bg-white dark:bg-gray-700 p-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         @for ($j = 0; $j < 3; $j++)
                             <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-md p-4 animate-pulse">

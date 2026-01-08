@@ -101,6 +101,7 @@ trait MuridSekolahTrait
             'id_sekolah' => $sekolah->id,
             'tahun_masuk' => $validated['tahun_masuk'],
             'kelas' => $validated['kelas'] ?? null,
+            'status_kelulusan' => $validated['status_kelulusan'] ?? null,
         ]);
 
         // Simpan alamat asli
@@ -336,6 +337,9 @@ trait MuridSekolahTrait
 
         return response()->download($templatePath, 'template-murid.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
         ]);
     }
 

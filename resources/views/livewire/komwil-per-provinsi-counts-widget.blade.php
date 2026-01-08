@@ -81,16 +81,16 @@
     <!-- Distribusi Komwil Chart Info -->
     <x-ui.card>
         <x-slot name="header">
-            <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Distribusi Komwil</h2>
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100">Distribusi Komwil</h2>
         </x-slot>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @forelse($komwilData as $data)
                 @if($data['komwil_count'] > 0)
-                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-4 border border-gray-200">
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                         <div class="flex items-center justify-between">
-                            <h3 class="font-medium text-gray-700">{{ $data['nama'] }}</h3>
-                            <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                            <h3 class="font-medium text-gray-700 dark:text-gray-200">{{ $data['nama'] }}</h3>
+                            <span class="bg-indigo-600 dark:bg-indigo-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                                 {{ number_format($data['komwil_count']) }} Komwil
                             </span>
                         </div>
@@ -99,10 +99,10 @@
                         </p> --}}
                     </div>
                 @else
-                    <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-4 border border-red-200">
+                    <div class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900 dark:to-red-800 rounded-lg p-4 border border-red-200 dark:border-red-700">
                         <div class="flex items-center justify-between">
-                            <h3 class="font-medium text-red-700">{{ $data['nama'] }}</h3>
-                            <span class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                            <h3 class="font-medium text-red-700 dark:text-red-300">{{ $data['nama'] }}</h3>
+                            <span class="bg-red-600 dark:bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                                 Belum Ada Komwil
                             </span>
                         </div>
@@ -114,7 +114,7 @@
                 @endif
             @empty
                 <div class="col-span-2 text-center py-8">
-                    <p class="text-gray-500">Tidak ada data untuk ditampilkan</p>
+                    <p class="text-gray-500 dark:text-gray-400">Tidak ada data untuk ditampilkan</p>
                 </div>
             @endforelse
         </div>

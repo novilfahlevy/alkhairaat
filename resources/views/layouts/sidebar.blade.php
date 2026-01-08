@@ -67,8 +67,8 @@
         <a href="/" class="flex items-center gap-3">
             <img src="/images/logo_alkhairaat.png" width="60" height="60" alt="Logo" />
             <span x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
-                class="text-lg font-semibold text-gray-900 dark:text-white whitespace-nowrap">
-                Alkhairaat
+                class="text-sm font-semibold text-gray-900 dark:text-white">
+                Sistem Database Nasional Alkhairaat
             </span>
         </a>
     </div>

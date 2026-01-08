@@ -209,6 +209,34 @@
                         @enderror
                     </div>
 
+                    <!-- Status Kelulusan -->
+                    <div class="lg:col-span-4">
+                        <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status Kelulusan</span>
+                        <div class="mt-2 flex flex-col md:flex-row md:flex-wrap md:items-center gap-4">
+                            <label class="inline-flex items-center gap-2">
+                                <input type="radio" name="status_kelulusan" value="ya"
+                                    {{ old('status_kelulusan') === 'ya' ? 'checked' : '' }}
+                                    class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 dark:border-gray-700" />
+                                <span class="text-sm text-gray-700 dark:text-gray-300">Lulus</span>
+                            </label>
+                            <label class="inline-flex items-center gap-2">
+                                <input type="radio" name="status_kelulusan" value="tidak"
+                                    {{ old('status_kelulusan') === 'tidak' ? 'checked' : '' }}
+                                    class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 dark:border-gray-700" />
+                                <span class="text-sm text-gray-700 dark:text-gray-300">Tidak Lulus</span>
+                            </label>
+                            <label class="inline-flex items-center gap-2">
+                                <input type="radio" name="status_kelulusan" value=""
+                                    {{ !old('status_kelulusan') ? 'checked' : '' }}
+                                    class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 dark:border-gray-700" />
+                                <span class="text-sm text-gray-700 dark:text-gray-300">Belum Lulus</span>
+                            </label>
+                        </div>
+                        @error('status_kelulusan')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Tahun Mutasi Masuk -->
                     <div class="lg:col-span-2">
                         <label for="tahun_mutasi_masuk"
