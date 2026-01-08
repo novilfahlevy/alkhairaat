@@ -36,8 +36,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read string $status_kepegawaian_label
  * @property-read string $status_label
  * @property-read string $status_perkawinan_label
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\JabatanGuru> $jabatanGuru
- * @property-read int|null $jabatan_guru_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\JabatanGuru> $jabatanGurus
+ * @property-read int|null $jabatan_gurus_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru aktif()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru byJenisKelamin(string $jenisKelamin)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Guru byStatusKepegawaian(string $status)
@@ -187,7 +187,7 @@ class Guru extends Model
     /**
      * Get the jabatan_guru records for this guru.
      */
-    public function jabatanGuru(): HasMany
+    public function jabatanGurus(): HasMany
     {
         return $this->hasMany(JabatanGuru::class, 'id_guru');
     }
@@ -255,7 +255,7 @@ class Guru extends Model
      */
     public function getStatusPerkawinanLabelAttribute(): string
     {
-        return self::STATUS_PERKAWINAN_OPTIONS[$this->status_perkawinan] ?? $this->status_perkawinan;
+        return self::STATUS_PERKAWINAN_OPTIONS[$this->status_perkawinan] ?? '-';
     }
 
     /**
@@ -263,7 +263,7 @@ class Guru extends Model
      */
     public function getStatusKepegawaianLabelAttribute(): string
     {
-        return self::STATUS_KEPEGAWAIAN_OPTIONS[$this->status_kepegawaian] ?? $this->status_kepegawaian;
+        return self::STATUS_KEPEGAWAIAN_OPTIONS[$this->status_kepegawaian] ?? '-';
     }
 
     /**

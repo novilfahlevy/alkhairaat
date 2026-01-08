@@ -108,7 +108,7 @@
                 $muridCount = $sekolah->murid()->count();
                 $alumniCount = $sekolah->murid()->where('status_alumni', true)->count();
                 $pengelolaCount = $sekolah->editorLists()->count();
-                $guruCount = $sekolah->jabatanGuru()->select('id_sekolah', 'id_guru')->distinct()->count('id_guru');
+                $guruCount = $sekolah->jabatanGurus()->select('id_sekolah', 'id_guru')->distinct()->count('id_guru');
             @endphp
 
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guru;
+use App\Models\JabatanGuru;
 use App\Models\Scopes\GuruSekolahNauanganScope;
 use App\Models\Sekolah;
 use Illuminate\Http\Request;
@@ -28,10 +29,7 @@ class GuruController extends Controller
             // Show all teachers for superusers and wilayah admins
             $query = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)
                 ->with([
-                    'jabatanGurus.sekolah', // Try this first
-                    'jabatans.sekolah',     // Or this
-                    'positions.sekolah',    // Or this
-                    'jabatanGuru.sekolah',  // Or this (singular)
+                    'jabatanGurus.sekolah',
                 ]);
             
             // Add search functionality
@@ -81,13 +79,20 @@ class GuruController extends Controller
     public function create()
     {
         $user = Auth::user();
-        
+
         if (!$user) {
             abort(403, 'Unauthorized');
         }
-        
-        // You can implement this if needed for direct teacher creation
-        return view('pages.guru.create');
+
+        // Only superusers and wilayah admins can create teachers
+        if (!$user->isSuperuser() && !$user->isKomisariatWilayah()) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Get all active schools for assignment
+        $sekolah = Sekolah::aktif()->orderBy('nama')->get();
+
+        return view('pages.guru.create', compact('sekolah'));
     }
 
     /**
@@ -96,12 +101,73 @@ class GuruController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        
+
         if (!$user) {
             abort(403, 'Unauthorized');
         }
-        
-        // Implement if needed
+
+        // Only superusers and wilayah admins can create teachers
+        if (!$user->isSuperuser() && !$user->isKomisariatWilayah()) {
+            abort(403, 'Unauthorized');
+        }
+
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nama_gelar_depan' => 'nullable|string|max:50',
+            'nama_gelar_belakang' => 'nullable|string|max:50',
+            'jenis_kelamin' => 'required|in:L,P',
+            'nik' => 'required|string|size:16|unique:guru,nik',
+            'tempat_lahir' => 'nullable|string|max:100',
+            'tanggal_lahir' => 'nullable|date|before:today',
+            'status_perkawinan' => 'nullable|in:lajang,menikah',
+            'status_kepegawaian' => 'nullable|in:PNS,Non PNS,PPPK',
+            'npk' => 'nullable|string|max:50|unique:guru,npk',
+            'nuptk' => 'nullable|string|max:16|unique:guru,nuptk',
+            'kontak_wa_hp' => 'nullable|string|max:20',
+            'kontak_email' => 'nullable|email|max:100',
+            'nomor_rekening' => 'nullable|string|max:50',
+            'rekening_atas_nama' => 'nullable|string|max:100',
+            'bank_rekening' => 'nullable|string|max:50',
+            'id_sekolah' => 'required|array|min:1',
+            'id_sekolah.*' => 'required|exists:sekolah,id',
+            'jenis_jabatan' => 'required|array|min:1',
+            'jenis_jabatan.*' => 'required|in:' . implode(',', array_keys(JabatanGuru::JENIS_JABATAN_OPTIONS)),
+            'keterangan_jabatan' => 'nullable|array',
+            'keterangan_jabatan.*' => 'nullable|string|max:255',
+        ]);
+
+        // Create the teacher
+        $guru = Guru::create([
+            'nama' => $request->nama,
+            'nama_gelar_depan' => $request->nama_gelar_depan,
+            'nama_gelar_belakang' => $request->nama_gelar_belakang,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'nik' => $request->nik,
+            'tempat_lahir' => $request->tempat_lahir,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'status_perkawinan' => $request->status_perkawinan,
+            'status_kepegawaian' => $request->status_kepegawaian,
+            'npk' => $request->npk,
+            'nuptk' => $request->nuptk,
+            'kontak_wa_hp' => $request->kontak_wa_hp,
+            'kontak_email' => $request->kontak_email,
+            'nomor_rekening' => $request->nomor_rekening,
+            'rekening_atas_nama' => $request->rekening_atas_nama,
+            'bank_rekening' => $request->bank_rekening,
+            'status' => Guru::STATUS_AKTIF, // Default to active
+        ]);
+
+        // Create jabatan_guru records for each school assignment
+        foreach ($request->id_sekolah as $index => $idSekolah) {
+            JabatanGuru::create([
+                'id_guru' => $guru->id,
+                'id_sekolah' => $idSekolah,
+                'jenis_jabatan' => $request->jenis_jabatan[$index],
+                'keterangan_jabatan' => $request->keterangan_jabatan[$index] ?? null,
+            ]);
+        }
+
+        return redirect()->route('guru.index')->with('success', 'Guru berhasil ditambahkan.');
     }
 
     /**
@@ -110,13 +176,16 @@ class GuruController extends Controller
     public function show(Guru $guru)
     {
         $user = Auth::user();
-        
+
         if (!$user) {
             abort(403, 'Unauthorized');
         }
-        
-        $guru->load(['jabatanGuru.sekolah', 'alamats']);
-        
+
+        // Load the guru without scope restrictions first
+        $guru = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)->findOrFail($guru->id);
+
+        $guru->load(['jabatanGurus.sekolah', 'alamatList']);
+
         return view('pages.guru.show', [
             'guru' => $guru,
             'title' => 'Detail Guru - ' . $guru->nama
@@ -129,13 +198,36 @@ class GuruController extends Controller
     public function edit(Guru $guru)
     {
         $user = Auth::user();
-        
+
         if (!$user) {
             abort(403, 'Unauthorized');
         }
-        
+
+        // Load the guru without scope restrictions first
+        $guru = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)->findOrFail($guru->id);
+
+        // Check if user can edit this teacher
+        if (!$user->isSuperuser() && !$user->isKomisariatWilayah()) {
+            // School users can only edit teachers from their school
+            if ($user->isSekolah()) {
+                $canEdit = $guru->jabatanGurus()->where('id_sekolah', $user->sekolah->id)->exists();
+                if (!$canEdit) {
+                    abort(403, 'Unauthorized');
+                }
+            } else {
+                abort(403, 'Unauthorized');
+            }
+        }
+
+        // Get all schools for assignment (including inactive ones for existing assignments)
+        $sekolah = Sekolah::orderBy('nama')->get();
+
+        // Load relationships
+        $guru->load(['jabatanGurus.sekolah', 'alamatList']);
+
         return view('pages.guru.edit', [
             'guru' => $guru,
+            'sekolah' => $sekolah,
             'title' => 'Edit Guru - ' . $guru->nama
         ]);
     }
@@ -146,12 +238,86 @@ class GuruController extends Controller
     public function update(Request $request, Guru $guru)
     {
         $user = Auth::user();
-        
+
         if (!$user) {
             abort(403, 'Unauthorized');
         }
-        
-        // Implement update logic
+
+        // Load the guru without scope restrictions first
+        $guru = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)->findOrFail($guru->id);
+
+        // Check if user can update this teacher
+        if (!$user->isSuperuser() && !$user->isKomisariatWilayah()) {
+            // School users can only update teachers from their school
+            if ($user->isSekolah()) {
+                $canUpdate = $guru->jabatanGurus()->where('id_sekolah', $user->sekolah->id)->exists();
+                if (!$canUpdate) {
+                    abort(403, 'Unauthorized');
+                }
+            } else {
+                abort(403, 'Unauthorized');
+            }
+        }
+
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nama_gelar_depan' => 'nullable|string|max:50',
+            'nama_gelar_belakang' => 'nullable|string|max:50',
+            'jenis_kelamin' => 'required|in:L,P',
+            'nik' => 'required|string|size:16|unique:guru,nik,' . $guru->id,
+            'tempat_lahir' => 'nullable|string|max:100',
+            'tanggal_lahir' => 'nullable|date|before:today',
+            'status_perkawinan' => 'nullable|in:lajang,menikah',
+            'status_kepegawaian' => 'nullable|in:PNS,Non PNS,PPPK',
+            'npk' => 'nullable|string|max:50|unique:guru,npk,' . $guru->id,
+            'nuptk' => 'nullable|string|max:16|unique:guru,nuptk,' . $guru->id,
+            'kontak_wa_hp' => 'nullable|string|max:20',
+            'kontak_email' => 'nullable|email|max:100',
+            'nomor_rekening' => 'nullable|string|max:50',
+            'rekening_atas_nama' => 'nullable|string|max:100',
+            'bank_rekening' => 'nullable|string|max:50',
+            'id_sekolah' => 'required|array|min:1',
+            'id_sekolah.*' => 'required|exists:sekolah,id',
+            'jenis_jabatan' => 'required|array|min:1',
+            'jenis_jabatan.*' => 'required|in:' . implode(',', array_keys(JabatanGuru::JENIS_JABATAN_OPTIONS)),
+            'keterangan_jabatan' => 'nullable|array',
+            'keterangan_jabatan.*' => 'nullable|string|max:255',
+        ]);
+
+        // Update the teacher
+        $guru->update([
+            'nama' => $request->nama,
+            'nama_gelar_depan' => $request->nama_gelar_depan,
+            'nama_gelar_belakang' => $request->nama_gelar_belakang,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'nik' => $request->nik,
+            'tempat_lahir' => $request->tempat_lahir,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'status_perkawinan' => $request->status_perkawinan,
+            'status_kepegawaian' => $request->status_kepegawaian,
+            'npk' => $request->npk,
+            'nuptk' => $request->nuptk,
+            'kontak_wa_hp' => $request->kontak_wa_hp,
+            'kontak_email' => $request->kontak_email,
+            'nomor_rekening' => $request->nomor_rekening,
+            'rekening_atas_nama' => $request->rekening_atas_nama,
+            'bank_rekening' => $request->bank_rekening,
+        ]);
+
+        // Delete existing jabatan_guru records
+        $guru->jabatanGurus()->delete();
+
+        // Create new jabatan_guru records for each school assignment
+        foreach ($request->id_sekolah as $index => $idSekolah) {
+            JabatanGuru::create([
+                'id_guru' => $guru->id,
+                'id_sekolah' => $idSekolah,
+                'jenis_jabatan' => $request->jenis_jabatan[$index],
+                'keterangan_jabatan' => $request->keterangan_jabatan[$index] ?? null,
+            ]);
+        }
+
+        return redirect()->route('guru.index')->with('success', 'Guru berhasil diperbarui.');
     }
 
     /**
@@ -160,11 +326,36 @@ class GuruController extends Controller
     public function destroy(Guru $guru)
     {
         $user = Auth::user();
-        
+
         if (!$user) {
             abort(403, 'Unauthorized');
         }
-        
-        // Implement delete logic
+
+        // Load the guru without scope restrictions first
+        $guru = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)->findOrFail($guru->id);
+
+        // Check if user can delete this teacher
+        if (!$user->isSuperuser() && !$user->isKomisariatWilayah()) {
+            // School users can only delete teachers from their school
+            if ($user->isSekolah()) {
+                $canDelete = $guru->jabatanGurus()->where('id_sekolah', $user->sekolah->id)->exists();
+                if (!$canDelete) {
+                    abort(403, 'Unauthorized');
+                }
+            } else {
+                abort(403, 'Unauthorized');
+            }
+        }
+
+        // Delete associated jabatan_guru records first
+        $guru->jabatanGurus()->delete();
+
+        // Delete associated alamat records
+        $guru->alamatList()->delete();
+
+        // Delete the guru
+        $guru->delete();
+
+        return redirect()->route('guru.index')->with('success', 'Guru berhasil dihapus.');
     }
 }
