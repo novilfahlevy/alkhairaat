@@ -192,6 +192,8 @@ class Guru extends Model
         return $this->hasMany(JabatanGuru::class, 'id_guru');
     }
 
+    
+
     /**
      * Get the alamat records for this guru.
      */

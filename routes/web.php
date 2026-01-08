@@ -160,6 +160,11 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/sekolah/{sekolah}/guru/{guru}', [App\Http\Controllers\SekolahController::class, 'deleteGuru'])->name('sekolah.delete-guru');
 });
 
+Route::middleware(['auth'])->group(function () {
+    // Guru CRUD
+    Route::resource('guru', App\Http\Controllers\GuruController::class);
+});
+
 /*
 |--------------------------------------------------------------------------
 | External School Management Routes
