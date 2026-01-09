@@ -114,14 +114,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the kabupaten that the user manages.
-     */
-    public function kabupaten(): BelongsToMany
-    {
-        return $this->belongsToMany(Kabupaten::class, 'user_kabupaten');
-    }
-
-    /**
      * Check if user is superuser
      */
     public function isSuperuser(): bool

@@ -32,6 +32,7 @@ class SekolahSeeder extends Seeder
             // Sulawesi Tengah - Kota Palu
             [
                 'kode_sekolah' => 'ALK-001',
+                'no_npsn' => '72781001',
                 'nama' => 'Pesantren Alkhairaat Pusat Palu',
                 'jenis_sekolah' => $jenisSekolah['PT'],
                 'bentuk_pendidikan' => $bentukPonpes,
@@ -47,6 +48,7 @@ class SekolahSeeder extends Seeder
             ],
             [
                 'kode_sekolah' => 'ALK-002',
+                'no_npsn' => '72781002',
                 'nama' => 'SMA Alkhairaat Palu',
                 'jenis_sekolah' => $jenisSekolah['MA-SMA'],
                 'bentuk_pendidikan' => $bentukUmum,
@@ -61,6 +63,7 @@ class SekolahSeeder extends Seeder
             ],
             [
                 'kode_sekolah' => 'ALK-003',
+                'no_npsn' => '72781003',
                 'nama' => 'SMP Alkhairaat Palu',
                 'jenis_sekolah' => $jenisSekolah['MTS-SMP'],
                 'bentuk_pendidikan' => $bentukUmum,
@@ -75,6 +78,7 @@ class SekolahSeeder extends Seeder
             ],
             [
                 'kode_sekolah' => 'ALK-004',
+                'no_npsn' => '72781004',
                 'nama' => 'Madrasah Aliyah Alkhairaat Palu',
                 'jenis_sekolah' => $jenisSekolah['MA-SMA'],
                 'bentuk_pendidikan' => $bentukPonpes,
@@ -89,6 +93,7 @@ class SekolahSeeder extends Seeder
             ],
             [
                 'kode_sekolah' => 'ALK-005',
+                'no_npsn' => '72781005',
                 'nama' => 'SD Alkhairaat Palu',
                 'jenis_sekolah' => $jenisSekolah['MI-SD'],
                 'bentuk_pendidikan' => $bentukUmum,
@@ -103,6 +108,7 @@ class SekolahSeeder extends Seeder
             ],
             [
                 'kode_sekolah' => 'ALK-006',
+                'no_npsn' => '72781006',
                 'nama' => 'TK Alkhairaat Palu',
                 'jenis_sekolah' => $jenisSekolah['RA-TK'],
                 'bentuk_pendidikan' => $bentukUmum,
@@ -119,6 +125,7 @@ class SekolahSeeder extends Seeder
             // Sulawesi Tengah - Donggala
             [
                 'kode_sekolah' => 'ALK-101',
+                'no_npsn' => '72781101',
                 'nama' => 'SMA Alkhairaat Donggala',
                 'jenis_sekolah' => $jenisSekolah['MA-SMA'],
                 'bentuk_pendidikan' => $bentukUmum,
@@ -133,6 +140,7 @@ class SekolahSeeder extends Seeder
             ],
             [
                 'kode_sekolah' => 'ALK-102',
+                'no_npsn' => '72781102',
                 'nama' => 'SMP Alkhairaat Donggala',
                 'jenis_sekolah' => $jenisSekolah['MTS-SMP'],
                 'bentuk_pendidikan' => $bentukUmum,
@@ -149,6 +157,7 @@ class SekolahSeeder extends Seeder
             // Sulawesi Tengah - Banggai
             [
                 'kode_sekolah' => 'ALK-201',
+                'no_npsn' => '72781201',
                 'nama' => 'Pesantren Alkhairaat Banggai',
                 'jenis_sekolah' => $jenisSekolah['MTS-SMP'],
                 'bentuk_pendidikan' => $bentukPonpes,
@@ -165,6 +174,7 @@ class SekolahSeeder extends Seeder
             // DKI Jakarta
             [
                 'kode_sekolah' => 'ALK-301',
+                'no_npsn' => '31781301',
                 'nama' => 'Sekolah Islam Alkhairaat Jakarta',
                 'jenis_sekolah' => $jenisSekolah['MA-SMA'],
                 'bentuk_pendidikan' => $bentukUmum,
@@ -182,6 +192,7 @@ class SekolahSeeder extends Seeder
             // Jawa Barat - Bandung
             [
                 'kode_sekolah' => 'ALK-401',
+                'no_npsn' => '32781401',
                 'nama' => 'Pesantren Al-Ihsan Alkhairaat Bandung',
                 'jenis_sekolah' => $jenisSekolah['MA-SMA'],
                 'bentuk_pendidikan' => $bentukPonpes,
@@ -196,6 +207,7 @@ class SekolahSeeder extends Seeder
             ],
             [
                 'kode_sekolah' => 'ALK-402',
+                'no_npsn' => '32781402',
                 'nama' => 'SD Alkhairaat Bandung',
                 'jenis_sekolah' => $jenisSekolah['MI-SD'],
                 'bentuk_pendidikan' => $bentukUmum,
@@ -212,6 +224,7 @@ class SekolahSeeder extends Seeder
             // Jawa Barat - Garut
             [
                 'kode_sekolah' => 'ALK-501',
+                'no_npsn' => '32781501',
                 'nama' => 'Pesantren Alkhairaat Garut',
                 'jenis_sekolah' => $jenisSekolah['MA-SMA'],
                 'bentuk_pendidikan' => $bentukPonpes,
@@ -228,6 +241,7 @@ class SekolahSeeder extends Seeder
             // Aceh
             [
                 'kode_sekolah' => 'ALK-601',
+                'no_npsn' => '11781601',
                 'nama' => 'Sekolah Islam Alkhairaat Aceh',
                 'jenis_sekolah' => $jenisSekolah['MA-SMA'],
                 'bentuk_pendidikan' => $bentukUmum,
@@ -250,6 +264,10 @@ class SekolahSeeder extends Seeder
             $kabupatenName = $data['kabupaten_name'];
             $provinsiName = $data['provinsi_name'];
             unset($data['kabupaten_name'], $data['provinsi_name']);
+
+            // Remove kecamatan and alamat as they don't exist in sekolah table
+            // These should be stored in the alamat table separately if needed
+            unset($data['kecamatan'], $data['alamat']);
 
             // Find kabupaten by name and provinsi
             $kabupaten = Kabupaten::whereHas('provinsi', function ($query) use ($provinsiName) {

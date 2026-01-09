@@ -127,7 +127,7 @@
                             Dibuat Pada
                         </p>
                         <p class="mt-1 text-sm font-medium text-gray-900 dark:text-white/90">
-                            {{ $sekolahExternal->created_at?->format('d M Y H:i') ?? '-' }}
+                            {{ $sekolahExternal->created_at?->translatedFormat('d M Y H:i') ?? '-' }}
                         </p>
                     </div>
 
@@ -137,7 +137,7 @@
                             Diperbarui Pada
                         </p>
                         <p class="mt-1 text-sm font-medium text-gray-900 dark:text-white/90">
-                            {{ $sekolahExternal->updated_at?->format('d M Y H:i') ?? '-' }}
+                            {{ $sekolahExternal->updated_at?->translatedFormat('d M Y H:i') ?? '-' }}
                         </p>
                     </div>
                 </div>

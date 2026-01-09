@@ -27,14 +27,14 @@ class UpdateSekolahRequest extends FormRequest
 
         return [
             'kode_sekolah' => ['required', 'string', 'max:20', Rule::unique('sekolah', 'kode_sekolah')->ignore($sekolahId)],
+            'no_npsn' => ['required', 'string', 'max:20', Rule::unique('sekolah', 'no_npsn')->ignore($sekolahId)],
             'nama' => ['required', 'string', 'max:255'],
             'jenis_sekolah' => ['required', Rule::in(array_keys(Sekolah::JENIS_SEKOLAH_OPTIONS))],
             'bentuk_pendidikan' => ['required', Rule::in(array_keys(Sekolah::BENTUK_PENDIDIKAN_OPTIONS))],
             'status' => ['required', Rule::in(Sekolah::STATUS_OPTIONS)],
             'id_provinsi' => ['required', 'exists:provinsi,id'],
             'id_kabupaten' => ['required', 'exists:kabupaten,id'],
-            'kecamatan' => ['nullable', 'string', 'max:100'],
-            'alamat' => ['nullable', 'string'],
+
             'telepon' => ['nullable', 'string', 'max:20'],
             'email' => ['nullable', 'email', 'max:255'],
             'website' => ['nullable', 'url', 'max:255'],
@@ -42,6 +42,7 @@ class UpdateSekolahRequest extends FormRequest
             'bank_rekening' => ['nullable', 'string', 'max:100'],
             'nomor_rekening' => ['nullable', 'string', 'max:50'],
             'rekening_atas_nama' => ['nullable', 'string', 'max:255'],
+
             'alamat_kecamatan' => ['nullable', 'string', 'max:100'],
             'alamat_kelurahan' => ['nullable', 'string', 'max:100'],
             'alamat_rt' => ['nullable', 'string', 'max:10'],
@@ -51,6 +52,7 @@ class UpdateSekolahRequest extends FormRequest
             'alamat_koordinat_y' => ['nullable', 'numeric'],
             'galeri_files' => ['nullable', 'array'],
             'galeri_files.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
+
             'deleted_galeri_ids' => ['nullable', 'array'],
             'deleted_galeri_ids.*' => ['nullable', 'integer'],
         ];
@@ -66,6 +68,8 @@ class UpdateSekolahRequest extends FormRequest
         return [
             'kode_sekolah.required' => 'Kode sekolah harus diisi.',
             'kode_sekolah.unique' => 'Kode sekolah sudah digunakan.',
+            'no_npsn.required' => 'Nomor NPSN harus diisi.',
+            'no_npsn.unique' => 'Nomor NPSN sudah digunakan.',
             'nama.required' => 'Nama sekolah harus diisi.',
             'jenis_sekolah.required' => 'Jenis sekolah harus dipilih.',
             'jenis_sekolah.in' => 'Jenis sekolah yang dipilih tidak valid.',
@@ -77,7 +81,10 @@ class UpdateSekolahRequest extends FormRequest
             'id_provinsi.exists' => 'Provinsi yang dipilih tidak valid.',
             'id_kabupaten.required' => 'Kabupaten harus dipilih.',
             'id_kabupaten.exists' => 'Kabupaten yang dipilih tidak valid.',
+            
             'email.email' => 'Format email tidak valid.',
+            'website.url' => 'Format website tidak valid.',
+
             'alamat_koordinat_x.numeric' => 'Koordinat X harus berupa angka.',
             'alamat_koordinat_y.numeric' => 'Koordinat Y harus berupa angka.',
             'galeri_files.array' => 'Galeri harus berupa array file.',
@@ -98,13 +105,13 @@ class UpdateSekolahRequest extends FormRequest
     {
         return [
             'kode_sekolah' => 'kode sekolah',
+            'no_npsn' => 'nomor NPSN',
             'nama' => 'nama sekolah',
             'jenis_sekolah' => 'jenis sekolah',
             'bentuk_pendidikan' => 'bentuk pendidikan',
             'status' => 'status',
             'id_kabupaten' => 'kabupaten',
-            'kecamatan' => 'kecamatan',
-            'alamat' => 'alamat',
+
             'telepon' => 'telepon',
             'email' => 'email',
             'website' => 'website',
@@ -112,6 +119,7 @@ class UpdateSekolahRequest extends FormRequest
             'bank_rekening' => 'bank',
             'nomor_rekening' => 'nomor rekening',
             'rekening_atas_nama' => 'nama pemilik rekening',
+            
             'alamat_kecamatan' => 'kecamatan alamat',
             'alamat_kelurahan' => 'kelurahan alamat',
             'alamat_rt' => 'RT alamat',

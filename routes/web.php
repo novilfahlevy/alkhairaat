@@ -4,7 +4,22 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\MuridController;
 use App\Models\User;
+use App\Models\Murid;
+
+// API public: cek NIK murid (untuk validasi alumni, tanpa auth)
+Route::get('/api/cari-nik-murid', [\App\Http\Controllers\ValidasiAlumniController::class, 'cariNik'])->name('api.cari-nik-murid');
+
+// Validasi Alumni (public, tanpa login)
+Route::get('/validasi-alumni', [\App\Http\Controllers\ValidasiAlumniController::class, 'form'])->name('validasi-alumni.form');
+Route::post('/validasi-alumni', [\App\Http\Controllers\ValidasiAlumniController::class, 'store'])->name('validasi-alumni.store');
+
+// Validasi Alumni Management (authenticated)
+Route::middleware('auth')->group(function () {
+    Route::get('/manajemen/validasi-alumni', [\App\Http\Controllers\ValidasiAlumniController::class, 'index'])->name('validasi-alumni.index');
+    Route::post('/manajemen/validasi-alumni/{validasi}/approve', [\App\Http\Controllers\ValidasiAlumniController::class, 'approve'])->name('validasi-alumni.approve');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -147,6 +162,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sekolah/{sekolah}/store-existing-murid', [App\Http\Controllers\SekolahController::class, 'storeExistingMurid'])->name('sekolah.store-existing-murid');
     Route::post('/sekolah/{sekolah}/tambah-murid-file', [App\Http\Controllers\SekolahController::class, 'storeMuridFile'])->name('sekolah.store-murid-file');
     Route::get('/sekolah/template/download', [App\Http\Controllers\SekolahController::class, 'downloadTemplate'])->name('sekolah.download-template');
+    Route::get('/sekolah/{sekolah}/murid/{murid}', [App\Http\Controllers\SekolahController::class, 'showDetailMurid'])->name('sekolah.show-detail-murid');
+    Route::get('/sekolah/{sekolah}/murid/{murid}/edit', [App\Http\Controllers\SekolahController::class, 'editMurid'])->name('sekolah.edit-murid');
+    Route::put('/sekolah/{sekolah}/murid/{murid}', [App\Http\Controllers\SekolahController::class, 'updateMurid'])->name('sekolah.update-murid');
     Route::delete('/sekolah/{sekolah}/murid/{murid}', [App\Http\Controllers\SekolahController::class, 'deleteMurid'])->name('sekolah.delete-murid');
     
     // Guru Management
@@ -157,7 +175,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sekolah/{sekolah}/store-existing-guru', [App\Http\Controllers\SekolahController::class, 'storeExistingGuru'])->name('sekolah.store-existing-guru');
     Route::post('/sekolah/{sekolah}/tambah-guru-file', [App\Http\Controllers\SekolahController::class, 'storeGuruFile'])->name('sekolah.store-guru-file');
     Route::get('/sekolah/template-guru/download', [App\Http\Controllers\SekolahController::class, 'downloadGuruTemplate'])->name('sekolah.download-guru-template');
+    Route::get('/sekolah/{sekolah}/guru/{guru}', [App\Http\Controllers\SekolahController::class, 'showDetailGuru'])->name('sekolah.show-detail-guru');
+    Route::get('/sekolah/{sekolah}/guru/{guru}/edit', [App\Http\Controllers\SekolahController::class, 'editGuru'])->name('sekolah.edit-guru');
+    Route::put('/sekolah/{sekolah}/guru/{guru}', [App\Http\Controllers\SekolahController::class, 'updateGuru'])->name('sekolah.update-guru');
     Route::delete('/sekolah/{sekolah}/guru/{guru}', [App\Http\Controllers\SekolahController::class, 'deleteGuru'])->name('sekolah.delete-guru');
+    
+    // Guru Jabatan Management
+    Route::post('/sekolah/{sekolah}/guru/{guru}/jabatan', [App\Http\Controllers\SekolahController::class, 'addJabatanGuru'])->name('sekolah.add-jabatan-guru');
+    Route::delete('/sekolah/{sekolah}/jabatan-guru/{jabatanGuru}', [App\Http\Controllers\SekolahController::class, 'deleteJabatanGuru'])->name('sekolah.delete-jabatan-guru');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -181,6 +206,31 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/sekolah-external/{sekolahExternal}', [App\Http\Controllers\SekolahExternalController::class, 'update'])->name('sekolah-external.update');
     Route::delete('/sekolah-external/{sekolahExternal}', [App\Http\Controllers\SekolahExternalController::class, 'destroy'])->name('sekolah-external.destroy');
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('murid', MuridController::class);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Alumni Management Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function () {
+    // Alumni CRUD
+    Route::get('/alumni', [App\Http\Controllers\AlumniController::class, 'index'])->name('alumni.index');
+    Route::get('/alumni/create', [App\Http\Controllers\AlumniController::class, 'create'])->name('alumni.create');
+    Route::post('/alumni', [App\Http\Controllers\AlumniController::class, 'store'])->name('alumni.store');
+    Route::post('/alumni/import-file', [App\Http\Controllers\AlumniController::class, 'storeFile'])->name('alumni.storeFile');
+    Route::get('/alumni/template/download', [App\Http\Controllers\AlumniController::class, 'downloadTemplate'])->name('alumni.download-template');
+    Route::get('/alumni/{alumni}', [App\Http\Controllers\AlumniController::class, 'show'])->name('alumni.show');
+    Route::get('/alumni/{alumni}/edit', [App\Http\Controllers\AlumniController::class, 'edit'])->name('alumni.edit');
+    Route::put('/alumni/{alumni}', [App\Http\Controllers\AlumniController::class, 'update'])->name('alumni.update');
+    Route::delete('/alumni/{alumni}', [App\Http\Controllers\AlumniController::class, 'destroy'])->name('alumni.destroy');
+});
+
+
 
 /*
 |--------------------------------------------------------------------------

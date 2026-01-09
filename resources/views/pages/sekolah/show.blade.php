@@ -29,6 +29,18 @@
         </form>
         <!-- Page Content -->
         <div class="space-y-6 pb-60">
+            <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
+                <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                    <a href="{{ route('sekolah.index') }}" class="hover:text-brand-600 dark:hover:text-brand-400">
+                        Sekolah
+                    </a>
+                    <span>/</span>
+                    <span class="text-gray-900 dark:text-white">
+                        {{ $sekolah->nama }}
+                    </span>
+                </div>
+            </div>
+
             <!-- Success/Error Messages -->
             @if (session('success'))
                 <div
@@ -42,18 +54,6 @@
                     {{ session('error') }}
                 </div>
             @endif
-
-            <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
-                <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                    <a href="{{ route('sekolah.index') }}" class="hover:text-brand-600 dark:hover:text-brand-400">
-                        Sekolah
-                    </a>
-                    <span>/</span>
-                    <span class="text-gray-900 dark:text-white">
-                        {{ $sekolah->nama }}
-                    </span>
-                </div>
-            </div>
 
             <!-- Page Header -->
             <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">

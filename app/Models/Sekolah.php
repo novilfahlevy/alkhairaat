@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\Storage;
 /**
  * @property int $id
  * @property string $kode_sekolah
- * @property string|null $jenis_sekolah
- * @property string|null $bentuk_pendidikan
- * @property string|null $no_npsn
+ * @property string $no_npsn
  * @property string $nama
  * @property string $status
- * @property int|null $id_kabupaten
+ * @property string $jenis_sekolah
+ * @property string $bentuk_pendidikan
+ * @property int $id_kabupaten
  * @property string|null $kecamatan
  * @property string|null $alamat
  * @property string|null $telepon
@@ -156,15 +156,16 @@ class Sekolah extends Model
      * @var list<string>
      */
     protected $fillable = [
+        // Mandatory fields
         'kode_sekolah',
         'no_npsn',
         'nama',
+        'status',
         'jenis_sekolah',
         'bentuk_pendidikan',
-        'status',
         'id_kabupaten',
-        'kecamatan',
-        'alamat',
+
+        // Optional fields
         'telepon',
         'email',
         'website',

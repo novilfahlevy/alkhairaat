@@ -66,6 +66,19 @@
                             @enderror
                         </div>
 
+                        <!-- Nomor NPSN -->
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                Nomor NPSN <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="no_npsn" placeholder="Nomor Pokok Sekolah Nasional"
+                                value="{{ old('no_npsn') }}"
+                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('no_npsn') border-red-500 @enderror">
+                            @error('no_npsn')
+                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Nama Sekolah -->
                         <div>
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
@@ -317,32 +330,6 @@
                                 @enderror
                             </div>
                         </div>
-
-                        <!-- Kecamatan -->
-                        <div x-show="showOptionalFields">
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                Kecamatan
-                            </label>
-                            <input type="text" name="alamat_kecamatan" value="{{ old('alamat_kecamatan') }}"
-                                placeholder="Nama kecamatan"
-                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat_kecamatan') border-red-500 @enderror">
-                            @error('alamat_kecamatan')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Kelurahan -->
-                        <div x-show="showOptionalFields">
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                Kelurahan
-                            </label>
-                            <input type="text" name="alamat_kelurahan" value="{{ old('alamat_kelurahan') }}"
-                                placeholder="Nama kelurahan"
-                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat_kelurahan') border-red-500 @enderror">
-                            @error('alamat_kelurahan')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div>
                     </div>
 
                     <!-- Right Column -->
@@ -390,18 +377,6 @@
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                 @enderror
                             </div>
-                        </div>
-
-                        <!-- Alamat Lengkap -->
-                        <div x-show="showOptionalFields">
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                Alamat Lengkap
-                            </label>
-                            <textarea name="alamat" rows="3" placeholder="Alamat lengkap sekolah"
-                                class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('alamat') border-red-500 @enderror">{{ old('alamat') }}</textarea>
-                            @error('alamat')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
                         </div>
                     </div>
                 </div>

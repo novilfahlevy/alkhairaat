@@ -68,6 +68,7 @@ class ValidasiAlumni extends Model
         'kontak_email',
         'update_alamat_sekarang',
         'tanggal_update_data_alumni',
+        'is_accepted'
     ];
 
     /**
@@ -79,6 +80,7 @@ class ValidasiAlumni extends Model
     {
         return [
             'tanggal_update_data_alumni' => 'datetime',
+            'is_accepted' => 'boolean',
         ];
     }
 

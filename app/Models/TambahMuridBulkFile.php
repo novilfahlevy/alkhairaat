@@ -44,9 +44,74 @@ class TambahMuridBulkFile extends Model
      */
     protected $fillable = [
         'file_path',
+        'file_original_name',
         'id_sekolah',
         'is_finished', // null: belum diproses, true: berhasil, false: gagal
+
+        'processed_rows',
+        'error_rows',
+        'error_details',
+        'error_message',
     ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_finished' => 'boolean',
+        'error_details' => 'array',
+    ];
+
+    /**
+     * Get the error details as array.
+     * This accessor will handle both JSON string and array cases.
+     */
+    public function getErrorDetailsArrayAttribute(): array
+    {
+        if (is_array($this->error_details)) {
+            return $this->error_details;
+        }
+
+        // If it's a JSON string, decode it
+        if (is_string($this->error_details)) {
+            $decoded = json_decode($this->error_details, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                return $decoded;
+            }
+        }
+
+        // If error_details is not empty but not an array, convert it to a single error entry
+        if (!empty($this->error_details)) {
+            return [
+                [
+                    'row' => 0,
+                    'nisn' => '-',
+                    'nama' => '-',
+                    'error' => is_string($this->error_details) ? $this->error_details : 'Unknown error'
+                ]
+            ];
+        }
+
+        return [];
+    }
+
+    /**
+     * Check if there are any errors.
+     */
+    public function getHasErrorsAttribute(): bool
+    {
+        return !empty($this->error_details);
+    }
+
+    /**
+     * Get the error count.
+     */
+    public function getErrorCountAttribute(): int
+    {
+        return count($this->error_details_array);
+    }
 
     protected static function booted(): void
     {
@@ -55,18 +120,6 @@ class TambahMuridBulkFile extends Model
                 Storage::disk('local')->delete($bulkFile->file_path);
             }
         });
-    }
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'is_finished' => 'boolean',
-        ];
     }
 
     /**

@@ -43,7 +43,7 @@ class MuridSeeder extends Seeder
                 } while (isset($nisnSet[$nisn]));
                 $nisnSet[$nisn] = true;
                 do {
-                    $nik = $faker->numerify('###############');
+                    $nik = $faker->numerify('################');
                 } while (isset($nikSet[$nik]));
                 $nikSet[$nik] = true;
                 do {

@@ -38,16 +38,16 @@
         <!-- Search and Per-Page Controls -->
         <div class="mb-6 space-y-3 sm:space-y-4">
             <form method="GET" class="flex flex-col gap-2 sm:flex-row">
-                <input type="hidden" name="per_page_guru" value="{{ request('per_page_guru', 10) }}">
-                <input type="text" name="search_guru" value="{{ request('search_guru') }}"
+                <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
+                <input type="text" name="search" value="{{ request('search') }}"
                     placeholder="Cari nama, NIK, atau NUPTK guru..."
                     class="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
                 <button type="submit"
                     class="bg-blue-500 hover:bg-blue-600 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition sm:px-6">
                     Cari
                 </button>
-                @if (request('search_guru'))
-                    <a href="{{ route('sekolah.show', $sekolah) }}"
+                @if (request('search'))
+                    <a href="{{ route('sekolah.show-guru', $sekolah) }}"
                         class="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
                         Reset
                     </a>
@@ -121,7 +121,7 @@
                                     {{ $item->kontak_wa_hp ?? '-' }}</td>
                                 <td class="px-6 py-4 text-sm font-medium">
                                     <div class="flex items-center gap-2">
-                                        <a href="#"
+                                        <a href="{{ route('sekolah.show-detail-guru', ['sekolah' => $sekolah->id, 'guru' => $item->id]) }}"
                                             class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">
                                             Lihat Detail
                                         </a>
@@ -191,7 +191,7 @@
                                 <span class="text-gray-900 dark:text-white">{{ $item->kontak_wa_hp ?? '-' }}</span>
                             </div>
                             <div class="mt-4 flex gap-2">
-                                <a href="#"
+                                <a href="{{ route('sekolah.show-detail-guru', ['sekolah' => $sekolah->id, 'guru' => $item->id]) }}"
                                     class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">
                                     Lihat Detail
                                 </a>
@@ -217,8 +217,8 @@
             <div
                 class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center dark:border-gray-700 dark:bg-gray-800">
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    @if (request('search_guru'))
-                        Tidak ada guru yang ditemukan dengan pencarian "<strong>{{ request('search_guru') }}</strong>".
+                    @if (request('search'))
+                        Tidak ada guru yang ditemukan dengan pencarian "<strong>{{ request('search') }}</strong>".
                     @else
                         Belum ada data guru di sekolah ini.
                     @endif

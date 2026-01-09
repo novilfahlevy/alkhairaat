@@ -106,7 +106,7 @@ class Alamat extends Model
         'id_murid',
         'id_sekolah',
         'id_guru',
-        'jenis',
+        'jenis', // asli, domisili, ayah, ibu
         'provinsi',
         'kabupaten',
         'kecamatan',

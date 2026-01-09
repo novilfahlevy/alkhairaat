@@ -102,6 +102,13 @@ class MenuHelper
             [
                 'title' => 'Menu Lainnya',
                 'items' => self::filterItemsByRole([
+                    // Validasi Alumni (oleh Superuser dan Komisariat Wilayah)
+                    [
+                        'icon' => 'graduates',
+                        'name' => 'Validasi Alumni',
+                        'roles' => [User::ROLE_SUPERUSER, User::ROLE_KOMISARIAT_WILAYAH],
+                        'path' => '/manajemen/validasi-alumni',
+                    ],
                     [
                         'icon' => 'users',
                         'name' => 'Manajemen User',

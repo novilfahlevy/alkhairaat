@@ -47,6 +47,16 @@ class StoreGuruRequest extends FormRequest
             'alamat_rw' => ['nullable', 'string', 'max:10'],
             'alamat_kode_pos' => ['nullable', 'string', 'max:10'],
             'alamat_lengkap' => ['nullable', 'string', 'max:255'],
+
+            // alamat asli fields
+            'alamat_asli_provinsi' => ['nullable', 'string', 'max:100'],
+            'alamat_asli_kabupaten' => ['nullable', 'string', 'max:100'],
+            'alamat_asli_kecamatan' => ['nullable', 'string', 'max:100'],
+            'alamat_asli_kelurahan' => ['nullable', 'string', 'max:100'],
+            'alamat_asli_rt' => ['nullable', 'string', 'max:10'],
+            'alamat_asli_rw' => ['nullable', 'string', 'max:10'],
+            'alamat_asli_kode_pos' => ['nullable', 'string', 'max:10'],
+            'alamat_asli_lengkap' => ['nullable', 'string', 'max:255'],
         ];
     }
 
@@ -113,6 +123,24 @@ class StoreGuruRequest extends FormRequest
             'alamat_kode_pos.max' => 'Kode pos maksimal 10 karakter.',
             'alamat_lengkap.string' => 'Alamat lengkap harus berupa teks.',
             'alamat_lengkap.max' => 'Alamat lengkap maksimal 255 karakter.',
+
+            // Alamat Asli
+            'alamat_asli_provinsi.string' => 'Provinsi alamat asli harus berupa teks.',
+            'alamat_asli_provinsi.max' => 'Provinsi alamat asli maksimal 100 karakter.',
+            'alamat_asli_kabupaten.string' => 'Kabupaten/Kota alamat asli harus berupa teks.',
+            'alamat_asli_kabupaten.max' => 'Kabupaten/Kota alamat asli maksimal 100 karakter.',
+            'alamat_asli_kecamatan.string' => 'Kecamatan alamat asli harus berupa teks.',
+            'alamat_asli_kecamatan.max' => 'Kecamatan alamat asli maksimal 100 karakter.',
+            'alamat_asli_kelurahan.string' => 'Kelurahan/Desa alamat asli harus berupa teks.',
+            'alamat_asli_kelurahan.max' => 'Kelurahan/Desa alamat asli maksimal 100 karakter.',
+            'alamat_asli_rt.string' => 'RT alamat asli harus berupa teks.',
+            'alamat_asli_rt.max' => 'RT alamat asli maksimal 10 karakter.',
+            'alamat_asli_rw.string' => 'RW alamat asli harus berupa teks.',
+            'alamat_asli_rw.max' => 'RW alamat asli maksimal 10 karakter.',
+            'alamat_asli_kode_pos.string' => 'Kode pos alamat asli harus berupa teks.',
+            'alamat_asli_kode_pos.max' => 'Kode pos alamat asli maksimal 10 karakter.',
+            'alamat_asli_lengkap.string' => 'Alamat lengkap alamat asli harus berupa teks.',
+            'alamat_asli_lengkap.max' => 'Alamat lengkap alamat asli maksimal 255 karakter.',
         ];
     }
 

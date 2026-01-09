@@ -85,7 +85,7 @@
             id="date_pick" 
             name="date_pick"
             placeholder="Date Picker" 
-            defaultDate="{{ now()->format('Y-m-d') }}" 
+            defaultDate="{{ now()->translatedFormat('Y-m-d') }}" 
         />
     </div>
 

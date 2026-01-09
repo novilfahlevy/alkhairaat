@@ -2,332 +2,356 @@
 
 namespace App\Imports;
 
+use App\Imports\Concerns\AlamatBulkProcessor;
+use App\Imports\Concerns\GuruBulkProcessor;
+use App\Imports\Concerns\JabatanGuruBulkProcessor;
 use App\Models\Guru;
 use App\Models\JabatanGuru;
-use App\Models\Alamat;
 use App\Models\Scopes\GuruSekolahNauanganScope;
 use Carbon\Carbon;
 use Exception;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class GuruImport implements ToCollection, WithHeadingRow, WithChunkReading
+class GuruImport implements ToCollection, WithStartRow, WithChunkReading
 {
-    public function __construct(private int $idSekolah) {}
+    private ?array $headers = null;
+    private ?array $columnMap = null;
+    private Collection $errors;
+    private Collection $successRows;
+    
+    private GuruBulkProcessor $guruProcessor;
+    private JabatanGuruBulkProcessor $jabatanProcessor;
+    private AlamatBulkProcessor $alamatProcessor;
 
+    public function __construct(private int $idSekolah) 
+    {
+        $this->guruProcessor = new GuruBulkProcessor();
+        $this->jabatanProcessor = new JabatanGuruBulkProcessor();
+        $this->alamatProcessor = new AlamatBulkProcessor();
+        $this->errors = collect();
+        $this->successRows = collect();
+    }
+
+    /**
+     * Start from row 2 (sub-header in Excel)
+     */
+    public function startRow(): int
+    {
+        return 2;
+    }
+
+    /**
+     * Get errors collection
+     */
+    public function getErrors(): Collection
+    {
+        return $this->errors;
+    }
+
+    /**
+     * Get success rows count
+     */
+    public function getSuccessCount(): int
+    {
+        return $this->successRows->count();
+    }
+
+    /**
+     * Main collection handler - orchestrates the import process
+     */
     public function collection(Collection $rows)
     {
-        $validRows = $this->validateRows($rows);
-        if ($validRows->isEmpty()) {
+        if ($rows->isEmpty()) {
+            Log::channel('guru_bulk_import')->warning('Collection is empty');
             return;
         }
 
-        // Ambil semua NIK, NPK, dan NUPTK dari chunk ini
-        $nikList = $validRows->pluck('nik')->filter()->unique()->toArray();
-        $npkList = $validRows->pluck('npk')->filter()->unique()->toArray();
-        $nuptkList = $validRows->pluck('nuptk')->filter()->unique()->toArray();
+        Log::channel('guru_bulk_import')->info('=== CHUNK START ===', [
+            'total_rows' => $rows->count(), 
+            'school_id' => $this->idSekolah
+        ]);
 
-        // Bulk query - ambil guru yang sudah ada berdasarkan NIK, NPK, atau NUPTK
-        $existingGurus = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)
-            ->whereIn('nik', $nikList)
-            ->orWhereIn('npk', $npkList)
-            ->orWhereIn('nuptk', $nuptkList)
-            ->get()
-            ->keyBy(function($guru) {
-                return $guru->nik . '_' . ($guru->npk ?? '') . '_' . ($guru->nuptk ?? '');
-            });
+        // Step 1: Parse headers from first row
+        $this->parseHeaders($rows->first());
+        
+        // Step 2: Validate and transform rows
+        $validatedData = $this->validateRows($rows);
 
-        // Filter guru baru dan guru yang sudah ada
-        $newGuruRows = $validRows->reject(function ($row) use ($existingGurus) {
-            $key = $row['nik'] . '_' . ($row['npk'] ?? '') . '_' . ($row['nuptk'] ?? '');
-            return $existingGurus->has($key);
-        });
-
-        $existingGuruRows = $validRows->filter(function ($row) use ($existingGurus) {
-            $key = $row['nik'] . '_' . ($row['npk'] ?? '') . '_' . ($row['nuptk'] ?? '');
-            return $existingGurus->has($key);
-        });
-
-        // Skip jika tidak ada data untuk diproses
-        if ($newGuruRows->isEmpty() && $existingGuruRows->isEmpty()) {
-            Log::channel('guru_bulk_import')->info('No valid guru data to import');
+        if ($validatedData->isEmpty()) {
+            Log::channel('guru_bulk_import')->warning('No valid rows after validation');
             return;
         }
 
-        DB::transaction(function () use ($newGuruRows, $existingGuruRows, $existingGurus) {
-            $jabatanGuruData = [];
-            $alamatData = [];
-            $newGuruData = [];
-            $updatedGuruIds = [];
-            $newJabatanGuruIds = [];
+        Log::channel('guru_bulk_import')->info('Rows validated', [
+            'valid_count' => $validatedData->count()
+        ]);
 
-            // Proses guru baru
-            if (!$newGuruRows->isEmpty()) {
-                foreach ($newGuruRows as $row) {
-                    // Siapkan data untuk bulk insert guru baru
-                    $newGuruData[] = [
-                        'status' => $row['status'] ?? Guru::STATUS_AKTIF,
-                        'nama_gelar_depan' => $row['gelar_depan'],
-                        'nama' => $row['nama'],
-                        'nama_gelar_belakang' => $row['gelar_belakang'],
-                        'tempat_lahir' => $row['tempat_lahir'],
-                        'tanggal_lahir' => $row['tanggal_lahir'],
-                        'jenis_kelamin' => strtoupper($row['jenis_kelamin']) === 'P' ? 'P' : 'L',
-                        'status_perkawinan' => $row['status_perkawinan'],
-                        'nik' => $row['nik'],
-                        'status_kepegawaian' => $row['status_kepegawaian'],
-                        'npk' => $row['npk'],
-                        'nuptk' => $row['nuptk'],
-                        'kontak_wa_hp' => $row['kontak_wa_hp'],
-                        'kontak_email' => $row['email'],
-                        'nomor_rekening' => $row['nomor_rekening'],
-                        'rekening_atas_nama' => $row['rekening_atas_nama'],
-                        'bank_rekening' => $row['bank_rekening'],
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
-                }
+        // Step 3: Get existing guru untuk comparison
+        $existingGurus = $this->getExistingGurus($validatedData);
 
-                // Bulk insert guru baru
-                try {
-                    DB::table('guru')->insert($newGuruData);
-                    Log::channel('guru_bulk_import')->info('Bulk inserted new guru', ['count' => count($newGuruData)]);
-                } catch (Exception $e) {
-                    // Jika bulk insert gagal, fallback ke insert satu-satu
-                    Log::channel('guru_bulk_import')->warning('Bulk insert failed, fallback to individual inserts', ['error' => $e->getMessage()]);
-                    
-                    foreach ($newGuruData as $data) {
-                        try {
-                            DB::table('guru')->insert($data);
-                        } catch (Exception $e2) {
-                            if ($e2 instanceof \Illuminate\Database\QueryException && isset($e2->errorInfo[1]) && $e2->errorInfo[1] == 1062) {
-                                // Duplicate entry, log and continue
-                                Log::channel('guru_bulk_import')->warning('Duplicate NPK, NIK, or NUPTK found, skipping', [
-                                    'nik' => $data['nik'],
-                                    'npk' => $data['npk'],
-                                    'nuptk' => $data['nuptk']
-                                ]);
-                                continue;
-                            } else {
-                                throw $e2;
-                            }
-                        }
-                    }
-                }
-
-                // Refresh untuk mendapatkan ID guru yang berhasil diinsert
-                $nikList = collect($newGuruData)->pluck('nik')->toArray();
-                $insertedGurus = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)
-                    ->whereIn('nik', $nikList)
-                    ->get()
-                    ->keyBy('nik');
-                
-                // Gabungkan dengan guru yang sudah ada
-                $allGurus = $existingGurus->merge($insertedGurus);
-            } else {
-                $allGurus = $existingGurus;
-            }
-
-            // Proses data JabatanGuru dan Alamat untuk semua guru (baru dan yang sudah ada)
-            $allGuruRows = $newGuruRows->merge($existingGuruRows);
+        // Step 4: Process dalam transaction
+        DB::transaction(function () use ($validatedData, $existingGurus) {
+            // 4.1: Process Guru (insert new, get all guru)
+            $allGurus = $this->guruProcessor->process($validatedData);
             
-            foreach ($allGuruRows as $row) {
-                // Cari guru berdasarkan NIK (prioritas), NPK, atau NUPTK
-                $guru = $allGurus->first(function ($g) use ($row) {
-                    return $g->nik === $row['nik'] || 
-                           ($g->npk && $g->npk === $row['npk']) || 
-                           ($g->nuptk && $g->nuptk === $row['nuptk']);
-                });
-                
-                if (!$guru) {
-                    Log::channel('guru_bulk_import')->warning('Guru not found', [
-                        'nik' => $row['nik'],
-                        'npk' => $row['npk'],
-                        'nuptk' => $row['nuptk']
-                    ]);
-                    continue;
-                }
-
-                // Update data guru yang sudah ada
-                if ($existingGuruRows->contains(function ($existingRow) use ($row) {
-                    return $existingRow['nik'] === $row['nik'] || 
-                           ($existingRow['npk'] && $existingRow['npk'] === $row['npk']) || 
-                           ($existingRow['nuptk'] && $existingRow['nuptk'] === $row['nuptk']);
-                })) {
-                    $updatedGuruIds[] = $guru->id;
-                    
-                    // Update data guru
-                    $guru->update([
-                        'status' => $row['status'] ?? Guru::STATUS_AKTIF,
-                        'nama_gelar_depan' => $row['gelar_depan'],
-                        'nama' => $row['nama'],
-                        'nama_gelar_belakang' => $row['gelar_belakang'],
-                        'tempat_lahir' => $row['tempat_lahir'],
-                        'tanggal_lahir' => $row['tanggal_lahir'],
-                        'jenis_kelamin' => strtoupper($row['jenis_kelamin']) === 'P' ? 'P' : 'L',
-                        'status_perkawinan' => $row['status_perkawinan'],
-                        'status_kepegawaian' => $row['status_kepegawaian'],
-                        'npk' => $row['npk'],
-                        'nuptk' => $row['nuptk'],
-                        'kontak_wa_hp' => $row['kontak_wa_hp'],
-                        'kontak_email' => $row['email'],
-                        'nomor_rekening' => $row['nomor_rekening'],
-                        'rekening_atas_nama' => $row['rekening_atas_nama'],
-                        'bank_rekening' => $row['bank_rekening'],
-                    ]);
-                }
-
-                // SELALU buat record JabatanGuru baru untuk setiap baris data
-                // Ini memungkinkan guru memiliki multiple jabatan di sekolah yang sama
-                $jabatanGuruData[] = [
-                    'id_guru' => $guru->id,
-                    'id_sekolah' => $this->idSekolah,
-                    'jenis_jabatan' => $row['jenis_jabatan'] ?? JabatanGuru::JENIS_JABATAN_GURU,
-                    'keterangan_jabatan' => $row['keterangan_jabatan'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-                $newJabatanGuruIds[] = $guru->id;
-                
-                // Cek dan update alamat
-                if ($row['alamat_lengkap'] || $row['provinsi']) {
-                    $alamat = Alamat::where('id_guru', $guru->id)
-                        ->where('jenis', 'domisili')
-                        ->first();
-
-                    if ($alamat) {
-                        // Update alamat yang sudah ada
-                        $alamat->update([
-                            'provinsi' => $row['provinsi'],
-                            'kabupaten' => $row['kabupaten'],
-                            'kecamatan' => $row['kecamatan'],
-                            'kelurahan' => $row['kelurahan'],
-                            'rt' => $row['rt'],
-                            'rw' => $row['rw'],
-                            'kode_pos' => $row['kode_pos'],
-                            'alamat_lengkap' => $row['alamat_lengkap'],
-                        ]);
-                    } else {
-                        // Data alamat baru
-                        $alamatData[] = [
-                            'id_guru' => $guru->id,
-                            'jenis' => 'domisili',
-                            'provinsi' => $row['provinsi'],
-                            'kabupaten' => $row['kabupaten'],
-                            'kecamatan' => $row['kecamatan'],
-                            'kelurahan' => $row['kelurahan'],
-                            'rt' => $row['rt'],
-                            'rw' => $row['rw'],
-                            'kode_pos' => $row['kode_pos'],
-                            'alamat_lengkap' => $row['alamat_lengkap'],
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ];
-                    }
-                }
-            }
-
-            // Batch insert jabatan_guru baru
-            if (!empty($jabatanGuruData)) {
-                DB::table('jabatan_guru')->insert($jabatanGuruData);
-                Log::channel('guru_bulk_import')->info('Processed new jabatan_guru', ['count' => count($jabatanGuruData)]);
-            }
+            // 4.2: Process Jabatan Guru (always insert new)
+            $jabatanCount = $this->jabatanProcessor->process(
+                $validatedData, 
+                $allGurus, 
+                $this->idSekolah
+            );
             
-            // Batch insert alamat baru
-            if (!empty($alamatData)) {
-                DB::table('alamat')->insert($alamatData);
-                Log::channel('guru_bulk_import')->info('Processed new alamat', ['count' => count($alamatData)]);
-            }
+            // 4.3: Process Alamat (insert new, update existing)
+            $alamatStats = $this->alamatProcessor->process(
+                $validatedData,
+                $allGurus,
+                $existingGurus
+            );
             
-            Log::channel('guru_bulk_import')->info('Import completed', [
-                'new_guru_count' => count($newGuruData),
-                'updated_guru_count' => count($updatedGuruIds),
-                'new_jabatan_count' => count($newJabatanGuruIds),
-                'total_processed' => $allGuruRows->count()
+            // Add success rows
+            $this->successRows = $validatedData;
+            
+            Log::channel('guru_bulk_import')->info('=== CHUNK COMPLETED ===', [
+                'guru_processed' => $allGurus->count(),
+                'jabatan_inserted' => $jabatanCount,
+                'alamat_inserted' => $alamatStats['inserted'],
+                'alamat_updated' => $alamatStats['updated']
             ]);
         });
     }
 
-    private function validateRows(Collection $rows): Collection
+    /**
+     * Get existing guru from database
+     */
+    private function getExistingGurus(Collection $validatedData): Collection
     {
-        return $rows->map(function ($row) {
-            $row = $row->toArray();
-            
-            // Validasi field wajib: nama, nik, jenis_kelamin, status, status_kepegawaian, keterangan_jabatan
-            if (empty($row['nik']) || empty($row['nama']) || empty($row['jenis_kelamin']) || 
-                empty($row['status']) || empty($row['status_kepegawaian']) || empty($row['keterangan_jabatan'])) {
-                return null;
-            }
-            
-            // Validasi field wajib alamat: provinsi, kabupaten
-            if (empty($row['provinsi']) || empty($row['kabupaten'])) {
-                return null;
-            }
-            
-            // Pastikan NIK, NPK, dan NUPTK adalah string, bukan angka
-            $nik = isset($row['nik']) ? (string)$row['nik'] : '';
-            $npk = isset($row['npk']) ? (string)$row['npk'] : null;
-            $nuptk = isset($row['nuptk']) ? (string)$row['nuptk'] : null;
-            
-            // Jika NIK dalam format notasi ilmiah (scientific notation), konversi ke string
-            if (is_numeric($nik) && strpos($nik, 'E') !== false) {
-                $nik = number_format($nik, 0, '', '');
-            }
-            
-            // Jika NPK dalam format notasi ilmiah, konversi ke string
-            if (is_numeric($npk) && strpos($npk, 'E') !== false) {
-                $npk = number_format($npk, 0, '', '');
-            }
-            
-            // Jika NUPTK dalam format notasi ilmiah, konversi ke string
-            if (is_numeric($nuptk) && strpos($nuptk, 'E') !== false) {
-                $nuptk = number_format($nuptk, 0, '', '');
-            }
-            
-            return [
-                'jenis_jabatan' => $row['jenis_jabatan'] ?? JabatanGuru::JENIS_JABATAN_GURU,
-                'keterangan_jabatan' => $row['keterangan_jabatan'],
-                'nama' => trim($row['nama']),
-                'nik' => trim($nik),
-                'jenis_kelamin' => strtoupper(trim($row['jenis_kelamin'] ?? '')) === 'P' ? 'P' : 'L',
-                'status' => $row['status'] ?? Guru::STATUS_AKTIF,
-                'status_kepegawaian' => $row['status_kepegawaian'],
-                'nuptk' => trim($nuptk),
-                'npk' => trim($npk),
-                'gelar_depan' => $row['gelar_depan'] ?? null,
-                'gelar_belakang' => $row['gelar_belakang'] ?? null,
-                'tempat_lahir' => $row['tempat_lahir'] ?? null,
-                'tanggal_lahir' => $this->transformDate($row['tanggal_lahir'] ?? null),
-                'status_perkawinan' => $row['status_perkawinan'] ?? null,
-                'kontak_wa_hp' => $row['kontak_wa_hp'] ?? null,
-                'email' => $row['email'] ?? null,
-                'nomor_rekening' => $row['nomor_rekening'] ?? null,
-                'rekening_atas_nama' => $row['rekening_atas_nama'] ?? null,
-                'bank_rekening' => $row['bank_rekening'] ?? null,
-                'provinsi' => $row['provinsi'],
-                'kabupaten' => $row['kabupaten'],
-                'kecamatan' => $row['kecamatan'] ?? null,
-                'kelurahan' => $row['kelurahan'] ?? null,
-                'rt' => $row['rt'] ?? null,
-                'rw' => $row['rw'] ?? null,
-                'kode_pos' => $row['kode_pos'] ?? null,
-                'alamat_lengkap' => $row['alamat_lengkap'] ?? null,
-            ];
-        })->filter();
+        $nikList = $validatedData->pluck('nik')->filter()->unique()->toArray();
+        $npkList = $validatedData->pluck('npk')->filter()->unique()->toArray();
+        $nuptkList = $validatedData->pluck('nuptk')->filter()->unique()->toArray();
+
+        return Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)
+            ->where(function($query) use ($nikList, $npkList, $nuptkList) {
+                $query->whereIn('nik', $nikList);
+                
+                if (!empty($npkList)) {
+                    $query->orWhereIn('npk', $npkList);
+                }
+                
+                if (!empty($nuptkList)) {
+                    $query->orWhereIn('nuptk', $nuptkList);
+                }
+            })
+            ->get();
     }
 
-    public function chunkSize(): int
+    /**
+     * Validate and transform rows
+     */
+    private function validateRows(Collection $rows): Collection
     {
-        return 500;
+        return $rows->skip(1) // Skip header row
+            ->map(function ($row, $index) {
+                $data = $row->toArray();
+                $rowNumber = $index + 2; // +2 because we skip header and start from row 2
+
+                // Get values using column mapping
+                $nama = $this->getValueByKey($data, 'nama');
+                $nik = $this->getValueByKey($data, 'nik');
+                $jenisKelamin = $this->getValueByKey($data, 'jenis_kelamin');
+                $status = $this->getValueByKey($data, 'status');
+
+                // Validate mandatory fields
+                if (empty($nik) || empty($nama) || empty($jenisKelamin) || empty($status)) {
+                    $errorFields = [];
+                    if (empty($nik)) $errorFields[] = 'NIK';
+                    if (empty($nama)) $errorFields[] = 'Nama';
+                    if (empty($jenisKelamin)) $errorFields[] = 'Jenis Kelamin';
+                    if (empty($status)) $errorFields[] = 'Status';
+                    
+                    $this->errors->push([
+                        'row' => $rowNumber,
+                        'nik' => $nik,
+                        'nama' => $nama,
+                        'error' => 'Kolom wajib tidak lengkap: ' . implode(', ', $errorFields)
+                    ]);
+                    
+                    Log::channel('guru_bulk_import')->warning('Row validation failed - missing required fields', [
+                        'row' => $rowNumber,
+                        'nik' => $nik,
+                        'nama' => $nama,
+                        'jenis_kelamin' => $jenisKelamin,
+                        'status' => $status,
+                    ]);
+                    return null;
+                }
+
+                // Validate NIK format (should be numeric and 16 digits)
+                if (!is_numeric($nik) || strlen($nik) !== 16) {
+                    $this->errors->push([
+                        'row' => $rowNumber,
+                        'nik' => $nik,
+                        'nama' => $nama,
+                        'error' => 'NIK harus berupa angka dan 16 digit'
+                    ]);
+                    return null;
+                }
+
+                // Validate jenis kelamin
+                if (strtoupper($jenisKelamin) !== 'L' && strtoupper($jenisKelamin) !== 'P') {
+                    $this->errors->push([
+                        'row' => $rowNumber,
+                        'nik' => $nik,
+                        'nama' => $nama,
+                        'error' => 'Jenis kelamin harus "L" atau "P"'
+                    ]);
+                    return null;
+                }
+
+                // Validate status
+                if (!in_array($status, ['aktif', 'tidak'])) {
+                    $this->errors->push([
+                        'row' => $rowNumber,
+                        'nik' => $nik,
+                        'nama' => $nama,
+                        'error' => 'Status harus "aktif" atau "tidak"'
+                    ]);
+                    return null;
+                }
+
+                // Normalize identifiers
+                $nik = $this->normalizeNumericString($nik);
+                $npk = $this->normalizeNumericString($this->getValueByKey($data, 'npk'));
+                $nuptk = $this->normalizeNumericString($this->getValueByKey($data, 'nuptk'));
+
+                return [
+                    'nama' => trim($nama),
+                    'nik' => trim($nik),
+                    'jenis_kelamin' => strtoupper(trim($jenisKelamin)) === 'P' ? 'P' : 'L',
+                    'status' => $status,
+                    'status_kepegawaian' => $this->getValueByKey($data, 'status_kepegawaian'),
+                    'status_perkawinan' => $this->getValueByKey($data, 'status_perkawinan'),
+                    'gelar_depan' => $this->getValueByKey($data, 'gelar_depan'),
+                    'gelar_belakang' => $this->getValueByKey($data, 'gelar_belakang'),
+                    'tempat_lahir' => $this->getValueByKey($data, 'tempat_lahir'),
+                    'tanggal_lahir' => $this->transformDate($this->getValueByKey($data, 'tanggal_lahir')),
+                    'npk' => $npk,
+                    'nuptk' => $nuptk,
+                    'kontak_wa_hp' => $this->getValueByKey($data, 'kontak_wa_hp'),
+                    'kontak_email' => $this->getValueByKey($data, 'kontak_email'),
+                    'jenis_jabatan' => $this->getValueByKey($data, 'jenis_jabatan') ?? JabatanGuru::JENIS_JABATAN_GURU,
+                    'keterangan_jabatan' => $this->getValueByKey($data, 'keterangan_jabatan'),
+                    'nomor_rekening' => $this->getValueByKey($data, 'nomor_rekening'),
+                    'rekening_atas_nama' => $this->getValueByKey($data, 'rekening_atas_nama'),
+                    'bank_rekening' => $this->getValueByKey($data, 'bank_rekening'),
+                    'alamat_asli' => $this->extractAlamatBySection($data, 'asli'),
+                    'alamat_domisili' => $this->extractAlamatBySection($data, 'domisili'),
+                ];
+            })->filter();
+    }
+
+    /**
+     * Parse headers for dynamic column mapping
+     */
+    private function parseHeaders($headerRow): void
+    {
+        if ($headerRow instanceof Collection) {
+            $headerRow = $headerRow->toArray();
+        }
+
+        // Normalize headers
+        $this->headers = array_map(function($h) {
+            $normalized = strtolower(trim((string)$h));
+            $normalized = str_replace(['/', ' '], '_', $normalized);
+            return $normalized;
+        }, $headerRow);
+        
+        $this->columnMap = [];
+
+        // Map columns
+        $this->mapColumns([
+            'nama', 'nik', 'jenis_kelamin', 'status', 'status_kepegawaian',
+            'status_perkawinan', 'gelar_depan', 'gelar_belakang', 
+            'tempat_lahir', 'tanggal_lahir', 'npk', 'nuptk',
+            'kontak_wa_hp', 'kontak_wa/hp', 'email',
+            'jenis_jabatan', 'keterangan_jabatan',
+            'nomor_rekening', 'rekening_atas_nama', 'bank_rekening'
+        ]);
+    }
+
+    private function mapColumns(array $columnNames): void
+    {
+        foreach ($columnNames as $colName) {
+            $normalized = strtolower($colName);
+            $key = array_search($normalized, $this->headers);
+            if ($key !== false) {
+                $cleanKey = str_replace(['/', ' '], '_', $colName);
+                $this->columnMap[$cleanKey] = $key;
+            }
+        }
+    }
+
+    private function getValueByKey(array $row, string $key): mixed
+    {
+        $normalizedKey = str_replace(['/', ' '], '_', strtolower($key));
+        
+        if (!$this->columnMap || !isset($this->columnMap[$normalizedKey])) {
+            return $row[$key] ?? $row[$normalizedKey] ?? null;
+        }
+
+        $columnIndex = $this->columnMap[$normalizedKey];
+        return $row[$columnIndex] ?? null;
+    }
+
+    /**
+     * Normalize numeric string (handle scientific notation)
+     */
+    private function normalizeNumericString($value): ?string
+    {
+        if (empty($value)) return null;
+        
+        $value = (string)$value;
+        
+        if (is_numeric($value) && (strpos($value, 'E') !== false || strpos($value, 'e') !== false)) {
+            return number_format((float)$value, 0, '', '');
+        }
+        
+        return $value;
+    }
+
+    /**
+     * Extract alamat by section
+     */
+    private function extractAlamatBySection(array $row, string $section): array
+    {
+        $startCol = match($section) {
+            'asli' => 22,      // Column W
+            'domisili' => 31,  // Column AF
+            default => 0,
+        };
+
+        return [
+            'provinsi' => $row[$startCol] ?? null,
+            'kabupaten' => $row[$startCol + 1] ?? null,
+            'kecamatan' => $row[$startCol + 2] ?? null,
+            'kelurahan' => $row[$startCol + 3] ?? null,
+            'rt' => $row[$startCol + 4] ?? null,
+            'rw' => $row[$startCol + 5] ?? null,
+            'kode_pos' => $row[$startCol + 6] ?? null,
+            'alamat_lengkap' => $row[$startCol + 7] ?? null,
+            'koordinat_x' => isset($row[$startCol + 8]) ? (float)$row[$startCol + 8] : null,
+            'koordinat_y' => isset($row[$startCol + 9]) ? (float)$row[$startCol + 9] : null,
+        ];
     }
 
     private function transformDate($value)
     {
         if (empty($value)) return null;
+        
         try {
             if (is_numeric($value)) {
                 return Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value))->format('Y-m-d');
@@ -336,5 +360,10 @@ class GuruImport implements ToCollection, WithHeadingRow, WithChunkReading
         } catch (Exception $e) {
             return null;
         }
+    }
+
+    public function chunkSize(): int
+    {
+        return 500;
     }
 }

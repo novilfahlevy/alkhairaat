@@ -75,7 +75,7 @@ class Murid extends Model
      */
     protected static function booted(): void
     {
-        static::addGlobalScope(new MuridNauanganScope());
+        // static::addGlobalScope(new MuridNauanganScope());
     }
 
     /**
@@ -112,7 +112,7 @@ class Murid extends Model
         'nomor_hp_ayah',
         'nama_ibu',
         'nomor_hp_ibu',
-        'status_alumni',
+        'status_alumni', // ya (1, lulus), tidak (0, belum/tidak lulus)
         'tanggal_update_data',
     ];
 

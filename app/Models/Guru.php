@@ -152,19 +152,19 @@ class Guru extends Model
     protected $fillable = [
         // Mandatory fields
         'nama',
-        'jenis_kelamin',
+        'jenis_kelamin', // L/P
         'nik',
-        'status',
+        'status', // aktif/tidak
         
         // Optional fields
         'npk',
         'nuptk',
-        'status_kepegawaian',
+        'status_kepegawaian', // PNS/Non PNS/PPPK
         'nama_gelar_depan',
         'nama_gelar_belakang',
         'tempat_lahir',
         'tanggal_lahir',
-        'status_perkawinan',
+        'status_perkawinan', // menikah/lajang
         'kontak_wa_hp',
         'kontak_email',
         'nomor_rekening',
@@ -255,7 +255,10 @@ class Guru extends Model
      */
     public function getStatusPerkawinanLabelAttribute(): string
     {
-        return self::STATUS_PERKAWINAN_OPTIONS[$this->status_perkawinan] ?? '-';
+        if (!$this->status_perkawinan) {
+            return '';
+        }
+        return self::STATUS_PERKAWINAN_OPTIONS[$this->status_perkawinan] ?? $this->status_perkawinan;
     }
 
     /**

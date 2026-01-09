@@ -48,7 +48,7 @@
                     Cari
                 </button>
                 @if (request('search'))
-                    <a href="{{ route('sekolah.show', $sekolah) }}"
+                    <a href="{{ route('sekolah.show-murid', $sekolah) }}"
                         class="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
                         Reset
                     </a>
@@ -110,18 +110,28 @@
                                     {{ $item->pivot?->kelas ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4 text-sm">
-                                    @if ($item->pivot?->status_kelulusan === 'ya')
-                                        <span
-                                            class="inline-flex rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400">Lulus</span>
-                                    @else
-                                        <span
-                                            class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">Belum
-                                            Lulus</span>
-                                    @endif
+                                    <span>
+                                        @if ($item->pivot?->status_kelulusan === 'ya')
+                                            <span
+                                                class="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                                Lulus
+                                            </span>
+                                        @elseif ($item->pivot?->status_kelulusan === 'tidak')
+                                            <span
+                                                class="inline-flex rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-400">
+                                                Tidak Lulus
+                                            </span>
+                                        @else
+                                            <span
+                                                class="inline-flex rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
+                                                Belum Lulus
+                                            </span>
+                                        @endif
+                                    </span>
                                 </td>
                                 <td class="px-6 py-4 text-sm font-medium">
                                     <div class="flex items-center gap-2">
-                                        <a href="#"
+                                        <a href="{{ route('sekolah.show-detail-murid', ['sekolah' => $sekolah->id, 'murid' => $item->id]) }}"
                                             class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">Lihat
                                             Detail</a>
                                         <form id="delete-murid-form-{{ $item->id }}"
@@ -177,6 +187,11 @@
                                             class="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400">
                                             Lulus
                                         </span>
+                                    @elseif ($item->pivot?->status_kelulusan === 'tidak')
+                                        <span
+                                            class="inline-flex rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-400">
+                                            Tidak Lulus
+                                        </span>
                                     @else
                                         <span
                                             class="inline-flex rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
@@ -186,7 +201,7 @@
                                 </span>
                             </div>
                             <div class="mt-4 flex gap-2">
-                                <a href="#"
+                                <a href="{{ route('sekolah.show-detail-murid', ['sekolah' => $sekolah->id, 'murid' => $item->id]) }}"
                                     class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20 text-nowrap">
                                     Lihat Detail
                                 </a>

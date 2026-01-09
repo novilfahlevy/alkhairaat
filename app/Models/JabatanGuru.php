@@ -75,7 +75,7 @@ class JabatanGuru extends Model
     protected $fillable = [
         'id_guru',
         'id_sekolah',
-        'jenis_jabatan',
+        'jenis_jabatan', // Kepala Sekolah, Wakil Kepala Sekolah, Guru, Staff / TU, Pengasuh Asrama
         'keterangan_jabatan', // Untuk guru, bisa diisi mata pelajaran yang diampu
     ];
 
