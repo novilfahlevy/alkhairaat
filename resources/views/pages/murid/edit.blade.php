@@ -60,8 +60,9 @@
 @endsection
 
 @section('content')
-  <div class="container mx-auto px-4 sm:px-8">
-    <div class="py-8">
+  <div
+    class="mx-auto px-4 sm:px-8 bg-white shadow-md dark:shadow-none rounded-lg dark:bg-black transition-colors duration-200">
+    <div class="py-4 pb-20">
 
       {{-- Header --}}
       <div class="flex justify-between items-center mb-6">
@@ -75,7 +76,7 @@
       </div>
 
       {{-- Card Container --}}
-      <div class="bg-white shadow rounded-lg p-6 sm:p-8 dark:bg-gray-800 transition-colors duration-200">
+      <div class="">
 
         <form action="{{ route('murid.update', $murid->id) }}" method="POST">
           @csrf
@@ -107,7 +108,7 @@
 
             {{-- ================= BAGIAN 1: IDENTITAS DIRI ================= --}}
             <div class="md:col-span-2">
-              <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mb-4 dark:text-gray-200 dark:border-gray-700">
+              <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mt-4 dark:text-gray-200 dark:border-gray-700">
                 Identitas Diri</h3>
             </div>
 
@@ -118,7 +119,7 @@
               </label>
               <input type="number" name="nisn" id="nisn" value="{{ old('nisn', $murid->nisn) }}" required
                 class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
             </div>
 
             {{-- NIK --}}
@@ -128,7 +129,7 @@
               </label>
               <input type="number" name="nik" id="nik" value="{{ old('nik', $murid->nik) }}"
                 class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
             </div>
 
             {{-- Nama Lengkap --}}
@@ -138,7 +139,7 @@
               </label>
               <input type="text" name="nama" id="nama" value="{{ old('nama', $murid->nama) }}" required
                 class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
             </div>
 
             {{-- Jenis Kelamin --}}
@@ -148,7 +149,7 @@
               </label>
               <select name="jenis_kelamin" id="jenis_kelamin" required
                 class="shadow border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
                 <option value="L" {{ old('jenis_kelamin', $murid->jenis_kelamin) == 'L' ? 'selected' : '' }}>
                   Laki-laki</option>
                 <option value="P" {{ old('jenis_kelamin', $murid->jenis_kelamin) == 'P' ? 'selected' : '' }}>
@@ -163,7 +164,7 @@
               </label>
               <select name="status_alumni" id="status_alumni" required
                 class="shadow border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
                 <option value="0" {{ old('status_alumni', $murid->status_alumni) == 0 ? 'selected' : '' }}>Aktif
                 </option>
                 <option value="1" {{ old('status_alumni', $murid->status_alumni) == 1 ? 'selected' : '' }}>Alumni
@@ -179,7 +180,7 @@
               <input type="text" name="tempat_lahir" id="tempat_lahir" required
                 value="{{ old('tempat_lahir', $murid->tempat_lahir) }}"
                 class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
             </div>
 
             {{-- TANGGAL LAHIR (FLATPICKR - STATIC MODE) --}}
@@ -215,7 +216,7 @@
                 <input x-ref="picker" type="text" name="tanggal_lahir" id="tanggal_lahir" required
                   placeholder="Pilih Tanggal..."
                   class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                         bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white cursor-pointer">
+                        bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white cursor-pointer">
 
                 {{-- Icon Kalender --}}
                 <div
@@ -230,7 +231,7 @@
 
             {{-- ================= BAGIAN 2: KONTAK SISWA ================= --}}
             <div class="md:col-span-2 mt-4">
-              <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mb-4 dark:text-gray-200 dark:border-gray-700">
+              <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mt-4 dark:text-gray-200 dark:border-gray-700">
                 Informasi Kontak Siswa</h3>
             </div>
 
@@ -242,7 +243,7 @@
               <input type="text" name="kontak_wa_hp" id="kontak_wa_hp"
                 value="{{ old('kontak_wa_hp', $murid->kontak_wa_hp) }}" placeholder="Contoh: 08123456789"
                 class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white dark:placeholder-gray-400">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white dark:placeholder-gray-400">
             </div>
 
             {{-- Email --}}
@@ -253,12 +254,12 @@
               <input type="email" name="kontak_email" id="kontak_email"
                 value="{{ old('kontak_email', $murid->kontak_email) }}" placeholder="Contoh: murid@sekolah.sch.id"
                 class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white dark:placeholder-gray-400">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white dark:placeholder-gray-400">
             </div>
 
             {{-- ================= BAGIAN 3: DATA ORANG TUA ================= --}}
             <div class="md:col-span-2 mt-4">
-              <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mb-4 dark:text-gray-200 dark:border-gray-700">
+              <h3 class="text-lg font-semibold text-gray-700 border-b pb-2 mt-4 dark:text-gray-200 dark:border-gray-700">
                 Data Orang Tua</h3>
             </div>
 
@@ -269,7 +270,7 @@
               </label>
               <input type="text" name="nama_ayah" id="nama_ayah" value="{{ old('nama_ayah', $murid->nama_ayah) }}"
                 class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
             </div>
 
             {{-- No HP Ayah --}}
@@ -280,7 +281,7 @@
               <input type="text" name="nomor_hp_ayah" id="nomor_hp_ayah"
                 value="{{ old('nomor_hp_ayah', $murid->nomor_hp_ayah) }}" placeholder="Contoh: 081xxxxxxx"
                 class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white dark:placeholder-gray-400">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white dark:placeholder-gray-400">
             </div>
 
             {{-- Nama Ibu --}}
@@ -290,7 +291,7 @@
               </label>
               <input type="text" name="nama_ibu" id="nama_ibu" value="{{ old('nama_ibu', $murid->nama_ibu) }}"
                 class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
             </div>
 
             {{-- No HP Ibu --}}
@@ -301,21 +302,21 @@
               <input type="text" name="nomor_hp_ibu" id="nomor_hp_ibu"
                 value="{{ old('nomor_hp_ibu', $murid->nomor_hp_ibu) }}" placeholder="Contoh: 081xxxxxxx"
                 class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white dark:placeholder-gray-400">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white dark:placeholder-gray-400">
             </div>
 
           </div>
 
-          <div class="flex items-center justify-end mt-8 gap-4">
+          <div class="flex items-center justify-end mt-16 gap-4">
             <a href="{{ route('murid.index') }}"
               class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline transition 
-                     dark:bg-gray-600 dark:hover:bg-gray-500">
+                    dark:bg-gray-600 dark:hover:bg-gray-500">
               Batal
             </a>
 
             <button type="submit"
               class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline transition flex items-center gap-2
-                     dark:bg-blue-600 dark:hover:bg-blue-500">
+                    dark:bg-blue-600 dark:hover:bg-blue-500">
               <i class="fas fa-save"></i>
               <span>Simpan Perubahan</span>
             </button>

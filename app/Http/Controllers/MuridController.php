@@ -53,9 +53,9 @@ class MuridController extends Controller
             'nisn'          => 'required|numeric|unique:murid,nisn',
             'nama'          => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:L,P',
-            'tempat_lahir'  => 'required|string|max:255', // Diubah jadi required
-            'tanggal_lahir' => 'required|date',           // Diubah jadi required
-            'status_alumni' => 'required|boolean',        // Diubah jadi required
+            'tempat_lahir'  => 'string|max:255', 
+            'tanggal_lahir' => 'date',           
+            'status_alumni' => 'required|boolean',        
 
             // --- OPSIONAL (BOLEH KOSONG) ---
             'nik'           => 'nullable|string|digits:16',

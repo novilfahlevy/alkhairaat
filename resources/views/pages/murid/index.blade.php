@@ -2,21 +2,26 @@
 
 @section('content')
   {{-- Alpine Component untuk Data Murid --}}
-  <div x-data="studentData()" x-init="init()" class="container mx-auto">
+  <div x-data="studentData()" x-init="init()" class=" mx-auto mb-20">
 
     {{-- Header & Tombol Tambah --}}
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-      <h2 class="text-2xl font-bold leading-tight text-gray-800 dark:text-white text-center sm:text-left">
-        Daftar Data Murid
-      </h2>
-
-      <a href="{{ route('murid.create') }}"
-        class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded shadow transition duration-200 flex items-center gap-2 w-full sm:w-auto justify-center">
-        <i class="fas fa-plus"></i>
-        <span>Tambah Murid</span>
-      </a>
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-title-md mb-2 font-semibold text-gray-800 dark:text-white/90">
+          Daftar Data Murid
+        </h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          Kelola akun user dan hak akses sekolah
+        </p>
+      </div>
+      <div>
+        <a href="{{ route('murid.create') }}"
+          class="bg-brand-500 hover:bg-brand-600 flex gap-1.5 items-center rounded-lg px-4 py-2.5 text-sm font-medium text-white transition">
+          <i class="fas fa-plus"></i>
+          Tambah User
+        </a>
+      </div>
     </div>
-
     {{-- Notification --}}
     @if (session('success'))
       <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" x-transition.duration.500ms
@@ -33,58 +38,58 @@
       </div>
     @endif
 
-    {{-- SEARCH & FILTER --}}
-    <div
-      class="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
-      <div class="flex flex-col md:flex-row gap-4">
-        {{-- Search Input --}}
-        <div class="flex-1">
-          <label for="search" class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Cari</label>
-          <div class="relative mt-1">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-              <i class="fas fa-search text-gray-400 dark:text-gray-500"></i>
-            </span>
-            <input type="text" x-model.debounce.500ms="search" placeholder="Cari Nama atau NISN..."
-              class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 
-                     bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 
-                     text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 transition-colors duration-200">
+    <div class="shadow-md dark:shadow-none transition-all bg-white dark:bg-black dark:px-0 dark:py-0 px-8 py-2 rounded-lg">
+      {{-- SEARCH & FILTER --}}
+      <div class="mb-2 py-4 rounded-lg  transition-colors duration-200">
+        <div class="flex flex-col md:flex-row gap-4">
+          {{-- Search Input --}}
+          <div class="flex-1">
+            <label for="search" class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Cari</label>
+            <div class="relative mt-1">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                <i class="fas fa-search text-gray-400 dark:text-gray-500"></i>
+              </span>
+              <input type="text" x-model.debounce.500ms="search" placeholder="Cari Nama atau NISN..."
+                class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 
+                      text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 transition-colors duration-200">
+            </div>
           </div>
-        </div>
 
-        {{-- Filters --}}
-        <div class="grid grid-cols-2 md:flex md:w-auto gap-4">
-          {{-- Filter Gender --}}
-          <div class="w-full md:w-40">
-            <label class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Gender</label>
-            <select x-model="gender"
-              class="w-full mt-1 py-2 px-3 cursor-pointer border rounded-lg focus:outline-none focus:border-blue-500
-                     bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 transition-colors duration-200">
-              <option value="">Semua</option>
-              <option value="L">Laki-laki</option>
-              <option value="P">Perempuan</option>
-            </select>
-          </div>
-          {{-- Filter Status --}}
-          <div class="w-full md:w-40">
-            <label class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Status</label>
-            <select x-model="status"
-              class="w-full mt-1 cursor-pointer py-2 px-3 border rounded-lg focus:outline-none focus:border-blue-500
-                     bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 transition-colors duration-200">
-              <option value="">Semua</option>
-              <option value="0">Aktif</option>
-              <option value="1">Alumni</option>
-            </select>
+          {{-- Filters --}}
+          <div class="grid grid-cols-2 md:flex md:w-auto gap-4">
+            {{-- Filter Gender --}}
+            <div class="w-full md:w-40">
+              <label class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Gender</label>
+              <select x-model="gender"
+                class="w-full mt-1 py-2 px-3 cursor-pointer border rounded-lg focus:outline-none focus:border-blue-500
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 transition-colors duration-200">
+                <option value="">Semua</option>
+                <option value="L">Laki-laki</option>
+                <option value="P">Perempuan</option>
+              </select>
+            </div>
+            {{-- Filter Status --}}
+            <div class="w-full md:w-40">
+              <label class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Status</label>
+              <select x-model="status"
+                class="w-full mt-1 cursor-pointer py-2 px-3 border rounded-lg focus:outline-none focus:border-blue-500
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 transition-colors duration-200">
+                <option value="">Semua</option>
+                <option value="0">Aktif</option>
+                <option value="1">Alumni</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
+
+      <div id="tableContainer" x-html="html" :class="{ 'opacity-50 pointer-events-none': isLoading }"
+        @click="handlePagination($event)" class="w-full transition-opacity duration-200">
+        @include('pages.murid._table')
+      </div>
     </div>
 
-    {{-- CONTAINER DATA --}}
-    {{-- PERBAIKAN DI SINI: Hapus .prevent --}}
-    <div id="tableContainer" x-html="html" :class="{ 'opacity-50 pointer-events-none': isLoading }"
-      @click="handlePagination($event)" class="w-full transition-opacity duration-200">
-      @include('pages.murid._table')
-    </div>
 
   </div>
 
