@@ -35,7 +35,7 @@ class GuruSekolahNauanganScope implements Scope
 
         // User dengan role sekolah hanya bisa melihat guru di sekolah yang dimapping
         if ($user->isSekolah()) {
-            $builder->whereHas('jabatanGuru.sekolah.editorLists', function ($query) use ($user) {
+            $builder->whereHas('jabatanGurus.sekolah.editorLists', function ($query) use ($user) {
                 $query->where('id_user', $user->id);
             });
             return;
@@ -47,7 +47,7 @@ class GuruSekolahNauanganScope implements Scope
 
         if ($hasMapping) {
             // Jika ada mapping, hanya tampilkan guru yang mengajar di sekolah yang dimapping
-            $builder->whereHas('jabatanGuru.sekolah.editorLists', function ($query) use ($user) {
+            $builder->whereHas('jabatanGurus.sekolah.editorLists', function ($query) use ($user) {
                 $query->where('id_user', $user->id);
             });
         }

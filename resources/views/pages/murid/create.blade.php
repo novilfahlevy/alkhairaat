@@ -34,7 +34,7 @@
     .dark .flatpickr-current-month .numInputWrapper input.numInput.cur-year {
       color: #fff !important;
     }
-
+    
     /* Hari & Tanggal */
     .dark span.flatpickr-weekday {
       color: #9ca3af !important;
@@ -63,8 +63,9 @@
 @endsection
 
 @section('content')
-  <div class="container mx-auto px-4 sm:px-8">
-    <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg dark:bg-gray-800 transition-colors duration-200">
+  <div class=" mx-auto ">
+    <div
+      class=" mx-auto bg-white px-8 py-6 rounded-lg shadow-lg dark:shadow-none dark:bg-black transition-colors duration-200">
 
       {{-- Header --}}
       <div class="flex justify-between items-center mb-6 border-b pb-4 dark:border-gray-700">
@@ -111,13 +112,13 @@
             </label>
             <input type="text" name="nisn" id="nisn" value="{{ old('nisn') }}" required
               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
-                     bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
+                    bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
           </div>
           <div>
             <label for="nik" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">NIK</label>
             <input type="text" name="nik" id="nik" value="{{ old('nik') }}"
               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
-                     bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
+                    bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
           </div>
         </div>
 
@@ -127,7 +128,7 @@
           </label>
           <input type="text" name="nama" id="nama" value="{{ old('nama') }}" required
             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
-                   bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
+                  bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
@@ -136,7 +137,7 @@
               Lahir</label>
             <input type="text" name="tempat_lahir" id="tempat_lahir" value="{{ old('tempat_lahir') }}"
               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
-                     bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
+                    bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
           </div>
 
           {{-- === TANGGAL LAHIR (Versi Static - No Dropdown) === --}}
@@ -170,7 +171,7 @@
             <div class="relative">
               <input x-ref="picker" type="text" name="tanggal_lahir" id="tanggal_lahir" placeholder="Pilih Tanggal..."
                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
-                       bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors cursor-pointer">
+                      bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors cursor-pointer">
 
               <div
                 class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500 dark:text-gray-400">
@@ -190,7 +191,7 @@
           </label>
           <select name="jenis_kelamin" id="jenis_kelamin" required
             class="shadow border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring focus:border-blue-300
-                   bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
+                  bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white">
             <option value="L">Laki-laki</option>
             <option value="P">Perempuan</option>
           </select>
@@ -205,13 +206,13 @@
             <label for="kontak_wa_hp" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">No. WhatsApp
               / HP</label>
             <input type="text" name="kontak_wa_hp" id="kontak_wa_hp" value="{{ old('kontak_wa_hp') }}"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
           </div>
           <div>
             <label for="kontak_email"
               class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Email</label>
             <input type="email" name="kontak_email" id="kontak_email" value="{{ old('kontak_email') }}"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
           </div>
         </div>
 
@@ -224,13 +225,13 @@
             <label for="nama_ayah" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Nama
               Ayah</label>
             <input type="text" name="nama_ayah" id="nama_ayah" value="{{ old('nama_ayah') }}"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
           </div>
           <div>
             <label for="nomor_hp_ayah" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">No. HP
               Ayah</label>
             <input type="text" name="nomor_hp_ayah" id="nomor_hp_ayah" value="{{ old('nomor_hp_ayah') }}"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
           </div>
         </div>
 
@@ -239,13 +240,13 @@
             <label for="nama_ibu" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Nama
               Ibu</label>
             <input type="text" name="nama_ibu" id="nama_ibu" value="{{ old('nama_ibu') }}"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
           </div>
           <div>
             <label for="nomor_hp_ibu" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">No. HP
               Ibu</label>
             <input type="text" name="nomor_hp_ibu" id="nomor_hp_ibu" value="{{ old('nomor_hp_ibu') }}"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
           </div>
         </div>
 
@@ -254,9 +255,9 @@
         {{-- ================= STATUS ================= --}}
         <div class="mb-6">
           <label for="status_alumni" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Status
-            Alumni</label>
+            Alumni <span class="text-red-500">*</span></label>
           <select name="status_alumni" id="status_alumni"
-            class="w-full px-4 py-2 cursor-pointer border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
+            class="w-full px-4 py-2 cursor-pointer border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors">
             <option value="0" {{ old('status_alumni') == '0' ? 'selected' : '' }}>Belum Lulus (Siswa Aktif)
             </option>
             <option value="1" {{ old('status_alumni') == '1' ? 'selected' : '' }}>Sudah Lulus (Alumni)</option>

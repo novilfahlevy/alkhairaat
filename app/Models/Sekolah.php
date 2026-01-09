@@ -40,8 +40,8 @@ use Illuminate\Support\Facades\Storage;
  * @property-read string $bentuk_pendidikan_label
  * @property-read string $jenis_sekolah_label
  * @property-read mixed $provinsi
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\JabatanGuru> $jabatanGuru
- * @property-read int|null $jabatan_guru_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\JabatanGuru> $jabatanGurus
+ * @property-read int|null $jabatan_gurus_count
  * @property-read \App\Models\Kabupaten|null $kabupaten
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Murid> $murid
  * @property-read int|null $murid_count
@@ -251,7 +251,7 @@ class Sekolah extends Model
     /**
      * Get the jabatan_guru records for this sekolah.
      */
-    public function jabatanGuru(): HasMany
+    public function jabatanGurus(): HasMany
     {
         return $this->hasMany(JabatanGuru::class, 'id_sekolah');
     }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Sekolah;
 
 /**
  * @property int $id
@@ -216,5 +217,16 @@ class User extends Authenticatable
     {
         $roles = $this->getRoleNames();
         return $roles->first() ?: null;
+    }
+
+    /**
+     * Get the sekolah for sekolah users (first from editorLists).
+     */
+    public function getSekolahAttribute(): ?Sekolah
+    {
+        if ($this->isSekolah()) {
+            return $this->editorLists()->with('sekolah')->first()?->sekolah;
+        }
+        return null;
     }
 }

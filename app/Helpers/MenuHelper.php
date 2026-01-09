@@ -63,6 +63,12 @@ class MenuHelper
                         'path' => '/sekolah'
                     ],
                     [
+                        'icon' => 'teachers',
+                        'name' => 'Guru',
+                        'roles' => [User::ROLE_SUPERUSER, User::ROLE_KOMISARIAT_WILAYAH, User::ROLE_SEKOLAH],
+                        'path' => '/guru',
+                    ],
+                    [
                         'icon' => 'students',
                         'name' => 'Murid',
                         'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH,  User::ROLE_KOMISARIAT_DAERAH, User::ROLE_SEKOLAH],
@@ -145,6 +151,7 @@ class MenuHelper
         $icons = [
             'dashboard' => '<i class="fas fa-square-poll-vertical"></i>',
             'sekolah' => '<i class="fa-regular fa-building"></i>',
+            'teachers' => '<i class="fa-solid fa-chalkboard-user"></i>',
             'students' => '<i class="fas fa-users-line"></i>',
             'graduates' => '<i class="fas fa-graduation-cap"></i>',
             'kabupaten' => '<i class="fas fa-city"></i>',
