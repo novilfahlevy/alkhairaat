@@ -83,23 +83,6 @@ class MenuHelper
                 ])
             ],
             [
-                'title' => 'Data Wilayah',
-                'items' => self::filterItemsByRole([
-                    [
-                        'icon' => 'kabupaten',
-                        'name' => 'Kabupaten',
-                        'roles' => [User::ROLE_SUPERUSER],
-                        'path' => '/kabupaten'
-                    ],
-                    [
-                        'icon' => 'provinsi',
-                        'name' => 'Provinsi',
-                        'roles' => [User::ROLE_SUPERUSER],
-                        'path' => '/provinsi'
-                    ],
-                ])
-            ],
-            [
                 'title' => 'Menu Lainnya',
                 'items' => self::filterItemsByRole([
                     // Validasi Alumni (oleh Superuser dan Komisariat Wilayah)
@@ -154,8 +137,6 @@ class MenuHelper
             'teachers' => '<i class="fa-solid fa-chalkboard-user"></i>',
             'students' => '<i class="fas fa-users-line"></i>',
             'graduates' => '<i class="fas fa-graduation-cap"></i>',
-            'kabupaten' => '<i class="fas fa-city"></i>',
-            'provinsi' => '<i class="fas fa-flag-usa"></i>',
             'users' => '<i class="fas fa-users"></i>',
         ];
 

@@ -35,24 +35,62 @@
             <h2 class="text-lg font-semibold text-gray-800 dark:text-white/90">Daftar Murid</h2>
         </x-slot>
 
-        <!-- Search and Per-Page Controls -->
+        <!-- Search and Filter Controls -->
         <div class="mb-6 space-y-3 sm:space-y-4">
-            <!-- Search Form -->
-            <form method="GET" class="flex flex-col gap-2 sm:flex-row">
+            <!-- Search and Filter Form -->
+            <form method="GET" class="flex flex-col gap-3">
                 <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
-                <input type="text" name="search" value="{{ request('search') }}"
-                    placeholder="Cari nama, NISN, atau NIK murid..."
-                    class="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
-                <button type="submit"
-                    class="bg-brand-500 hover:bg-brand-600 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition sm:px-6">
-                    Cari
-                </button>
-                @if (request('search'))
-                    <a href="{{ route('sekolah.show-murid', $sekolah) }}"
-                        class="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
-                        Reset
-                    </a>
-                @endif
+                
+                <!-- Search Input -->
+                <div class="flex flex-col gap-2 sm:flex-row">
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Cari nama, NISN, atau NIK murid..."
+                        class="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
+                    <button type="submit"
+                        class="bg-brand-500 hover:bg-brand-600 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition sm:px-6">
+                        Cari
+                    </button>
+                </div>
+
+                <!-- Filters Row -->
+                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    <!-- Jenis Kelamin Filter -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">
+                            Jenis Kelamin
+                        </label>
+                        <select name="jenis_kelamin"
+                            class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                            <option value="">Semua</option>
+                            <option value="L" @selected(request('jenis_kelamin') === 'L')>Laki-laki</option>
+                            <option value="P" @selected(request('jenis_kelamin') === 'P')>Perempuan</option>
+                        </select>
+                    </div>
+
+                    <!-- Status Kelulusan Filter -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">
+                            Status Kelulusan
+                        </label>
+                        <select name="status_kelulusan"
+                            class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                            <option value="">Semua</option>
+                            <option value="belum" @selected(request('status_kelulusan') === 'belum')>Belum Lulus</option>
+                            <option value="ya" @selected(request('status_kelulusan') === 'ya')>Sudah Lulus</option>
+                            <option value="tidak" @selected(request('status_kelulusan') === 'tidak')>Tidak Lulus</option>
+                        </select>
+                    </div>
+
+                    <!-- Reset Button -->
+                    @if (request('search') || request('jenis_kelamin') || request('status_kelulusan'))
+                        <div class="flex items-end">
+                            <a href="{{ route('sekolah.show-murid', $sekolah) }}"
+                                class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
+                                Reset
+                            </a>
+                        </div>
+                    @endif
+                </div>
             </form>
         </div>
 

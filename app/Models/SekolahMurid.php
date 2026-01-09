@@ -92,7 +92,7 @@ class SekolahMurid extends Model
         'tahun_mutasi_keluar',
         'alasan_mutasi_keluar',
         'kelas',
-        'status_kelulusan',
+        'status_kelulusan', //ya/tidak/null
     ];
 
     /**

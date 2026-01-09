@@ -202,10 +202,24 @@ class SekolahController extends Controller
         if ($request->filled('search')) {
             $search = $request->input('search');
             $muridQuery->where(function ($q) use ($search) {
-                $q->where('nama', 'like', "%{$search}%")
-                    ->orWhere('nisn', 'like', "%{$search}%")
-                    ->orWhere('nik', 'like', "%{$search}%");
+                $q->where('murid.nama', 'like', "%{$search}%")
+                    ->orWhere('murid.nisn', 'like', "%{$search}%")
+                    ->orWhere('murid.nik', 'like', "%{$search}%");
             });
+        }
+
+        // Apply jenis kelamin filter
+        if ($request->filled('jenis_kelamin')) {
+            $muridQuery->where('murid.jenis_kelamin', $request->input('jenis_kelamin'));
+        }
+
+        // Apply status kelulusan filter
+        if ($request->filled('status_kelulusan')) {
+            if ($request->input('status_kelulusan') === 'belum') {
+                $muridQuery->wherePivotNull('status_kelulusan');
+            } else {
+                $muridQuery->wherePivot('status_kelulusan', $request->input('status_kelulusan'));
+            }
         }
 
         // Get per_page parameter, default to 10
