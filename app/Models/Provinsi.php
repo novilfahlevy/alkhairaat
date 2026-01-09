@@ -57,6 +57,10 @@ class Provinsi extends Model
      */
     public function scopeNaungan($query)
     {
+        if (Auth::user()->isSuperuser() || Auth::user()->isPengurusBesar()) {
+            return $query;
+        }
+        
         return $query->whereHas('kabupaten', function ($query) {
             $query->whereHas('sekolah', function ($query) {
                 $query->whereHas('editorLists', function ($q) {

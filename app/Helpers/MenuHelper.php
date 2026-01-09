@@ -54,7 +54,7 @@ class MenuHelper
                         'icon' => 'dashboard',
                         'name' => 'Dasbor',
                         'path' => '/',
-                        'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH, User::ROLE_SEKOLAH],
+                        'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH,  User::ROLE_KOMISARIAT_DAERAH, User::ROLE_SEKOLAH],
                     ],
                     [
                         'icon' => 'sekolah',
@@ -65,13 +65,13 @@ class MenuHelper
                     [
                         'icon' => 'students',
                         'name' => 'Murid',
-                        'roles' => [User::ROLE_SUPERUSER, User::ROLE_KOMISARIAT_WILAYAH, User::ROLE_SEKOLAH],
+                        'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH,  User::ROLE_KOMISARIAT_DAERAH, User::ROLE_SEKOLAH],
                         'path' => '/murid',
                     ],
                     [
                         'icon' => 'graduates',
                         'name' => 'Alumni',
-                        'roles' => [User::ROLE_SUPERUSER, User::ROLE_KOMISARIAT_WILAYAH, User::ROLE_SEKOLAH],
+                        'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH,  User::ROLE_KOMISARIAT_DAERAH, User::ROLE_SEKOLAH],
                         'path' => '/alumni'
                     ],
                 ])
@@ -100,7 +100,7 @@ class MenuHelper
                     [
                         'icon' => 'graduates',
                         'name' => 'Validasi Alumni',
-                        'roles' => [User::ROLE_SUPERUSER, User::ROLE_KOMISARIAT_WILAYAH],
+                        'roles' => [User::ROLE_SUPERUSER, User::ROLE_PENGURUS_BESAR, User::ROLE_KOMISARIAT_WILAYAH,  User::ROLE_KOMISARIAT_DAERAH, User::ROLE_SEKOLAH],
                         'path' => '/manajemen/validasi-alumni',
                     ],
                     [

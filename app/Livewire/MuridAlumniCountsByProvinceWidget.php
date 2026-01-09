@@ -9,7 +9,7 @@ use App\Models\Kabupaten;
 use Livewire\Component;
 use Illuminate\Support\Collection;
 
-class MuridCountsWidget extends Component
+class MuridAlumniCountsByProvinceWidget extends Component
 {
     public $collapsed = [];
 
@@ -18,7 +18,7 @@ class MuridCountsWidget extends Component
      */
     public function placeholder()
     {
-        return view('livewire.placeholders.murid-counts-skeleton');
+        return view('livewire.placeholders.murid-alumni-counts-by-province-skeleton');
     }
 
     /**
@@ -49,7 +49,7 @@ class MuridCountsWidget extends Component
 
         // 4. Query Provinsi dan eager load data dengan constraint ID
         // Kita membatasi relasi agar hanya memuat kabupaten dan sekolah yang relevan (naungan user).
-        return Provinsi::query()
+        return Provinsi::naungan()
             ->whereIn('id', $accessibleProvinsiIds)
             ->with([
                 'kabupaten' => function ($query) use ($accessibleKabupatenIds) {
@@ -115,7 +115,7 @@ class MuridCountsWidget extends Component
 
     public function render()
     {
-        return view('livewire.murid-counts-widget', [
+        return view('livewire.murid-alumni-counts-by-province-widget', [
             'provinsis' => $this->getMuridCounts(),
         ]);
     }

@@ -80,6 +80,10 @@ class Kabupaten extends Model
      */
     public function scopeNaungan($query)
     {
+        if (Auth::user()->isSuperuser() || Auth::user()->isPengurusBesar()) {
+            return $query;
+        }
+        
         return $query->whereHas('sekolah', function ($query) {
             $query->whereHas('editorLists', function ($q) {
                 $q->where('id_user', Auth::id());
