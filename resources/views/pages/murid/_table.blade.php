@@ -1,12 +1,12 @@
 {{-- A. TAMPILAN DESKTOP (TABLE) --}}
-<div class="hidden md:block rounded-lg shadow-xs bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+<div
+  class="hidden md:block rounded-lg overflow-hidden shadow-xs bg-white dark:bg-black border border-gray-200 dark:border-gray-700">
   {{-- pb-24 dipertahankan agar dropdown baris terakhir tidak terpotong --}}
-  <div class="w-full overflow-x-auto pb-24 min-h-75">
+  <div class="w-full overflow-x-auto min-h-75">
     <table class="w-full whitespace-no-wrap">
       <thead>
         <tr
-          class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-          <th class="px-4 py-3">No</th>
+          class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-transparent">
           <th class="px-4 py-3">NISN</th>
           <th class="px-4 py-3">Nama Lengkap</th>
           <th class="px-4 py-3">L/P</th>
@@ -15,17 +15,19 @@
           <th class="px-4 py-3 text-right">Aksi</th>
         </tr>
       </thead>
-      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+      <tbody class="bg-white divide-y dark:divide-gray-700 rounded-lg dark:bg-black">
         @forelse ($murid as $index => $item)
           <tr class="text-gray-700 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
             <td class="px-4 py-3 text-sm">
-              {{ $murid->firstItem() + $index }}
-            </td>
-            <td class="px-4 py-3 text-sm">
               {{ $item->nisn }}
             </td>
-            <td class="px-4 py-3 text-sm font-semibold">
-              {{ $item->nama }}
+            <td class="px-4 py-3 flex flex-col text-base font-semibold">
+              <span>
+                {{ $item->nama }}
+              </span>
+              <span class="text-sm font-light italic">
+                {{ $item->nik ? $item->nik : '-' }}
+              </span>
             </td>
             <td class="px-4 py-3 text-sm">
               {{ $item->jenis_kelamin }}
@@ -53,7 +55,7 @@
 
                 {{-- Tombol Trigger --}}
                 <button @click="open = !open"
-                  class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none bg-gray-100 dark:bg-gray-700 rounded-full w-8 h-8 flex items-center justify-center transition">
+                  class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none bg-gray-100 dark:bg-black rounded-full w-8 h-8 flex items-center justify-center transition">
                   <i class="fas fa-ellipsis-v text-xs"></i>
                 </button>
 
@@ -64,7 +66,7 @@
                   x-transition:leave="transition ease-in duration-75"
                   x-transition:leave-start="transform opacity-100 scale-100"
                   x-transition:leave-end="transform opacity-0 scale-95"
-                  class="absolute right-0 z-50 mt-2 w-32 origin-top-right bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  class="absolute right-0 z-50 mt-2 w-32 origin-top-right bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700 rounded-md shadow-lg ring-opacity-5 focus:outline-none"
                   style="display: none;">
 
                   <div class="py-1">
