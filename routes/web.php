@@ -150,6 +150,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sekolah/kabupaten', [App\Http\Controllers\SekolahController::class, 'getKabupaten'])->name('sekolah.get_kabupaten');
     Route::get('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'show'])->name('sekolah.show');
     Route::get('/sekolah/{sekolah}/murid', [App\Http\Controllers\SekolahController::class, 'showMurid'])->name('sekolah.show-murid');
+    Route::get('/sekolah/{sekolah}/murid/export', [App\Http\Controllers\SekolahController::class, 'exportMurid'])->name('sekolah.export-murid');
     Route::get('/sekolah/{sekolah}/guru', [App\Http\Controllers\SekolahController::class, 'showGuru'])->name('sekolah.show-guru');
     Route::get('/sekolah/{sekolah}/edit', [App\Http\Controllers\SekolahController::class, 'edit'])->name('sekolah.edit');
     Route::put('/sekolah/{sekolah}', [App\Http\Controllers\SekolahController::class, 'update'])->name('sekolah.update');

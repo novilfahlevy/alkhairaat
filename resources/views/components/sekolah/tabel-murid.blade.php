@@ -92,6 +92,31 @@
                     @endif
                 </div>
             </form>
+
+            <!-- Export and Action Buttons -->
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+                @if ($murid->count() > 0)
+                    <form method="GET" action="{{ route('sekolah.export-murid', $sekolah) }}" class="w-full sm:w-auto">
+                        <!-- Pass all current filter parameters to export -->
+                        @if (request('search'))
+                            <input type="hidden" name="search" value="{{ request('search') }}">
+                        @endif
+                        @if (request('jenis_kelamin'))
+                            <input type="hidden" name="jenis_kelamin" value="{{ request('jenis_kelamin') }}">
+                        @endif
+                        @if (request('status_kelulusan'))
+                            <input type="hidden" name="status_kelulusan" value="{{ request('status_kelulusan') }}">
+                        @endif
+                        <button type="submit"
+                            class="flex w-full items-center justify-center rounded-lg bg-green-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-green-600 transition sm:w-auto">
+                            <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Ekspor ke XLSX
+                        </button>
+                    </form>
+                @endif
+            </div>
         </div>
 
         <!-- Desktop Table View -->

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MuridSekolahExport;
 use App\Http\Controllers\Traits\MuridSekolahTrait;
 use App\Http\Controllers\Traits\GuruSekolahTrait;
 use App\Http\Requests\StoreSekolahRequest;
@@ -17,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SekolahController extends Controller
 {
@@ -236,6 +238,50 @@ class SekolahController extends Controller
             'sekolah' => $sekolah,
             'murid' => $murid,
         ]);
+    }
+
+    /**
+     * Export murid to XLSX with applied filters
+     */
+    public function exportMurid(Sekolah $sekolah, Request $request)
+    {
+        // Fetch murid with the same filters as showMurid
+        $muridQuery = $sekolah->murid();
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $muridQuery->where(function ($q) use ($search) {
+                $q->where('murid.nama', 'like', "%{$search}%")
+                    ->orWhere('murid.nisn', 'like', "%{$search}%")
+                    ->orWhere('murid.nik', 'like', "%{$search}%");
+            });
+        }
+
+        // Apply jenis kelamin filter
+        if ($request->filled('jenis_kelamin')) {
+            $muridQuery->where('murid.jenis_kelamin', $request->input('jenis_kelamin'));
+        }
+
+        // Apply status kelulusan filter
+        if ($request->filled('status_kelulusan')) {
+            if ($request->input('status_kelulusan') === 'belum') {
+                $muridQuery->wherePivotNull('status_kelulusan');
+            } else {
+                $muridQuery->wherePivot('status_kelulusan', $request->input('status_kelulusan'));
+            }
+        }
+
+        // Get all filtered murid without pagination
+        $muridCollection = $muridQuery->get();
+
+        // Generate filename with school code and timestamp
+        $filename = 'Murid_' . $sekolah->kode_sekolah . '_' . now()->format('Ymd_His') . '.xlsx';
+
+        return Excel::download(
+            new MuridSekolahExport($sekolah, $muridCollection),
+            $filename
+        );
     }
 
     /**
