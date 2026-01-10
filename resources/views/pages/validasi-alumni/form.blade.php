@@ -168,6 +168,12 @@
                         </form>
                     </div>
                 </div>
+                <!-- Footer Credit (Mobile) -->
+                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800 lg:hidden">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
+                        CSR by <a href="https://dumeg.id" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300 transition-colors underline">PT. Duta Meta Graha</a>
+                    </p>
+                </div>
             </div>
 
             <div class="bg-brand-950 relative hidden h-full w-full items-center lg:grid lg:w-1/2 dark:bg-white/5">
@@ -181,6 +187,12 @@
                             Perguruan Islam Alkhairaat
                         </p>
                     </div>
+                </div>
+                <!-- Footer Credit -->
+                <div class="absolute bottom-6 left-6 z-40">
+                    <p class="text-xs text-gray-400 dark:text-gray-500">
+                        CSR by <a href="https://dumeg.id" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:text-brand-300 dark:text-brand-300 dark:hover:text-brand-200 transition-colors underline">PT. Duta Meta Graha</a>
+                    </p>
                 </div>
             </div>
         </div>

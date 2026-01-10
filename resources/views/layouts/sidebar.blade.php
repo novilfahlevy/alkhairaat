@@ -74,7 +74,7 @@
     </div>
 
     <!-- Navigation Menu -->
-    <div class="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
+    <div class="flex flex-col flex-1 overflow-y-auto duration-300 ease-linear no-scrollbar">
         <nav class="mb-6">
             <div class="flex flex-col gap-4">
                 @foreach ($menuGroups as $groupIndex => $menuGroup)
@@ -225,6 +225,17 @@
                 @endforeach
             </div>
         </nav>
+    </div>
+    
+    <!-- Footer Credit -->
+    <div class="border-t border-gray-200 dark:border-gray-800 p-3 mt-auto">
+        <p class="text-xs text-gray-500 dark:text-gray-400 text-center"
+            :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ? 'whitespace-nowrap overflow-hidden text-ellipsis' : ''">
+            <span x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen" class="inline">
+                CSR by <a href="https://dumeg.id" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300 transition-colors underline">PT. Duta Meta Graha</a>
+            </span>
+            <svg x-show="!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen" class="w-5 h-5 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </p>
     </div>
 </aside>
 
