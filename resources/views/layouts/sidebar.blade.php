@@ -68,7 +68,7 @@
             <img src="/images/logo_alkhairaat.png" width="60" height="60" alt="Logo" />
             <span x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
                 class="text-sm font-semibold text-gray-900 dark:text-white">
-                Sistem Database Nasional Alkhairaat
+                Sistem Database Perguruan Islam Alkhairaat
             </span>
         </a>
     </div>
@@ -232,7 +232,9 @@
         <p class="text-xs text-gray-500 dark:text-gray-400 text-center"
             :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ? 'whitespace-nowrap overflow-hidden text-ellipsis' : ''">
             <span x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen" class="inline">
-                CSR by <a href="https://dumeg.id" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300 transition-colors underline">PT. Duta Meta Graha</a>
+                CSR by <a href="https://dumeg.id" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300 transition-colors underline">
+                    <img src="{{ asset('images/logo_dumeg.png') }}" class="w-28 mx-auto inline-block" alt="Dumeg Logo">
+                </a>
             </span>
             <svg x-show="!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen" class="w-5 h-5 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         </p>

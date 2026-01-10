@@ -42,7 +42,8 @@
                                         NIK <span class="text-error-500">*</span>
                                     </label>
                                     <input type="text" id="nik" name="nik" placeholder="Masukkan NIK Anda"
-                                        x-model="nik" x-on:input="nik = nik.replace(/[^0-9]/g, '')" x-on:keyup.debounce.500ms="searchNik" autocomplete="off" inputmode="numeric"
+                                        x-model="nik" x-on:input="nik = nik.replace(/[^0-9]/g, '')"
+                                        x-on:keyup.debounce.500ms="searchNik" autocomplete="off" inputmode="numeric"
                                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('nik') border-red-500 @enderror" />
 
                                     <template x-if="loading">
@@ -126,7 +127,8 @@
                                         Kontak WhatsApp
                                     </label>
                                     <input type="tel" name="kontak_wa" placeholder="Nomor WhatsApp aktif"
-                                        value="{{ old('kontak_wa') }}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                        value="{{ old('kontak_wa') }}" inputmode="numeric"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('kontak_wa') border-red-500 @enderror" />
                                     @error('kontak_wa')
                                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
@@ -149,8 +151,8 @@
                                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                         Alamat Sekarang
                                     </label>
-                                    <input type="text" name="update_alamat_sekarang" placeholder="Alamat domisili sekarang"
-                                        value="{{ old('update_alamat_sekarang') }}"
+                                    <input type="text" name="update_alamat_sekarang"
+                                        placeholder="Alamat domisili sekarang" value="{{ old('update_alamat_sekarang') }}"
                                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('update_alamat_sekarang') border-red-500 @enderror" />
                                     @error('update_alamat_sekarang')
                                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
@@ -169,9 +171,13 @@
                     </div>
                 </div>
                 <!-- Footer Credit (Mobile) -->
-                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800 lg:hidden">
+                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
                     <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
-                        CSR by <a href="https://dumeg.id" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300 transition-colors underline">PT. Duta Meta Graha</a>
+                        CSR by <a href="https://dumeg.id" target="_blank" rel="noopener noreferrer"
+                            class="text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300 transition-colors underline">
+                            <img src="{{ asset('images/logo_dumeg.png') }}" class="w-28 mx-auto inline-block"
+                                alt="Dumeg Logo">
+                        </a>
                     </p>
                 </div>
             </div>
@@ -187,12 +193,6 @@
                             Perguruan Islam Alkhairaat
                         </p>
                     </div>
-                </div>
-                <!-- Footer Credit -->
-                <div class="absolute bottom-6 left-6 z-40">
-                    <p class="text-xs text-gray-400 dark:text-gray-500">
-                        CSR by <a href="https://dumeg.id" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:text-brand-300 dark:text-brand-300 dark:hover:text-brand-200 transition-colors underline">PT. Duta Meta Graha</a>
-                    </p>
                 </div>
             </div>
         </div>

@@ -138,8 +138,10 @@
                             <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
                                 <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
                                     CSR by <a href="https://dumeg.id" target="_blank" rel="noopener noreferrer"
-                                        class="text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300 transition-colors underline">PT.
-                                        Duta Meta Graha</a>
+                                        class="text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300 transition-colors underline">
+                                        <img src="{{ asset('images/logo_dumeg.png') }}" class="w-28 mx-auto inline-block"
+                                            alt="Dumeg Logo">
+                                    </a>
                                 </p>
                             </div>
                         </div>
