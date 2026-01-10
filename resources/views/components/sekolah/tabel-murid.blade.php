@@ -1,4 +1,4 @@
-@props(['murid', 'sekolah'])
+@props(['murid', 'sekolah', 'tahunMasukOptions'])
 
 <!-- Murid Table Section -->
 <div x-data="{
@@ -40,7 +40,7 @@
             <!-- Search and Filter Form -->
             <form method="GET" class="flex flex-col gap-3">
                 <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
-                
+
                 <!-- Search Input -->
                 <div class="flex flex-col gap-2 sm:flex-row">
                     <input type="text" name="search" value="{{ request('search') }}"
@@ -81,8 +81,23 @@
                         </select>
                     </div>
 
+                    <!-- Tahun Masuk Filter -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">
+                            Tahun Masuk
+                        </label>
+                        <select name="tahun_masuk"
+                            class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                            <option value="">Semua</option>
+                            @foreach ($tahunMasukOptions ?? [] as $tahun)
+                                <option value="{{ $tahun }}" @selected(request('tahun_masuk') == $tahun)>{{ $tahun }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <!-- Reset Button -->
-                    @if (request('search') || request('jenis_kelamin') || request('status_kelulusan'))
+                    @if (request('search') || request('jenis_kelamin') || request('status_kelulusan') || request('tahun_masuk'))
                         <div class="flex items-end">
                             <a href="{{ route('sekolah.show-murid', $sekolah) }}"
                                 class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
@@ -96,7 +111,8 @@
             <!-- Export and Action Buttons -->
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
                 @if ($murid->count() > 0)
-                    <form method="GET" action="{{ route('sekolah.export-murid', $sekolah) }}" class="w-full sm:w-auto">
+                    <form method="GET" action="{{ route('sekolah.export-murid', $sekolah) }}"
+                        class="w-full sm:w-auto">
                         <!-- Pass all current filter parameters to export -->
                         @if (request('search'))
                             <input type="hidden" name="search" value="{{ request('search') }}">
@@ -107,10 +123,14 @@
                         @if (request('status_kelulusan'))
                             <input type="hidden" name="status_kelulusan" value="{{ request('status_kelulusan') }}">
                         @endif
+                        @if (request('tahun_masuk'))
+                            <input type="hidden" name="tahun_masuk" value="{{ request('tahun_masuk') }}">
+                        @endif
                         <button type="submit"
                             class="flex w-full items-center justify-center rounded-lg bg-green-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-green-600 transition sm:w-auto">
                             <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>
                             Ekspor ke XLSX
                         </button>

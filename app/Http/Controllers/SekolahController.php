@@ -224,6 +224,21 @@ class SekolahController extends Controller
             }
         }
 
+        // Apply tahun masuk filter
+        if ($request->filled('tahun_masuk')) {
+            $muridQuery->wherePivot('tahun_masuk', $request->input('tahun_masuk'));
+        }
+
+        // Get tahun masuk options for filter dropdown
+        $tahunMasukOptions = $sekolah->murid()
+            ->whereNotNull('sekolah_murid.tahun_masuk')
+            ->orderBy('sekolah_murid.tahun_masuk', 'desc')
+            ->pluck('sekolah_murid.tahun_masuk')
+            ->unique()
+            ->sort()
+            ->reverse()
+            ->values();
+
         // Get per_page parameter, default to 10
         $perPage = $request->input('per_page', 10);
         if ($perPage === 'all') {
@@ -237,6 +252,7 @@ class SekolahController extends Controller
             'title' => 'Daftar Murid - ' . $sekolah->nama,
             'sekolah' => $sekolah,
             'murid' => $murid,
+            'tahunMasukOptions' => $tahunMasukOptions,
         ]);
     }
 
@@ -270,6 +286,11 @@ class SekolahController extends Controller
             } else {
                 $muridQuery->wherePivot('status_kelulusan', $request->input('status_kelulusan'));
             }
+        }
+
+        // Apply tahun masuk filter
+        if ($request->filled('tahun_masuk')) {
+            $muridQuery->wherePivot('tahun_masuk', $request->input('tahun_masuk'));
         }
 
         // Get all filtered murid without pagination

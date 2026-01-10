@@ -61,6 +61,6 @@
         </div>
 
         <!-- Murid Table Section -->
-        <x-sekolah.tabel-murid :murid="$murid" :sekolah="$sekolah" />
+        <x-sekolah.tabel-murid :murid="$murid" :sekolah="$sekolah" :tahunMasukOptions="$tahunMasukOptions" />
     </div>
 @endsection
