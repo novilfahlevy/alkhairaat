@@ -45,7 +45,14 @@ class MuridGuruCountsWidget extends Component
             ->where('status_kelulusan', SekolahMurid::STATUS_LULUS_TIDAK)
             ->count();
 
-        $muridBelumLulus = $totalMurid - ($muridLulus + $muridTidakLulus);
+        $muridBelumLulus = SekolahMurid::whereHas('sekolah.editorLists', function ($query) {
+            if (Auth::user()->isPengurusBesar() || Auth::user()->isSuperuser()) {
+                return;
+            }
+            $query->where('id_user', Auth::id());
+        })
+            ->whereNull('status_kelulusan')
+            ->count();
 
         $totalGuru = Guru::count();
         $guruAktif = Guru::aktif()->count();

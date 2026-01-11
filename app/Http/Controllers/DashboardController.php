@@ -134,7 +134,14 @@ class DashboardController extends Controller
             ->where('status_kelulusan', SekolahMurid::STATUS_LULUS_TIDAK)
             ->count();
 
-        $muridBelumLulus = $totalMurid - ($muridLulus + $muridTidakLulus);
+        $muridBelumLulus = SekolahMurid::whereHas('sekolah.editorLists', function ($query) use ($user) {
+            if ($user->isPengurusBesar() || $user->isSuperuser()) {
+                return;
+            }
+            $query->where('id_user', $user->id);
+        })
+            ->whereNull('status_kelulusan')
+            ->count();
 
         $totalGuru = Guru::count();
         $guruAktif = Guru::aktif()->count();
@@ -215,7 +222,7 @@ class DashboardController extends Controller
 
                     $sekolahMurids = $schools->flatMap(fn($sekolah) => $sekolah->sekolahMurid);
                     $totalMurid = $sekolahMurids->count();
-                    
+
                     $alumniCount = $sekolahMurids
                         ->filter(fn($sm) => $sm->murid !== null && $sm->murid->isAlumni())
                         ->pluck('murid.id')
