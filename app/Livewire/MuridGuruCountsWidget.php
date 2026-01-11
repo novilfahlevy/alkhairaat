@@ -23,9 +23,9 @@ class MuridGuruCountsWidget extends Component
      */
     private function getCounts(): array
     {
-        $totalMurid = Murid::count();
-        $muridAktif = Murid::nonAlumni()->count();
-        $muridAlumni = Murid::alumni()->count();
+        $totalMurid = SekolahMurid::count();
+        // $muridAktif = Murid::nonAlumni()->count();
+        // $muridAlumni = Murid::alumni()->count();
 
         $muridLulus = SekolahMurid::whereHas('sekolah.editorLists', function ($query) {
             if (Auth::user()->isPengurusBesar() || Auth::user()->isSuperuser()) {
@@ -71,8 +71,8 @@ class MuridGuruCountsWidget extends Component
         return [
             'murid' => [
                 'total' => $totalMurid,
-                'aktif' => $muridAktif,
-                'alumni' => $muridAlumni,
+                // 'aktif' => $muridAktif,
+                // 'alumni' => $muridAlumni,
                 'laki_laki' => $muridLakiLaki,
                 'perempuan' => $muridPerempuan,
                 'lulus' => $muridLulus,

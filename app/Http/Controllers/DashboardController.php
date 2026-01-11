@@ -112,9 +112,9 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        $totalMurid = Murid::count();
-        $muridAktif = Murid::nonAlumni()->count();
-        $muridAlumni = Murid::alumni()->count();
+        $totalMurid = SekolahMurid::count();
+        // $muridAktif = Murid::nonAlumni()->count();
+        // $muridAlumni = Murid::alumni()->count();
 
         $muridLulus = SekolahMurid::whereHas('sekolah.editorLists', function ($query) use ($user) {
             if ($user->isPengurusBesar() || $user->isSuperuser()) {
@@ -160,8 +160,8 @@ class DashboardController extends Controller
         return [
             'murid' => [
                 'total' => $totalMurid,
-                'aktif' => $muridAktif,
-                'alumni' => $muridAlumni,
+                // 'aktif' => $muridAktif,
+                // 'alumni' => $muridAlumni,
                 'laki_laki' => $muridLakiLaki,
                 'perempuan' => $muridPerempuan,
                 'lulus' => $muridLulus,
