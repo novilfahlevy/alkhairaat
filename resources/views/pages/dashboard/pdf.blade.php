@@ -369,14 +369,6 @@
                             <td class="table-number">{{ number_format($murid_guru['murid']['total']) }}</td>
                         </tr>
                         <tr>
-                            <td>Murid Aktif</td>
-                            <td class="table-number">{{ number_format($murid_guru['murid']['aktif']) }}</td>
-                        </tr>
-                        <tr>
-                            <td>Alumni</td>
-                            <td class="table-number">{{ number_format($murid_guru['murid']['alumni']) }}</td>
-                        </tr>
-                        <tr>
                             <td>Laki-laki</td>
                             <td class="table-number">{{ number_format($murid_guru['murid']['laki_laki']) }}</td>
                         </tr>
@@ -385,16 +377,16 @@
                             <td class="table-number">{{ number_format($murid_guru['murid']['perempuan']) }}</td>
                         </tr>
                         <tr>
-                            <td>Jumlah Lulusan</td>
+                            <td>Murid Aktif (Belum Lulus)</td>
+                            <td class="table-number">{{ number_format($murid_guru['murid']['belum_lulus']) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Lulusan</td>
                             <td class="table-number">{{ number_format($murid_guru['murid']['lulus']) }}</td>
                         </tr>
                         <tr>
                             <td>Tidak Lulus</td>
                             <td class="table-number">{{ number_format($murid_guru['murid']['tidak_lulus']) }}</td>
-                        </tr>
-                        <tr>
-                            <td>Jumlah Murid Aktif</td>
-                            <td class="table-number">{{ number_format($murid_guru['murid']['belum_lulus']) }}</td>
                         </tr>
                     </tbody>
                 </table>
