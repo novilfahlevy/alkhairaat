@@ -77,9 +77,9 @@ class MuridAlumniCountsByProvinceWidget extends Component
                     $totalMurid = $sekolahMurids->count();
                     
                     $alumniCount = $sekolahMurids
-                        ->flatMap(fn($sm) => $sm->murid)
-                        ->filter(fn($murid) => $murid->isAlumni())
-                        ->unique('id')
+                        ->filter(fn($sm) => $sm->murid !== null && $sm->murid->isAlumni())
+                        ->pluck('murid.id')
+                        ->unique()
                         ->count();
 
                     // Jika tidak ada murid di kabupaten ini (untuk user ini), skip

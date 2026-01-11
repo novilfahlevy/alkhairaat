@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Models\Murid;
 use App\Models\Guru;
+use App\Models\SekolahMurid;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class MuridGuruCountsWidget extends Component
@@ -24,6 +26,26 @@ class MuridGuruCountsWidget extends Component
         $totalMurid = Murid::count();
         $muridAktif = Murid::nonAlumni()->count();
         $muridAlumni = Murid::alumni()->count();
+
+        $muridLulus = SekolahMurid::whereHas('sekolah.editorLists', function ($query) {
+            if (Auth::user()->isPengurusBesar() || Auth::user()->isSuperuser()) {
+                return;
+            }
+            $query->where('id_user', Auth::id());
+        })
+            ->where('status_kelulusan', SekolahMurid::STATUS_LULUS_YA)
+            ->count();
+
+        $muridTidakLulus = SekolahMurid::whereHas('sekolah.editorLists', function ($query) {
+            if (Auth::user()->isPengurusBesar() || Auth::user()->isSuperuser()) {
+                return;
+            }
+            $query->where('id_user', Auth::id());
+        })
+            ->where('status_kelulusan', SekolahMurid::STATUS_LULUS_TIDAK)
+            ->count();
+
+        $muridBelumLulus = $totalMurid - ($muridLulus + $muridTidakLulus);
 
         $totalGuru = Guru::count();
         $guruAktif = Guru::aktif()->count();
@@ -46,6 +68,9 @@ class MuridGuruCountsWidget extends Component
                 'alumni' => $muridAlumni,
                 'laki_laki' => $muridLakiLaki,
                 'perempuan' => $muridPerempuan,
+                'lulus' => $muridLulus,
+                'tidak_lulus' => $muridTidakLulus,
+                'belum_lulus' => $muridBelumLulus,
             ],
             'guru' => [
                 'total' => $totalGuru,
