@@ -112,7 +112,7 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        $totalMurid = SekolahMurid::count();
+        $totalMurid = Murid::count();
         // $muridAktif = Murid::nonAlumni()->count();
         // $muridAlumni = Murid::alumni()->count();
 

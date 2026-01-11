@@ -23,7 +23,7 @@ class MuridGuruCountsWidget extends Component
      */
     private function getCounts(): array
     {
-        $totalMurid = SekolahMurid::count();
+        $totalMurid = Murid::count();
         // $muridAktif = Murid::nonAlumni()->count();
         // $muridAlumni = Murid::alumni()->count();
 
