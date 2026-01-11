@@ -38,16 +38,6 @@
                             class="bg-purple-600 dark:bg-purple-500 text-white text-xs sm:text-sm font-bold px-2 sm:px-3 py-1 rounded-full shadow-sm dark:shadow-gray-900/50">
                             {{ number_format($provinsi['total_alumni']) }} alumni
                         </span>
-                        @php
-                            $persenAlumni =
-                                $provinsi['total_murid'] > 0
-                                    ? ($provinsi['total_alumni'] / $provinsi['total_murid']) * 100
-                                    : 0;
-                        @endphp
-                        <span
-                            class="bg-emerald-600 dark:bg-emerald-500 text-white text-xs sm:text-sm font-bold px-2 sm:px-3 py-1 rounded-full shadow-sm dark:shadow-gray-900/50">
-                            {{ number_format($persenAlumni, 1) }}%
-                        </span>
                     </div>
                 </button>
 
@@ -80,12 +70,6 @@
                                         <span class="text-xs text-gray-500 dark:text-gray-400">Alumni:</span>
                                         <span
                                             class="text-lg font-bold text-purple-600 dark:text-purple-400">{{ number_format($kabupaten['alumni_count']) }}</span>
-                                    </div>
-                                    <div
-                                        class="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-600">
-                                        <span class="text-xs text-gray-500 dark:text-gray-400">Persentase Alumni:</span>
-                                        <span
-                                            class="text-sm font-bold text-emerald-600 dark:text-emerald-400">{{ number_format($persenKabAlumni, 1) }}%</span>
                                     </div>
                                 </div>
                             </div>

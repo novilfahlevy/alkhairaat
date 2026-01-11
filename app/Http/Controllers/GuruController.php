@@ -19,57 +19,28 @@ class GuruController extends Controller
     {
         // Check if user is authenticated using Auth facade like in SekolahController
         $user = Auth::user();
-        
+
         if (!$user) {
             abort(403, 'Unauthorized');
         }
-        
-        // Determine which teachers to show based on user role
-        if ($user->isSuperuser() || $user->isKomisariatWilayah()) {
-            // Show all teachers for superusers and wilayah admins
-            $query = Guru::withoutGlobalScope(GuruSekolahNauanganScope::class)
-                ->with([
-                    'jabatanGurus.sekolah',
-                ]);
-            
-            // Add search functionality
-            if ($request->filled('search')) {
-                $search = $request->input('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('nama', 'like', "%{$search}%")
-                      ->orWhere('nik', 'like', "%{$search}%")
-                      ->orWhere('npk', 'like', "%{$search}%")
-                      ->orWhere('nuptk', 'like', "%{$search}%");
-                });
-            }
-            
-            $guru = $query->latest()->paginate(20);
-            $title = 'Data Guru Semua Sekolah';
-            
-        } elseif ($user->isSekolah() && $user->sekolah) {
-            // Show teachers only from this school
-            $sekolah = $user->sekolah;
-            $query = $sekolah->guru();
-            
-            if ($request->filled('search')) {
-                $search = $request->input('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('nama', 'like', "%{$search}%")
-                      ->orWhere('nik', 'like', "%{$search}%")
-                      ->orWhere('npk', 'like', "%{$search}%")
-                      ->orWhere('nuptk', 'like', "%{$search}%");
-                });
-            }
-            
-            $guru = $query->paginate(20);
-            $title = 'Data Guru - ' . $sekolah->nama;
-            
-        } else {
-            // For other roles, show empty or limited data
-            $guru = collect();
-            $title = 'Data Guru';
+
+        // Show all teachers for superusers and wilayah admins
+        $query = Guru::with(['jabatanGurus.sekolah']);
+
+        // Add search functionality
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('nik', 'like', "%{$search}%")
+                    ->orWhere('npk', 'like', "%{$search}%")
+                    ->orWhere('nuptk', 'like', "%{$search}%");
+            });
         }
-        
+
+        $guru = $query->latest()->paginate(20);
+        $title = 'Data Guru';
+
         return view('pages.guru.index', compact('guru', 'title'));
     }
 

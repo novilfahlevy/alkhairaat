@@ -453,7 +453,6 @@
                                 <th>Provinsi</th>
                                 <th class="text-right">Total Murid</th>
                                 <th class="text-right">Total Alumni</th>
-                                <th class="text-right">Persentase Alumni</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -465,25 +464,17 @@
                                 @php
                                     $grandTotalMurid += $prov['total_murid'];
                                     $grandTotalAlumni += $prov['total_alumni'];
-                                    $persenAlumni =
-                                        $prov['total_murid'] > 0
-                                            ? ($prov['total_alumni'] / $prov['total_murid']) * 100
-                                            : 0;
                                 @endphp
                                 <tr>
                                     <td><strong>{{ $prov['nama'] }}</strong></td>
                                     <td class="table-number">{{ number_format($prov['total_murid']) }}</td>
                                     <td class="table-number">{{ number_format($prov['total_alumni']) }}</td>
-                                    <td class="table-number">{{ number_format($persenAlumni, 1) }}%</td>
                                 </tr>
                             @endforeach
                             <tr style="background-color: #d1fae5; font-weight: bold;">
                                 <td><strong>TOTAL SELURUH WILAYAH</strong></td>
                                 <td class="table-number">{{ number_format($grandTotalMurid) }}</td>
                                 <td class="table-number">{{ number_format($grandTotalAlumni) }}</td>
-                                <td class="table-number">
-                                    {{ $grandTotalMurid > 0 ? number_format(($grandTotalAlumni / $grandTotalMurid) * 100, 1) : 0 }}%
-                                </td>
                             </tr>
                         </tbody>
                     </table>

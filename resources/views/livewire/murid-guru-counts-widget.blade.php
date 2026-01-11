@@ -56,26 +56,6 @@
                 </div>
             </div>
 
-            <!-- Persentase Alumni -->
-            @php
-                $persenAlumni =
-                    $counts['murid']['total'] > 0 ? ($counts['murid']['alumni'] / $counts['murid']['total']) * 100 : 0;
-            @endphp
-            <div
-                class="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900 dark:to-emerald-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-emerald-200 dark:border-emerald-700 md:col-span-2">
-                <div class="flex items-center justify-between gap-2">
-                    <div class="min-w-0">
-                        <p
-                            class="text-xs sm:text-sm font-medium text-emerald-600 dark:text-emerald-300 uppercase tracking-wide truncate">
-                            Persentase Alumni</p>
-                        <p class="text-2xl sm:text-3xl font-bold text-emerald-800 dark:text-emerald-100 mt-1">
-                            {{ number_format($persenAlumni, 1) }}%</p>
-                    </div>
-                    <i
-                        class="fas fa-chart-pie text-3xl sm:text-4xl text-emerald-300 dark:text-emerald-600 flex-shrink-0"></i>
-                </div>
-            </div>
-
             <!-- Murid Laki-laki -->
             <div
                 class="bg-gradient-to-br from-cyan-50 to-cyan-100 dark:from-cyan-900 dark:to-cyan-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-cyan-200 dark:border-cyan-700">
