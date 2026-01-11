@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\MuridController;
+use App\Http\Controllers\ProfileController;
 use App\Models\User;
 use App\Models\Murid;
 
@@ -56,6 +57,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', function () {
         return view('pages.profile', ['title' => 'Profile']);
     })->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Calendar
     Route::get('/calendar', function () {

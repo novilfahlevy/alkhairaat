@@ -72,7 +72,7 @@
                                 fill="currentColor"
                             />
                         </svg>',
-                        'path' => '/profile',
+                        'path' => '/profile/edit',
                     ],
                     // [
                     //     'text' => 'Panduan & Bantuan',
