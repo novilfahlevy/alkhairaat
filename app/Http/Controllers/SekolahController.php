@@ -261,46 +261,13 @@ class SekolahController extends Controller
      */
     public function exportMurid(Sekolah $sekolah, Request $request)
     {
-        // Fetch murid with the same filters as showMurid
-        $muridQuery = $sekolah->murid();
-
-        // Apply search filter
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $muridQuery->where(function ($q) use ($search) {
-                $q->where('murid.nama', 'like', "%{$search}%")
-                    ->orWhere('murid.nisn', 'like', "%{$search}%")
-                    ->orWhere('murid.nik', 'like', "%{$search}%");
-            });
-        }
-
-        // Apply jenis kelamin filter
-        if ($request->filled('jenis_kelamin')) {
-            $muridQuery->where('murid.jenis_kelamin', $request->input('jenis_kelamin'));
-        }
-
-        // Apply status kelulusan filter
-        if ($request->filled('status_kelulusan')) {
-            if ($request->input('status_kelulusan') === 'belum') {
-                $muridQuery->wherePivotNull('status_kelulusan');
-            } else {
-                $muridQuery->wherePivot('status_kelulusan', $request->input('status_kelulusan'));
-            }
-        }
-
-        // Apply tahun masuk filter
-        if ($request->filled('tahun_masuk')) {
-            $muridQuery->wherePivot('tahun_masuk', $request->input('tahun_masuk'));
-        }
-
-        // Get all filtered murid without pagination
-        $muridCollection = $muridQuery->get();
-
         // Generate filename with school code and timestamp
         $filename = 'Murid_' . $sekolah->kode_sekolah . '_' . now()->format('Ymd_His') . '.xlsx';
 
+        // Use FromQuery-based export for better memory efficiency
+        // Filters are now handled inside the Export class
         return Excel::download(
-            new MuridSekolahExport($sekolah, $muridCollection),
+            new MuridSekolahExport($sekolah, $request),
             $filename
         );
     }

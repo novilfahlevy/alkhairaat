@@ -15,8 +15,9 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 
-class MuridImport implements ToCollection, WithStartRow, WithChunkReading
+class MuridImport implements ToCollection, WithStartRow, WithChunkReading, SkipsEmptyRows
 {
     private ?array $headers = null;
     private ?array $columnMap = null;
@@ -186,12 +187,12 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading
                 }
 
                 // Validate NISN format (should be numeric and 10 digits)
-                if (!is_numeric($nisn) || strlen($nisn) !== 10) {
+                if (!is_numeric($nisn)) {
                     $this->errors->push([
                         'row' => $rowNumber,
                         'nisn' => $nisn,
                         'nama' => $nama,
-                        'error' => 'NISN harus berupa angka dan 10 digit'
+                        'error' => 'NISN tidak valid.'
                     ]);
                     return null;
                 }

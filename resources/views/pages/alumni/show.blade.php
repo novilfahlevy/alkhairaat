@@ -124,12 +124,33 @@
                                     {{ $alumni->kota_tempat_kerja ?? '-' }}
                                 </p>
                             </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Riwayat Pekerjaan</label>
+                                <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                    {{ $alumni->riwayat_pekerjaan ?? '-' }}
+                                </p>
+                            </div>
                         </div>
-                        <div class="mt-4">
-                            <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Riwayat Pekerjaan</label>
-                            <p class="mt-1 text-sm text-gray-900 dark:text-white">
-                                {{ $alumni->riwayat_pekerjaan ?? '-' }}
-                            </p>
+                    </div>
+
+                    <!-- Domisili Section -->
+                    <div class="border-t border-gray-200 pt-6 dark:border-gray-700">
+                        <h3 class="mb-4 text-base font-semibold text-gray-900 dark:text-white">
+                            Informasi Domisili
+                        </h3>
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div>
+                                <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Provinsi</label>
+                                <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                    {{ $alumni->provinsi?->nama_provinsi ?? '-' }}
+                                </p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Kabupaten/Kota</label>
+                                <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                    {{ $alumni->kabupaten?->nama_kabupaten ?? '-' }}
+                                </p>
+                            </div>
                         </div>
                     </div>
 

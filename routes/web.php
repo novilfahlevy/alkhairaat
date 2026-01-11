@@ -11,6 +11,9 @@ use App\Models\Murid;
 // API public: cek NIK murid (untuk validasi alumni, tanpa auth)
 Route::get('/api/cari-nik-murid', [\App\Http\Controllers\ValidasiAlumniController::class, 'cariNik'])->name('api.cari-nik-murid');
 
+// API public: get kabupaten by provinsi (untuk validasi alumni)
+Route::get('/api/kabupaten-by-provinsi', [\App\Http\Controllers\ValidasiAlumniController::class, 'getKabupatenByProvinsi'])->name('api.kabupaten-by-provinsi');
+
 // Validasi Alumni (public, tanpa login)
 Route::get('/validasi-alumni', [\App\Http\Controllers\ValidasiAlumniController::class, 'form'])->name('validasi-alumni.form');
 Route::post('/validasi-alumni', [\App\Http\Controllers\ValidasiAlumniController::class, 'store'])->name('validasi-alumni.store');

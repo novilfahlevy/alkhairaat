@@ -4,171 +4,203 @@ namespace App\Exports;
 
 use App\Models\Sekolah;
 use App\Models\Alamat;
-use Illuminate\Database\Eloquent\Collection;
-use Maatwebsite\Excel\Concerns\FromArray;
+use App\Models\Murid;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-class MuridSekolahExport implements FromArray, WithStyles, WithColumnWidths
+class MuridSekolahExport implements FromQuery, WithHeadings, WithMapping, WithStyles, WithColumnWidths, WithEvents
 {
-    private Collection $murid;
     private Sekolah $sekolah;
+    private ?Request $request;
+    private int $rowCount = 0;
 
-    public function __construct(Sekolah $sekolah, Collection $murid)
+    /**
+     * Chunk size for processing - adjust based on your server's memory
+     */
+    private const CHUNK_SIZE = 500;
+
+    public function __construct(Sekolah $sekolah, ?Request $request = null)
     {
         $this->sekolah = $sekolah;
-        $this->murid = $murid;
+        $this->request = $request;
     }
 
     /**
-     * Get the data as array (including headers)
+     * Build the query with eager loading and filters
      */
-    public function array(): array
+    public function query(): Builder
     {
-        $data = [];
+        // Build query directly with join to sekolah_murid
+        $query = Murid::query()
+            ->join('sekolah_murid', 'murid.id', '=', 'sekolah_murid.id_murid')
+            ->where('sekolah_murid.id_sekolah', $this->sekolah->id)
+            ->select('murid.*', 
+                'sekolah_murid.kelas',
+                'sekolah_murid.tahun_masuk',
+                'sekolah_murid.tahun_keluar',
+                'sekolah_murid.status_kelulusan',
+                'sekolah_murid.tahun_mutasi_masuk',
+                'sekolah_murid.alasan_mutasi_masuk',
+                'sekolah_murid.tahun_mutasi_keluar',
+                'sekolah_murid.alasan_mutasi_keluar'
+            );
 
-        // Row 1: Group headers
-        $data[] = $this->getGroupHeaders();
+        // Apply filters if request is provided
+        if ($this->request) {
+            // Apply search filter
+            if ($this->request->filled('search')) {
+                $search = $this->request->input('search');
+                $query->where(function ($q) use ($search) {
+                    $q->where('murid.nama', 'like', "%{$search}%")
+                      ->orWhere('murid.nisn', 'like', "%{$search}%")
+                      ->orWhere('murid.nik', 'like', "%{$search}%");
+                });
+            }
 
-        // Row 2: Column headers
-        $data[] = $this->getColumnHeaders();
+            // Apply jenis kelamin filter
+            if ($this->request->filled('jenis_kelamin')) {
+                $query->where('murid.jenis_kelamin', $this->request->input('jenis_kelamin'));
+            }
 
-        // Data rows
-        foreach ($this->murid as $item) {
-            $alamatAsli = Alamat::where('id_murid', $item->id)->where('jenis', Alamat::JENIS_ASLI)->first();
-            $alamatDomisili = Alamat::where('id_murid', $item->id)->where('jenis', Alamat::JENIS_DOMISILI)->first();
-            $alamatAyah = Alamat::where('id_murid', $item->id)->where('jenis', Alamat::JENIS_AYAH)->first();
-            $alamatIbu = Alamat::where('id_murid', $item->id)->where('jenis', Alamat::JENIS_IBU)->first();
+            // Apply status kelulusan filter
+            if ($this->request->filled('status_kelulusan')) {
+                $status = $this->request->input('status_kelulusan');
+                if ($status === 'belum') {
+                    $query->whereNull('sekolah_murid.status_kelulusan');
+                } else {
+                    $query->where('sekolah_murid.status_kelulusan', $status);
+                }
+            }
 
-            $data[] = [
-                // Data Pribadi (8 columns + 1 separator)
-                $item->nisn ?? '',
-                $item->nama ?? '',
-                $item->jenis_kelamin ?? '',
-                $item->nik ?? '',
-                $item->tempat_lahir ?? '',
-                $item->tanggal_lahir ? $item->tanggal_lahir->format('d/m/Y') : '',
-                $item->kontak_wa_hp ?? '',
-                $item->kontak_email ?? '',
-                '', // Separator
-
-                // Data Sekolah dan Pendidikan (8 columns + 1 separator)
-                $item->pivot?->kelas ?? '',
-                $item->pivot?->tahun_masuk ?? '',
-                $item->pivot?->tahun_keluar ?? '',
-                $this->getStatusKelulusanLabel($item->pivot?->status_kelulusan),
-                $item->pivot?->tahun_mutasi_masuk ?? '',
-                $item->pivot?->alasan_mutasi_masuk ?? '',
-                $item->pivot?->tahun_mutasi_keluar ?? '',
-                $item->pivot?->alasan_mutasi_keluar ?? '',
-                '', // Separator
-
-                // Data Orang Tua (4 columns + 1 separator)
-                $item->nama_ayah ?? '',
-                $item->nomor_hp_ayah ?? '',
-                $item->nama_ibu ?? '',
-                $item->nomor_hp_ibu ?? '',
-                '', // Separator
-
-                // Alamat Asli (10 columns + 1 separator)
-                $alamatAsli?->provinsi ?? '',
-                $alamatAsli?->kabupaten ?? '',
-                $alamatAsli?->kecamatan ?? '',
-                $alamatAsli?->kelurahan ?? '',
-                $alamatAsli?->rt ?? '',
-                $alamatAsli?->rw ?? '',
-                $alamatAsli?->kode_pos ?? '',
-                $alamatAsli?->alamat_lengkap ?? '',
-                $alamatAsli?->koordinat_y ?? '', // Latitude
-                $alamatAsli?->koordinat_x ?? '', // Longitude
-                '', // Separator
-
-                // Alamat Domisili (10 columns + 1 separator)
-                $alamatDomisili?->provinsi ?? '',
-                $alamatDomisili?->kabupaten ?? '',
-                $alamatDomisili?->kecamatan ?? '',
-                $alamatDomisili?->kelurahan ?? '',
-                $alamatDomisili?->rt ?? '',
-                $alamatDomisili?->rw ?? '',
-                $alamatDomisili?->kode_pos ?? '',
-                $alamatDomisili?->alamat_lengkap ?? '',
-                $alamatDomisili?->koordinat_y ?? '', // Latitude
-                $alamatDomisili?->koordinat_x ?? '', // Longitude
-                '', // Separator
-
-                // Alamat Ayah (10 columns + 1 separator)
-                $alamatAyah?->provinsi ?? '',
-                $alamatAyah?->kabupaten ?? '',
-                $alamatAyah?->kecamatan ?? '',
-                $alamatAyah?->kelurahan ?? '',
-                $alamatAyah?->rt ?? '',
-                $alamatAyah?->rw ?? '',
-                $alamatAyah?->kode_pos ?? '',
-                $alamatAyah?->alamat_lengkap ?? '',
-                $alamatAyah?->koordinat_y ?? '', // Latitude
-                $alamatAyah?->koordinat_x ?? '', // Longitude
-                '', // Separator
-
-                // Alamat Ibu (10 columns)
-                $alamatIbu?->provinsi ?? '',
-                $alamatIbu?->kabupaten ?? '',
-                $alamatIbu?->kecamatan ?? '',
-                $alamatIbu?->kelurahan ?? '',
-                $alamatIbu?->rt ?? '',
-                $alamatIbu?->rw ?? '',
-                $alamatIbu?->kode_pos ?? '',
-                $alamatIbu?->alamat_lengkap ?? '',
-                $alamatIbu?->koordinat_y ?? '', // Latitude
-                $alamatIbu?->koordinat_x ?? '', // Longitude
-            ];
+            // Apply tahun masuk filter
+            if ($this->request->filled('tahun_masuk')) {
+                $query->where('sekolah_murid.tahun_masuk', $this->request->input('tahun_masuk'));
+            }
         }
 
-        return $data;
+        // Count rows for styling (use a separate count query to avoid memory issues)
+        $this->rowCount = (clone $query)->count();
+
+        return $query;
     }
 
     /**
-     * Get group headers (row 1)
+     * Map each row - this is called per chunk, so memory efficient
      */
-    private function getGroupHeaders(): array
+    public function map($murid): array
     {
+        // Fetch alamat in a single query with indexing by jenis
+        $alamatRecords = Alamat::where('id_murid', $murid->id)
+            ->whereIn('jenis', [Alamat::JENIS_ASLI, Alamat::JENIS_DOMISILI, Alamat::JENIS_AYAH, Alamat::JENIS_IBU])
+            ->get()
+            ->keyBy('jenis');
+
+        $alamatAsli = $alamatRecords->get(Alamat::JENIS_ASLI);
+        $alamatDomisili = $alamatRecords->get(Alamat::JENIS_DOMISILI);
+        $alamatAyah = $alamatRecords->get(Alamat::JENIS_AYAH);
+        $alamatIbu = $alamatRecords->get(Alamat::JENIS_IBU);
+
         return [
             // Data Pribadi (8 columns + 1 separator)
-            'Data Pribadi', '', '', '', '', '', '', '',
+            $murid->nisn ?? '',
+            $murid->nama ?? '',
+            $murid->jenis_kelamin ?? '',
+            $murid->nik ?? '',
+            $murid->tempat_lahir ?? '',
+            $murid->tanggal_lahir ? $murid->tanggal_lahir->format('d/m/Y') : '',
+            $murid->kontak_wa_hp ?? '',
+            $murid->kontak_email ?? '',
             '', // Separator
 
             // Data Sekolah dan Pendidikan (8 columns + 1 separator)
-            'Data Sekolah dan Pendidikan', '', '', '', '', '', '', '',
+            // Data from joined sekolah_murid table
+            $murid->kelas ?? '',
+            $murid->tahun_masuk ?? '',
+            $murid->tahun_keluar ?? '',
+            $this->getStatusKelulusanLabel($murid->status_kelulusan),
+            $murid->tahun_mutasi_masuk ?? '',
+            $murid->alasan_mutasi_masuk ?? '',
+            $murid->tahun_mutasi_keluar ?? '',
+            $murid->alasan_mutasi_keluar ?? '',
             '', // Separator
 
             // Data Orang Tua (4 columns + 1 separator)
-            'Data Orang Tua', '', '', '',
+            $murid->nama_ayah ?? '',
+            $murid->nomor_hp_ayah ?? '',
+            $murid->nama_ibu ?? '',
+            $murid->nomor_hp_ibu ?? '',
             '', // Separator
 
             // Alamat Asli (10 columns + 1 separator)
-            'Alamat Asli', '', '', '', '', '', '', '', '', '',
+            $alamatAsli?->provinsi ?? '',
+            $alamatAsli?->kabupaten ?? '',
+            $alamatAsli?->kecamatan ?? '',
+            $alamatAsli?->kelurahan ?? '',
+            $alamatAsli?->rt ?? '',
+            $alamatAsli?->rw ?? '',
+            $alamatAsli?->kode_pos ?? '',
+            $alamatAsli?->alamat_lengkap ?? '',
+            $alamatAsli?->koordinat_y ?? '', // Latitude
+            $alamatAsli?->koordinat_x ?? '', // Longitude
             '', // Separator
 
             // Alamat Domisili (10 columns + 1 separator)
-            'Alamat Domisili', '', '', '', '', '', '', '', '', '',
+            $alamatDomisili?->provinsi ?? '',
+            $alamatDomisili?->kabupaten ?? '',
+            $alamatDomisili?->kecamatan ?? '',
+            $alamatDomisili?->kelurahan ?? '',
+            $alamatDomisili?->rt ?? '',
+            $alamatDomisili?->rw ?? '',
+            $alamatDomisili?->kode_pos ?? '',
+            $alamatDomisili?->alamat_lengkap ?? '',
+            $alamatDomisili?->koordinat_y ?? '', // Latitude
+            $alamatDomisili?->koordinat_x ?? '', // Longitude
             '', // Separator
 
             // Alamat Ayah (10 columns + 1 separator)
-            'Alamat Ayah', '', '', '', '', '', '', '', '', '',
+            $alamatAyah?->provinsi ?? '',
+            $alamatAyah?->kabupaten ?? '',
+            $alamatAyah?->kecamatan ?? '',
+            $alamatAyah?->kelurahan ?? '',
+            $alamatAyah?->rt ?? '',
+            $alamatAyah?->rw ?? '',
+            $alamatAyah?->kode_pos ?? '',
+            $alamatAyah?->alamat_lengkap ?? '',
+            $alamatAyah?->koordinat_y ?? '', // Latitude
+            $alamatAyah?->koordinat_x ?? '', // Longitude
             '', // Separator
 
             // Alamat Ibu (10 columns)
-            'Alamat Ibu', '', '', '', '', '', '', '', '', '',
+            $alamatIbu?->provinsi ?? '',
+            $alamatIbu?->kabupaten ?? '',
+            $alamatIbu?->kecamatan ?? '',
+            $alamatIbu?->kelurahan ?? '',
+            $alamatIbu?->rt ?? '',
+            $alamatIbu?->rw ?? '',
+            $alamatIbu?->kode_pos ?? '',
+            $alamatIbu?->alamat_lengkap ?? '',
+            $alamatIbu?->koordinat_y ?? '', // Latitude
+            $alamatIbu?->koordinat_x ?? '', // Longitude
         ];
     }
 
     /**
-     * Get column headers (row 2)
+     * Column headings (row 2 in final output)
      */
-    private function getColumnHeaders(): array
+    public function headings(): array
     {
         return [
             // Data Pribadi
@@ -201,12 +233,37 @@ class MuridSekolahExport implements FromArray, WithStyles, WithColumnWidths
     }
 
     /**
-     * Style the worksheet
+     * Register events for adding group header row and applying styles
      */
-    public function styles(Worksheet $sheet)
+    public function registerEvents(): array
     {
-        $lastColumn = 'BP'; // Total 68 columns
-        $lastRow = count($this->murid) + 2; // +2 for 2 header rows
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $sheet = $event->sheet->getDelegate();
+
+                // Insert a new row at the top for group headers
+                $sheet->insertNewRowBefore(1, 1);
+
+                // Add group headers to row 1
+                $groupHeaders = $this->getGroupHeaders();
+                $col = 'A';
+                foreach ($groupHeaders as $header) {
+                    $sheet->setCellValue($col . '1', $header);
+                    $col++;
+                }
+
+                // Apply all styles after row insertion
+                $this->applyStyles($sheet);
+            },
+        ];
+    }
+
+    /**
+     * Apply styles to the worksheet (called from AfterSheet event)
+     */
+    private function applyStyles(Worksheet $sheet): void
+    {
+        $lastRow = $this->rowCount + 2; // +2 for 2 header rows
 
         // Style row 1 (group headers)
         $sheet->getStyle('1:1')->applyFromArray([
@@ -255,27 +312,6 @@ class MuridSekolahExport implements FromArray, WithStyles, WithColumnWidths
             ],
         ]);
 
-        // Style body rows
-        for ($i = 3; $i <= $lastRow; $i++) {
-            $fillColor = ($i % 2 === 1) ? 'F9FAFB' : 'FFFFFF';
-
-            $sheet->getStyle($i . ':' . $i)->applyFromArray([
-                'fill' => [
-                    'fillType' => Fill::FILL_SOLID,
-                    'startColor' => ['rgb' => $fillColor],
-                ],
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => Border::BORDER_THIN,
-                        'color' => ['rgb' => 'E5E7EB'],
-                    ],
-                ],
-                'alignment' => [
-                    'vertical' => Alignment::VERTICAL_TOP,
-                ],
-            ]);
-        }
-
         // Set row heights
         $sheet->getRowDimension(1)->setRowHeight(25);
         $sheet->getRowDimension(2)->setRowHeight(30);
@@ -290,8 +326,50 @@ class MuridSekolahExport implements FromArray, WithStyles, WithColumnWidths
                 ],
             ]);
         }
+    }
 
+    /**
+     * Style the worksheet - empty since we apply styles in AfterSheet event
+     */
+    public function styles(Worksheet $sheet)
+    {
+        // Styles are applied in AfterSheet event after row insertion
         return [];
+    }
+
+    /**
+     * Get group headers (row 1)
+     */
+    private function getGroupHeaders(): array
+    {
+        return [
+            // Data Pribadi (8 columns + 1 separator)
+            'Data Pribadi', '', '', '', '', '', '', '',
+            '', // Separator
+
+            // Data Sekolah dan Pendidikan (8 columns + 1 separator)
+            'Data Sekolah dan Pendidikan', '', '', '', '', '', '', '',
+            '', // Separator
+
+            // Data Orang Tua (4 columns + 1 separator)
+            'Data Orang Tua', '', '', '',
+            '', // Separator
+
+            // Alamat Asli (10 columns + 1 separator)
+            'Alamat Asli', '', '', '', '', '', '', '', '', '',
+            '', // Separator
+
+            // Alamat Domisili (10 columns + 1 separator)
+            'Alamat Domisili', '', '', '', '', '', '', '', '', '',
+            '', // Separator
+
+            // Alamat Ayah (10 columns + 1 separator)
+            'Alamat Ayah', '', '', '', '', '', '', '', '', '',
+            '', // Separator
+
+            // Alamat Ibu (10 columns)
+            'Alamat Ibu', '', '', '', '', '', '', '', '', '',
+        ];
     }
 
     /**

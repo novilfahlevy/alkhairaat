@@ -67,6 +67,8 @@ class ValidasiAlumni extends Model
         'kontak_wa',
         'kontak_email',
         'update_alamat_sekarang',
+        'id_provinsi',
+        'id_kabupaten',
         'tanggal_update_data_alumni',
         'is_accepted'
     ];
@@ -90,6 +92,22 @@ class ValidasiAlumni extends Model
     public function murid(): BelongsTo
     {
         return $this->belongsTo(Murid::class, 'id_murid');
+    }
+
+    /**
+     * Get the provinsi that this validasi alumni record belongs to.
+     */
+    public function provinsi(): BelongsTo
+    {
+        return $this->belongsTo(Provinsi::class, 'id_provinsi');
+    }
+
+    /**
+     * Get the kabupaten that this validasi alumni record belongs to.
+     */
+    public function kabupaten(): BelongsTo
+    {
+        return $this->belongsTo(Kabupaten::class, 'id_kabupaten');
     }
 
     /**

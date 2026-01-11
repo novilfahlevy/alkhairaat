@@ -200,6 +200,8 @@
                                                 kontak_wa: '{{ $item->kontak_wa ?? '' }}',
                                                 kontak_email: '{{ $item->kontak_email ?? '' }}',
                                                 alamat_sekarang: '{{ addslashes($item->update_alamat_sekarang ?? '') }}',
+                                                provinsi: {{ $item->provinsi ? "{ id: {$item->provinsi->id}, nama_provinsi: '{$item->provinsi->nama_provinsi}' }" : 'null' }},
+                                                kabupaten: {{ $item->kabupaten ? "{ id: {$item->kabupaten->id}, nama_kabupaten: '{$item->kabupaten->nama_kabupaten}' }" : 'null' }},
                                                 is_accepted: {{ $item->is_accepted ? 'true' : 'false' }}
                                             })"
                                             class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex-1 rounded-md bg-blue-50 px-3 py-2 text-center text-sm font-medium dark:bg-blue-900/20">
@@ -288,6 +290,8 @@
                                     kontak_wa: '{{ $item->kontak_wa ?? '' }}',
                                     kontak_email: '{{ $item->kontak_email ?? '' }}',
                                     alamat_sekarang: '{{ addslashes($item->update_alamat_sekarang ?? '') }}',
+                                    provinsi: {{ $item->provinsi ? "{ id: {$item->provinsi->id}, nama_provinsi: '{$item->provinsi->nama_provinsi}' }" : 'null' }},
+                                    kabupaten: {{ $item->kabupaten ? "{ id: {$item->kabupaten->id}, nama_kabupaten: '{$item->kabupaten->nama_kabupaten}' }" : 'null' }},
                                     is_accepted: {{ $item->is_accepted ? 'true' : 'false' }}
                                 })"
                                 class="flex items-center text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
@@ -432,6 +436,23 @@
                             <h4 class="mb-3 font-semibold text-gray-900 dark:text-white">Alamat Sekarang</h4>
                             <p class="text-sm text-gray-900 dark:text-white"
                                 x-text="selectedValidasi?.alamat_sekarang || '-'"></p>
+                        </div>
+
+                        <!-- Data Domisili -->
+                        <div>
+                            <h4 class="mb-3 font-semibold text-gray-900 dark:text-white">Informasi Domisili</h4>
+                            <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                                <div>
+                                    <label class="text-xs font-medium text-gray-500 dark:text-gray-400">Provinsi</label>
+                                    <p class="mt-1 text-sm text-gray-900 dark:text-white"
+                                        x-text="selectedValidasi?.provinsi?.nama_provinsi || '-'"></p>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-medium text-gray-500 dark:text-gray-400">Kabupaten/Kota</label>
+                                    <p class="mt-1 text-sm text-gray-900 dark:text-white"
+                                        x-text="selectedValidasi?.kabupaten?.nama_kabupaten || '-'"></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

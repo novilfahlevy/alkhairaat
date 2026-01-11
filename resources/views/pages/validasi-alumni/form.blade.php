@@ -158,6 +158,42 @@
                                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                     @enderror
                                 </div>
+                                <!-- Provinsi Domisili -->
+                                <div>
+                                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                        Provinsi Domisili Sekarang
+                                    </label>
+                                    <select name="id_provinsi" id="id_provinsi"
+                                        x-on:change="loadKabupaten($event.target.value)"
+                                        class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('id_provinsi') border-red-500 @enderror">
+                                        <option value="">-- Pilih Provinsi --</option>
+                                        @foreach ($provinsiList as $provinsi)
+                                            <option value="{{ $provinsi->id }}" {{ old('id_provinsi') == $provinsi->id ? 'selected' : '' }}>
+                                                {{ $provinsi->nama_provinsi }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('id_provinsi')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <!-- Kabupaten Domisili -->
+                                <div>
+                                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                        Kabupaten/Kota Domisili Sekarang
+                                    </label>
+                                    <select name="id_kabupaten" id="id_kabupaten"
+                                        class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 @error('id_kabupaten') border-red-500 @enderror"
+                                        :disabled="kabupatenList.length === 0">
+                                        <option value="">-- Pilih Kabupaten/Kota --</option>
+                                        <template x-for="kab in kabupatenList" :key="kab.id">
+                                            <option :value="kab.id" x-text="kab.nama_kabupaten" :selected="kab.id == oldKabupatenId"></option>
+                                        </template>
+                                    </select>
+                                    @error('id_kabupaten')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
+                                </div>
                                 <!-- Button -->
                                 <div>
                                     <button type="submit" :disabled="nikFound !== true"
@@ -208,6 +244,16 @@
                 muridNama: '',
                 muridId: '',
                 loading: false,
+                kabupatenList: [],
+                oldKabupatenId: `{{ old('id_kabupaten') }}`,
+
+                init() {
+                    // Load kabupaten if provinsi was selected (old value)
+                    const oldProvinsiId = `{{ old('id_provinsi') }}`;
+                    if (oldProvinsiId) {
+                        this.loadKabupaten(oldProvinsiId);
+                    }
+                },
 
                 searchNik() {
                     // Reset jika NIK kosong atau terlalu pendek
@@ -241,6 +287,23 @@
                             this.nikFound = false;
                             this.muridNama = '';
                             this.muridId = '';
+                        });
+                },
+
+                loadKabupaten(provinsiId) {
+                    if (!provinsiId) {
+                        this.kabupatenList = [];
+                        return;
+                    }
+
+                    fetch(`/api/kabupaten-by-provinsi?id_provinsi=${encodeURIComponent(provinsiId)}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            this.kabupatenList = data.kabupaten || [];
+                        })
+                        .catch(error => {
+                            console.error('Error loading kabupaten:', error);
+                            this.kabupatenList = [];
                         });
                 }
             }

@@ -79,6 +79,8 @@ class Alumni extends Model
         'nama_tempat_kerja',
         'kota_tempat_kerja',
         'riwayat_pekerjaan',
+        'id_provinsi',
+        'id_kabupaten',
     ];
 
     /**
@@ -87,6 +89,22 @@ class Alumni extends Model
     public function murid(): BelongsTo
     {
         return $this->belongsTo(Murid::class, 'id_murid', 'id');
+    }
+
+    /**
+     * Get the provinsi that this alumni belongs to.
+     */
+    public function provinsi(): BelongsTo
+    {
+        return $this->belongsTo(Provinsi::class, 'id_provinsi');
+    }
+
+    /**
+     * Get the kabupaten that this alumni belongs to.
+     */
+    public function kabupaten(): BelongsTo
+    {
+        return $this->belongsTo(Kabupaten::class, 'id_kabupaten');
     }
 
     /**

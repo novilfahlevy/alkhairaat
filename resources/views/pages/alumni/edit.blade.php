@@ -128,6 +128,31 @@
                 </div>
             </div>
 
+            <!-- Informasi Domisili (Read-only) -->
+            <div class="mb-8 border-t border-gray-200 py-8 dark:border-gray-700">
+                <h3 class="mb-6 text-base font-semibold text-gray-900 dark:text-white">
+                    Informasi Domisili
+                </h3>
+
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                            Provinsi
+                        </label>
+                        <input type="text" value="{{ $alumni->provinsi?->nama_provinsi ?? '-' }}" disabled
+                            class="h-11 w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
+                    </div>
+
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                            Kabupaten/Kota
+                        </label>
+                        <input type="text" value="{{ $alumni->kabupaten?->nama_kabupaten ?? '-' }}" disabled
+                            class="h-11 w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
+                    </div>
+                </div>
+            </div>
+
             <!-- Form Actions -->
             <div class="mt-8 flex gap-3 border-t border-gray-200 pt-8 dark:border-gray-700">
                 <button type="submit"

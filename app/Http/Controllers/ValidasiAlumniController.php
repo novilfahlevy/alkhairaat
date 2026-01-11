@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Alamat;
 use App\Models\Alumni;
+use App\Models\Kabupaten;
+use App\Models\Provinsi;
 use App\Models\ValidasiAlumni;
 use App\Models\Murid;
 use Illuminate\Http\Request;
@@ -16,7 +18,11 @@ class ValidasiAlumniController extends Controller
      */
     public function form(Request $request)
     {
-        return view('pages.validasi-alumni.form');
+        $provinsiList = Provinsi::orderBy('nama_provinsi')->get();
+
+        return view('pages.validasi-alumni.form', [
+            'provinsiList' => $provinsiList,
+        ]);
     }
 
     /**
@@ -34,6 +40,8 @@ class ValidasiAlumniController extends Controller
             'kontak_wa' => ['nullable', 'string', 'max:50'],
             'kontak_email' => ['nullable', 'email', 'max:255'],
             'update_alamat_sekarang' => ['nullable', 'string', 'max:255'],
+            'id_provinsi' => ['nullable', 'integer', 'exists:provinsi,id'],
+            'id_kabupaten' => ['nullable', 'integer', 'exists:kabupaten,id'],
         ]);
 
         $murid = Murid::withoutGlobalScopes()
@@ -58,6 +66,8 @@ class ValidasiAlumniController extends Controller
         $validasi->kontak_wa = $validated['kontak_wa'] ?? null;
         $validasi->kontak_email = $validated['kontak_email'] ?? null;
         $validasi->update_alamat_sekarang = $validated['update_alamat_sekarang'] ?? null;
+        $validasi->id_provinsi = $validated['id_provinsi'] ?? null;
+        $validasi->id_kabupaten = $validated['id_kabupaten'] ?? null;
         $validasi->tanggal_update_data_alumni = now();
         $validasi->save();
 
@@ -88,11 +98,29 @@ class ValidasiAlumniController extends Controller
     }
 
     /**
+     * Get kabupaten by provinsi (public API).
+     */
+    public function getKabupatenByProvinsi(Request $request)
+    {
+        $idProvinsi = $request->query('id_provinsi');
+
+        if (!$idProvinsi) {
+            return response()->json(['kabupaten' => []], 200);
+        }
+
+        $kabupaten = Kabupaten::where('id_provinsi', $idProvinsi)
+            ->orderBy('nama_kabupaten')
+            ->get(['id', 'nama_kabupaten']);
+
+        return response()->json(['kabupaten' => $kabupaten], 200);
+    }
+
+    /**
      * Show the alumni validation list (authenticated).
      */
     public function index(Request $request)
     {
-        $validasi = ValidasiAlumni::with('murid')
+        $validasi = ValidasiAlumni::with('murid', 'provinsi', 'kabupaten')
             ->orderBy('is_accepted', 'asc')
             ->orderBy('created_at', 'desc');
 
@@ -152,6 +180,8 @@ class ValidasiAlumniController extends Controller
                     'nama_tempat_kerja' => $validasi->nama_tempat_kerja,
                     'kota_tempat_kerja' => $validasi->kota_tempat_kerja,
                     'riwayat_pekerjaan' => $validasi->riwayat_pekerjaan,
+                    'id_provinsi' => $validasi->id_provinsi,
+                    'id_kabupaten' => $validasi->id_kabupaten,
                 ]
             );
 
@@ -162,6 +192,8 @@ class ValidasiAlumniController extends Controller
                     'nama_tempat_kerja' => $validasi->nama_tempat_kerja,
                     'kota_tempat_kerja' => $validasi->kota_tempat_kerja,
                     'riwayat_pekerjaan' => $validasi->riwayat_pekerjaan,
+                    'id_provinsi' => $validasi->id_provinsi,
+                    'id_kabupaten' => $validasi->id_kabupaten,
                 ]);
             }
 

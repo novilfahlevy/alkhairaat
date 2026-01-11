@@ -16,6 +16,7 @@
 
     <livewire:sekolah-counts-widget lazy />
     <livewire:murid-alumni-counts-by-province-widget lazy />
+    {{-- <livewire:alumni-per-provinsi-widget lazy /> --}}
     <livewire:murid-guru-counts-widget lazy />
     {{-- <livewire:komwil-per-provinsi-counts-widget lazy /> --}}
   </div>

@@ -29,14 +29,14 @@
         </x-slot:header>
 
         <form method="GET" class="mb-6" x-data="{ isSubmitting: false, isClearing: false }" x-on:submit="isSubmitting = true">
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
                 <!-- Search -->
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                         Cari
                     </label>
                     <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="Nama atau NISN alumni"
+                        placeholder="Nama atau NIK alumni"
                         class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30">
                 </div>
 
@@ -51,6 +51,22 @@
                         @foreach ($statusOptions as $key => $label)
                             <option value="{{ $key }}" @selected(request('status') == $key)>
                                 {{ $label }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Provinsi -->
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                        Provinsi Domisili
+                    </label>
+                    <select name="provinsi"
+                        class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                        <option value="">Semua Provinsi</option>
+                        @foreach ($provinsiList as $provinsi)
+                            <option value="{{ $provinsi->id }}" @selected(request('provinsi') == $provinsi->id)>
+                                {{ $provinsi->nama_provinsi }}
                             </option>
                         @endforeach
                     </select>
@@ -73,7 +89,7 @@
                         </template>
                         Filter
                     </button>
-                    @if (request('search') || request('status'))
+                    @if (request('search') || request('status') || request('provinsi'))
                         <a href="{{ route('alumni.index') }}" x-on:click="isClearing = true"
                             class="border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/20 h-11 flex-1 rounded-lg border px-4 text-sm font-medium text-brand-600 transition flex items-center justify-center dark:border-brand-700 dark:text-brand-400"
                             :disabled="isClearing" x-bind:class="{ 'opacity-70 cursor-not-allowed': isClearing }">
@@ -116,7 +132,7 @@
                             Nama Alumni
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
-                            NISN
+                            NIK
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
                             Profesi
@@ -136,10 +152,10 @@
                     @forelse($alumni as $item)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
                             <td class="whitespace-nowrap px-6 py-3 text-sm font-medium text-gray-900 dark:text-white/90">
-                                {{ $item->murid?->nama ?? 'N/A' }}
+                                {{ $item->murid?->nama ?? '-' }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-3 text-sm text-gray-600 dark:text-gray-300">
-                                {{ $item->murid?->nisn ?? 'N/A' }}
+                                {{ $item->murid?->nik ?? '-' }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-3 text-sm text-gray-600 dark:text-gray-300">
                                 {{ $item->profesi_sekarang ?? '-' }}
@@ -203,10 +219,10 @@
                     <div class="mb-3 flex items-start justify-between">
                         <div class="flex-1">
                             <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
-                                {{ $item->murid?->nama ?? 'N/A' }}
+                                {{ $item->murid?->nama ?? '-' }}
                             </h3>
                             <p class="text-xs text-gray-500 dark:text-gray-400">
-                                NISN: {{ $item->murid?->nisn ?? 'N/A' }}
+                                NIK: {{ $item->murid?->nik ?? '-' }}
                             </p>
                         </div>
                         <div class="ml-2 flex items-center space-x-2">

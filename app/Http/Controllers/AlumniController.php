@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Alumni;
 use App\Models\Murid;
+use App\Models\Provinsi;
 use App\Models\Sekolah;
 use App\Http\Requests\StoreAlumniRequest;
 use App\Imports\AlumniImport;
@@ -25,7 +26,7 @@ class AlumniController extends Controller
             $search = $request->input('search');
             $query->whereHas('murid', function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('nisn', 'like', "%{$search}%");
+                ->orWhere('nik', 'like', "%{$search}%");
             });
         }
 
@@ -41,8 +42,13 @@ class AlumniController extends Controller
             }
         }
 
+        // Filter by provinsi
+        if ($request->filled('provinsi')) {
+            $query->where('id_provinsi', $request->input('provinsi'));
+        }
+
         // Apply naungan scope (role-based filtering)
-        $alumni = $query->with(['murid'])
+        $alumni = $query->with(['murid', 'provinsi', 'kabupaten'])
                        ->orderBy('created_at', 'desc')
                        ->paginate(15)
                        ->appends($request->query());
@@ -53,10 +59,14 @@ class AlumniController extends Controller
             'belum' => 'Belum Bekerja',
         ];
 
+        // Get provinsi list for filter
+        $provinsiList = Provinsi::orderBy('nama_provinsi')->get();
+
         return view('pages.alumni.index', [
             'title' => 'Alumni',
             'alumni' => $alumni,
             'statusOptions' => $statusOptions,
+            'provinsiList' => $provinsiList,
         ]);
     }
 
@@ -170,7 +180,7 @@ class AlumniController extends Controller
      */
     public function show(Alumni $alumni)
     {
-        $alumni->load(['murid']);
+        $alumni->load(['murid', 'provinsi', 'kabupaten']);
 
         return view('pages.alumni.show', [
             'title' => 'Detail Alumni',
@@ -183,7 +193,7 @@ class AlumniController extends Controller
      */
     public function edit(Alumni $alumni)
     {
-        $alumni->load(['murid']);
+        $alumni->load(['murid', 'provinsi', 'kabupaten']);
 
         return view('pages.alumni.edit', [
             'title' => 'Edit Alumni',

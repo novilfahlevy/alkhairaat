@@ -24,7 +24,7 @@ class UpdateMuridRequest extends FormRequest
         return [
             // Data pribadi
             'nama' => 'required|string|max:255',
-            'nisn' => 'required|string|size:10|unique:murid,nisn,' . $this->route('murid')->id,
+            'nisn' => 'required|string|unique:murid,nisn,' . $this->route('murid')->id,
             'jenis_kelamin' => 'required|in:L,P',
             'tahun_masuk' => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 1),
             'nik' => 'nullable|string|max:16|unique:murid,nik,' . $this->route('murid')->id,
@@ -131,6 +131,7 @@ class UpdateMuridRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'nisn.required' => 'NISN wajib diisi.',
             'nisn.size' => 'NISN harus terdiri dari :size karakter.',
             'nisn.unique' => 'NISN sudah terdaftar untuk murid lain.',
             'nik.size' => 'NIK harus terdiri dari :size karakter.',
