@@ -385,7 +385,7 @@
                             <td class="table-number">{{ number_format($murid_guru['murid']['perempuan']) }}</td>
                         </tr>
                         <tr>
-                            <td>Lulus</td>
+                            <td>Jumlah Lulusan</td>
                             <td class="table-number">{{ number_format($murid_guru['murid']['lulus']) }}</td>
                         </tr>
                         <tr>
@@ -393,7 +393,7 @@
                             <td class="table-number">{{ number_format($murid_guru['murid']['tidak_lulus']) }}</td>
                         </tr>
                         <tr>
-                            <td>Belum Lulus</td>
+                            <td>Jumlah Murid Aktif</td>
                             <td class="table-number">{{ number_format($murid_guru['murid']['belum_lulus']) }}</td>
                         </tr>
                     </tbody>

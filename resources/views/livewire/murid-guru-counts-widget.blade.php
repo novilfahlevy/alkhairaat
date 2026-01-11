@@ -5,74 +5,6 @@
             <h2 class="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100">Statistik Murid</h2>
         </x-slot>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
-            <!-- Total Murid -->
-            <div
-                class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-blue-200 dark:border-blue-700 md:col-span-3">
-                <div class="flex items-center justify-between gap-2">
-                    <div class="min-w-0">
-                        <p
-                            class="text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-300 uppercase tracking-wide truncate">
-                            Total
-                            Murid
-                        </p>
-                        <p class="text-2xl sm:text-3xl font-bold text-blue-800 dark:text-blue-100 mt-1">
-                            {{ number_format($counts['murid']['total']) }}</p>
-                    </div>
-                    <i class="fas fa-users text-3xl sm:text-4xl text-blue-300 dark:text-blue-600 flex-shrink-0"></i>
-                </div>
-            </div>
-
-            <!-- Murid Lulus -->
-            <div
-                class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-green-200 dark:border-green-700">
-                <div class="flex items-center justify-between gap-2">
-                    <div class="min-w-0">
-                        <p
-                            class="text-xs sm:text-sm font-medium text-green-600 dark:text-green-300 uppercase tracking-wide truncate">
-                            Lulus
-                        </p>
-                        <p class="text-2xl sm:text-3xl font-bold text-green-800 dark:text-green-100 mt-1">
-                            {{ number_format($counts['murid']['lulus']) }}</p>
-                    </div>
-                    <i
-                        class="fas fa-check-circle text-3xl sm:text-4xl text-green-300 dark:text-green-600 flex-shrink-0"></i>
-                </div>
-            </div>
-
-            <!-- Murid Belum Lulus -->
-            <div
-                class="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900 dark:to-yellow-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-yellow-200 dark:border-yellow-700">
-                <div class="flex items-center justify-between gap-2">
-                    <div class="min-w-0">
-                        <p
-                            class="text-xs sm:text-sm font-medium text-yellow-600 dark:text-yellow-300 uppercase tracking-wide truncate">
-                            Belum Lulus</p>
-                        <p class="text-2xl sm:text-3xl font-bold text-yellow-800 dark:text-yellow-100 mt-1">
-                            {{ number_format($counts['murid']['belum_lulus']) }}</p>
-                    </div>
-                    <i
-                        class="fas fa-graduation-cap text-3xl sm:text-4xl text-yellow-300 dark:text-yellow-600 flex-shrink-0"></i>
-                </div>
-            </div>
-
-            <!-- Murid Tidak Lulus -->
-            <div
-                class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900 dark:to-red-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-red-200 dark:border-red-700">
-                <div class="flex items-center justify-between gap-2">
-                    <div class="min-w-0">
-                        <p
-                            class="text-xs sm:text-sm font-medium text-red-600 dark:text-red-300 uppercase tracking-wide truncate">
-                            Tidak Lulus</p>
-                        <p class="text-2xl sm:text-3xl font-bold text-red-800 dark:text-red-100 mt-1">
-                            {{ number_format($counts['murid']['tidak_lulus']) }}</p>
-                    </div>
-                    <i
-                        class="fas fa-times-circle text-3xl sm:text-4xl text-red-300 dark:text-red-600 flex-shrink-0"></i>
-                </div>
-            </div>
-        </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 mt-2 sm:mt-3 lg:mt-4">
             <!-- Murid Laki-laki -->
             <div
@@ -103,6 +35,74 @@
                             {{ number_format($counts['murid']['perempuan']) }}</p>
                     </div>
                     <i class="fas fa-venus text-3xl sm:text-4xl text-rose-300 dark:text-rose-600 flex-shrink-0"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
+            <!-- Total Murid -->
+            <div
+                class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-blue-200 dark:border-blue-700 md:col-span-3">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p
+                            class="text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-300 uppercase tracking-wide truncate">
+                            Total
+                            Murid
+                        </p>
+                        <p class="text-2xl sm:text-3xl font-bold text-blue-800 dark:text-blue-100 mt-1">
+                            {{ number_format($counts['murid']['total']) }}</p>
+                    </div>
+                    <i class="fas fa-users text-3xl sm:text-4xl text-blue-300 dark:text-blue-600 flex-shrink-0"></i>
+                </div>
+            </div>
+
+            <!-- Murid Lulus -->
+            <div
+                class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-green-200 dark:border-green-700">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p
+                            class="text-xs sm:text-sm font-medium text-green-600 dark:text-green-300 uppercase tracking-wide truncate">
+                            Jumlah Lulusan
+                        </p>
+                        <p class="text-2xl sm:text-3xl font-bold text-green-800 dark:text-green-100 mt-1">
+                            {{ number_format($counts['murid']['lulus']) }}</p>
+                    </div>
+                    <i
+                        class="fas fa-check-circle text-3xl sm:text-4xl text-green-300 dark:text-green-600 flex-shrink-0"></i>
+                </div>
+            </div>
+
+            <!-- Murid Belum Lulus -->
+            <div
+                class="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900 dark:to-yellow-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-yellow-200 dark:border-yellow-700">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p
+                            class="text-xs sm:text-sm font-medium text-yellow-600 dark:text-yellow-300 uppercase tracking-wide truncate">
+                            Jumlah Murid Aktif</p>
+                        <p class="text-2xl sm:text-3xl font-bold text-yellow-800 dark:text-yellow-100 mt-1">
+                            {{ number_format($counts['murid']['belum_lulus']) }}</p>
+                    </div>
+                    <i
+                        class="fas fa-graduation-cap text-3xl sm:text-4xl text-yellow-300 dark:text-yellow-600 flex-shrink-0"></i>
+                </div>
+            </div>
+
+            <!-- Murid Tidak Lulus -->
+            <div
+                class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900 dark:to-red-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-red-200 dark:border-red-700">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p
+                            class="text-xs sm:text-sm font-medium text-red-600 dark:text-red-300 uppercase tracking-wide truncate">
+                            Tidak Lulus</p>
+                        <p class="text-2xl sm:text-3xl font-bold text-red-800 dark:text-red-100 mt-1">
+                            {{ number_format($counts['murid']['tidak_lulus']) }}</p>
+                    </div>
+                    <i
+                        class="fas fa-times-circle text-3xl sm:text-4xl text-red-300 dark:text-red-600 flex-shrink-0"></i>
                 </div>
             </div>
         </div>
