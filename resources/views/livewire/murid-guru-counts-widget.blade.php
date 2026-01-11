@@ -5,40 +5,6 @@
             <h2 class="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100">Statistik Murid</h2>
         </x-slot>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 mt-2 sm:mt-3 lg:mt-4">
-            <!-- Murid Laki-laki -->
-            <div
-                class="bg-gradient-to-br from-cyan-50 to-cyan-100 dark:from-cyan-900 dark:to-cyan-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-cyan-200 dark:border-cyan-700">
-                <div class="flex items-center justify-between gap-2">
-                    <div class="min-w-0">
-                        <p
-                            class="text-xs sm:text-sm font-medium text-cyan-600 dark:text-cyan-300 uppercase tracking-wide truncate">
-                            Laki-laki
-                        </p>
-                        <p class="text-2xl sm:text-3xl font-bold text-cyan-800 dark:text-cyan-100 mt-1">
-                            {{ number_format($counts['murid']['laki_laki']) }}</p>
-                    </div>
-                    <i class="fas fa-mars text-3xl sm:text-4xl text-cyan-300 dark:text-cyan-600 flex-shrink-0"></i>
-                </div>
-            </div>
-
-            <!-- Murid Perempuan -->
-            <div
-                class="bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900 dark:to-rose-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-rose-200 dark:border-rose-700">
-                <div class="flex items-center justify-between gap-2">
-                    <div class="min-w-0">
-                        <p
-                            class="text-xs sm:text-sm font-medium text-rose-600 dark:text-rose-300 uppercase tracking-wide truncate">
-                            Perempuan
-                        </p>
-                        <p class="text-2xl sm:text-3xl font-bold text-rose-800 dark:text-rose-100 mt-1">
-                            {{ number_format($counts['murid']['perempuan']) }}</p>
-                    </div>
-                    <i class="fas fa-venus text-3xl sm:text-4xl text-rose-300 dark:text-rose-600 flex-shrink-0"></i>
-                </div>
-            </div>
-        </div>
-
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
             <!-- Total Murid -->
             <div
@@ -103,6 +69,40 @@
                     </div>
                     <i
                         class="fas fa-times-circle text-3xl sm:text-4xl text-red-300 dark:text-red-600 flex-shrink-0"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 mt-2 sm:mt-3 lg:mt-4">
+            <!-- Murid Laki-laki -->
+            <div
+                class="bg-gradient-to-br from-cyan-50 to-cyan-100 dark:from-cyan-900 dark:to-cyan-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-cyan-200 dark:border-cyan-700">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p
+                            class="text-xs sm:text-sm font-medium text-cyan-600 dark:text-cyan-300 uppercase tracking-wide truncate">
+                            Laki-laki
+                        </p>
+                        <p class="text-2xl sm:text-3xl font-bold text-cyan-800 dark:text-cyan-100 mt-1">
+                            {{ number_format($counts['murid']['laki_laki']) }}</p>
+                    </div>
+                    <i class="fas fa-mars text-3xl sm:text-4xl text-cyan-300 dark:text-cyan-600 flex-shrink-0"></i>
+                </div>
+            </div>
+
+            <!-- Murid Perempuan -->
+            <div
+                class="bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900 dark:to-rose-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-rose-200 dark:border-rose-700">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p
+                            class="text-xs sm:text-sm font-medium text-rose-600 dark:text-rose-300 uppercase tracking-wide truncate">
+                            Perempuan
+                        </p>
+                        <p class="text-2xl sm:text-3xl font-bold text-rose-800 dark:text-rose-100 mt-1">
+                            {{ number_format($counts['murid']['perempuan']) }}</p>
+                    </div>
+                    <i class="fas fa-venus text-3xl sm:text-4xl text-rose-300 dark:text-rose-600 flex-shrink-0"></i>
                 </div>
             </div>
         </div>
