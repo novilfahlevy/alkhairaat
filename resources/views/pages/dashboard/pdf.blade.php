@@ -384,6 +384,18 @@
                             <td>Perempuan</td>
                             <td class="table-number">{{ number_format($murid_guru['murid']['perempuan']) }}</td>
                         </tr>
+                        <tr>
+                            <td>Lulus</td>
+                            <td class="table-number">{{ number_format($murid_guru['murid']['lulus']) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tidak Lulus</td>
+                            <td class="table-number">{{ number_format($murid_guru['murid']['tidak_lulus']) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Belum Lulus</td>
+                            <td class="table-number">{{ number_format($murid_guru['murid']['belum_lulus']) }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -490,7 +502,7 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th colspan="4" style="background-color: #059669;">
+                                    <th colspan="3" style="background-color: #059669;">
                                         {{ $prov['nama'] }}
                                     </th>
                                 </tr>
@@ -498,7 +510,6 @@
                                     <th>Kabupaten/Kota</th>
                                     <th class="text-right">Total Murid</th>
                                     <th class="text-right">Total Alumni</th>
-                                    <th class="text-right">% Alumni</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -513,16 +524,12 @@
                                         <td>{{ $kab['nama'] }}</td>
                                         <td class="table-number">{{ number_format($kab['murid_count']) }}</td>
                                         <td class="table-number">{{ number_format($kab['alumni_count']) }}</td>
-                                        <td class="table-number">{{ number_format($persenKabAlumni, 1) }}%</td>
                                     </tr>
                                 @endforeach
                                 <tr style="background-color: #d1fae5; font-weight: bold;">
                                     <td><strong>Total {{ $prov['nama'] }}</strong></td>
                                     <td class="table-number">{{ number_format($prov['total_murid']) }}</td>
                                     <td class="table-number">{{ number_format($prov['total_alumni']) }}</td>
-                                    <td class="table-number">
-                                        {{ $prov['total_murid'] > 0 ? number_format(($prov['total_alumni'] / $prov['total_murid']) * 100, 1) : 0 }}%
-                                    </td>
                                 </tr>
                             </tbody>
                         </table>

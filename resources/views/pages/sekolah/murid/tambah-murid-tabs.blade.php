@@ -61,7 +61,7 @@
                 aria-selected="{{ $currentTab === 'file' ? 'true' : 'false' }}"
                 class="inline-block min-w-[180px] border-b-2 px-6 py-4 text-sm font-medium transition {{ $currentTab === 'file' ? 'border-brand-500 text-brand-600 dark:text-brand-400' : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white' }}">
                 <i class="fas fa-file-upload mr-2"></i>
-                Tambah Murid dengan File
+                Unggah File CSV/XLSX
             </a>
         </div>
     </div>

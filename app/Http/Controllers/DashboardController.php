@@ -7,6 +7,7 @@ use App\Models\Kabupaten;
 use App\Models\Sekolah;
 use App\Models\Murid;
 use App\Models\Guru;
+use App\Models\SekolahMurid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -109,9 +110,31 @@ class DashboardController extends Controller
      */
     private function getMuridGuruCounts(): array
     {
+        $user = Auth::user();
+
         $totalMurid = Murid::count();
         $muridAktif = Murid::nonAlumni()->count();
         $muridAlumni = Murid::alumni()->count();
+
+        $muridLulus = SekolahMurid::whereHas('sekolah.editorLists', function ($query) use ($user) {
+            if ($user->isPengurusBesar() || $user->isSuperuser()) {
+                return;
+            }
+            $query->where('id_user', $user->id);
+        })
+            ->where('status_kelulusan', SekolahMurid::STATUS_LULUS_YA)
+            ->count();
+
+        $muridTidakLulus = SekolahMurid::whereHas('sekolah.editorLists', function ($query) use ($user) {
+            if ($user->isPengurusBesar() || $user->isSuperuser()) {
+                return;
+            }
+            $query->where('id_user', $user->id);
+        })
+            ->where('status_kelulusan', SekolahMurid::STATUS_LULUS_TIDAK)
+            ->count();
+
+        $muridBelumLulus = $totalMurid - ($muridLulus + $muridTidakLulus);
 
         $totalGuru = Guru::count();
         $guruAktif = Guru::aktif()->count();
@@ -134,6 +157,9 @@ class DashboardController extends Controller
                 'alumni' => $muridAlumni,
                 'laki_laki' => $muridLakiLaki,
                 'perempuan' => $muridPerempuan,
+                'lulus' => $muridLulus,
+                'tidak_lulus' => $muridTidakLulus,
+                'belum_lulus' => $muridBelumLulus,
             ],
             'guru' => [
                 'total' => $totalGuru,
@@ -191,9 +217,9 @@ class DashboardController extends Controller
                     $totalMurid = $sekolahMurids->count();
                     
                     $alumniCount = $sekolahMurids
-                        ->flatMap(fn($sm) => $sm->murid)
-                        ->filter(fn($murid) => $murid?->isAlumni())
-                        ->unique('id')
+                        ->filter(fn($sm) => $sm->murid !== null && $sm->murid->isAlumni())
+                        ->pluck('murid.id')
+                        ->unique()
                         ->count();
 
                     if ($totalMurid === 0) {

@@ -27,6 +27,11 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading, Skips
     private MuridBulkProcessor $muridProcessor;
     private SekolahMuridBulkProcessor $sekolahMuridProcessor;
     private AlamatBulkProcessor $alamatProcessor;
+    
+    /**
+     * Flag to track if this is the first chunk (contains header row)
+     */
+    private bool $isFirstChunk = true;
 
     public function __construct(private int $idSekolah) 
     {
@@ -73,14 +78,22 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading, Skips
 
         Log::channel('murid_bulk_import')->info('=== CHUNK START ===', [
             'total_rows' => $rows->count(), 
-            'school_id' => $this->idSekolah
+            'school_id' => $this->idSekolah,
+            'is_first_chunk' => $this->isFirstChunk,
         ]);
 
-        // Step 1: Parse headers from first row
-        $this->parseHeaders($rows->first());
+        // Step 1: Parse headers only from first chunk (first row contains column headers)
+        // For subsequent chunks, headers are already parsed
+        if ($this->isFirstChunk) {
+            $this->parseHeaders($rows->first());
+        }
         
         // Step 2: Validate and transform rows
-        $validatedData = $this->validateRows($rows);
+        // For first chunk, skip the header row; for subsequent chunks, process all rows
+        $validatedData = $this->validateRows($rows, $this->isFirstChunk);
+        
+        // Mark that first chunk has been processed
+        $this->isFirstChunk = false;
 
         if ($validatedData->isEmpty()) {
             Log::channel('murid_bulk_import')->warning('No valid rows after validation');
@@ -140,13 +153,24 @@ class MuridImport implements ToCollection, WithStartRow, WithChunkReading, Skips
 
     /**
      * Validate and transform rows
+     * 
+     * @param Collection $rows The rows to validate
+     * @param bool $skipFirstRow Whether to skip the first row (header row in first chunk)
      */
-    private function validateRows(Collection $rows): Collection
+    private function validateRows(Collection $rows, bool $skipFirstRow = false): Collection
     {
-        return $rows->skip(1) // Skip header row
-            ->map(function ($row, $index) {
+        // For first chunk, skip header row; for subsequent chunks, process all rows
+        $rowsToProcess = $skipFirstRow ? $rows->skip(1) : $rows;
+        
+        // Calculate base row number for error reporting
+        // If skipping first row, the first data row is at index 1 in the chunk
+        $baseRowOffset = $skipFirstRow ? 1 : 0;
+        
+        return $rowsToProcess->map(function ($row, $index) use ($skipFirstRow, $baseRowOffset) {
                 $data = $row->toArray();
-                $rowNumber = $index + 2; // +2 because we skip header and start from row 2
+                // Row number calculation: +3 because row 1 is group header, row 2 is column header, data starts at row 3
+                // But since we're using startRow(2), the actual calculation depends on chunk processing
+                $rowNumber = $index + 3 + $baseRowOffset;
                 
                 Log::channel('murid_bulk_import')->debug('Raw row data received', [
                     'row_type' => get_class($row),
