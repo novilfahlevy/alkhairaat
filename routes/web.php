@@ -174,6 +174,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sekolah/{sekolah}/murid/{murid}/edit', [App\Http\Controllers\SekolahController::class, 'editMurid'])->name('sekolah.edit-murid');
     Route::put('/sekolah/{sekolah}/murid/{murid}', [App\Http\Controllers\SekolahController::class, 'updateMurid'])->name('sekolah.update-murid');
     Route::delete('/sekolah/{sekolah}/murid/{murid}', [App\Http\Controllers\SekolahController::class, 'deleteMurid'])->name('sekolah.delete-murid');
+    Route::get('/sekolah/{sekolah}/edit-murid-bulk', [App\Http\Controllers\SekolahController::class, 'editMuridBulk'])->name('sekolah.edit-murid-bulk');
+    Route::put('/sekolah/{sekolah}/update-murid-bulk', [App\Http\Controllers\SekolahController::class, 'updateMuridBulk'])->name('sekolah.update-murid-bulk');
     
     // Guru Management
     Route::get('/sekolah/{sekolah}/tambah-guru', [App\Http\Controllers\SekolahController::class, 'createGuru'])->name('sekolah.create-guru');

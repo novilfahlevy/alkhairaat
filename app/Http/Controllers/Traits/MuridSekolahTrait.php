@@ -526,4 +526,120 @@ trait MuridSekolahTrait
                 ->withInput();
         }
     }
+
+    /**
+     * Show the bulk edit form for murid.
+     */
+    public function editMuridBulk(Sekolah $sekolah, Request $request): View
+    {
+        $sekolah->load(['kabupaten.provinsi']);
+
+        // Fetch murid with sekolah_murid relationship
+        $muridQuery = $sekolah->murid();
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $muridQuery->where(function ($q) use ($search) {
+                $q->where('murid.nama', 'like', "%{$search}%")
+                    ->orWhere('murid.nisn', 'like', "%{$search}%")
+                    ->orWhere('murid.nik', 'like', "%{$search}%");
+            });
+        }
+
+        // Apply jenis kelamin filter
+        if ($request->filled('jenis_kelamin')) {
+            $muridQuery->where('murid.jenis_kelamin', $request->input('jenis_kelamin'));
+        }
+
+        // Apply status kelulusan filter
+        if ($request->filled('status_kelulusan')) {
+            $status = $request->input('status_kelulusan');
+            if ($status === 'belum') {
+                $muridQuery->whereNull('sekolah_murid.status_kelulusan');
+            } else {
+                $muridQuery->where('sekolah_murid.status_kelulusan', $status);
+            }
+        }
+
+        // Apply tahun masuk filter
+        if ($request->filled('tahun_masuk')) {
+            $muridQuery->where('sekolah_murid.tahun_masuk', $request->input('tahun_masuk'));
+        }
+
+        // Get tahun masuk options for filter dropdown
+        $tahunMasukOptions = $sekolah->murid()
+            ->select('sekolah_murid.tahun_masuk')
+            ->distinct()
+            ->orderBy('sekolah_murid.tahun_masuk', 'desc')
+            ->pluck('sekolah_murid.tahun_masuk')
+            ->filter()
+            ->values()
+            ->toArray();
+
+        // Get per_page parameter, default to 10
+        $perPage = $request->input('per_page', 10);
+        if ($perPage === 'all') {
+            $murid = $muridQuery->paginate(PHP_INT_MAX);
+        } else {
+            $perPage = is_numeric($perPage) ? (int) $perPage : 10;
+            $murid = $muridQuery->paginate($perPage);
+        }
+
+        return view('pages.sekolah.murid.edit-murid-bulk', [
+            'title' => 'Edit Murid Massal - ' . $sekolah->nama,
+            'sekolah' => $sekolah,
+            'murid' => $murid,
+            'tahunMasukOptions' => $tahunMasukOptions,
+        ]);
+    }
+
+    /**
+     * Update murid in bulk.
+     */
+    public function updateMuridBulk(Request $request, Sekolah $sekolah): RedirectResponse
+    {
+        $validated = $request->validate([
+            'murid' => 'required|array',
+            'murid.*.id' => 'required|exists:murid,id',
+            'murid.*.selected' => 'nullable|in:1',
+            'murid.*.kelas' => 'nullable|string|max:50',
+            'murid.*.status_kelulusan' => 'nullable|string|in:ya,tidak,',
+        ]);
+
+        try {
+            $updatedCount = 0;
+
+            foreach ($validated['murid'] as $muridId => $data) {
+                // Only update if the checkbox was selected
+                if (!isset($data['selected']) || $data['selected'] !== '1') {
+                    continue;
+                }
+
+                $sekolahMurid = SekolahMurid::where('id_sekolah', $sekolah->id)
+                    ->where('id_murid', $data['id'])
+                    ->first();
+
+                if ($sekolahMurid) {
+                    // Handle empty string as null for status_kelulusan
+                    $statusKelulusan = isset($data['status_kelulusan']) && $data['status_kelulusan'] !== '' 
+                        ? $data['status_kelulusan'] 
+                        : null;
+
+                    $sekolahMurid->kelas = $data['kelas'] ?? null;
+                    $sekolahMurid->status_kelulusan = $statusKelulusan;
+                    $sekolahMurid->save();
+                    
+                    $updatedCount++;
+                }
+            }
+
+            return redirect()->route('sekolah.edit-murid-bulk', $sekolah)
+                ->with('success', "Berhasil memperbarui {$updatedCount} data murid.");
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat memperbarui data murid: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
 }
