@@ -35,7 +35,7 @@ trait MuridSekolahTrait
                 ->get();
 
             return view('pages.sekolah.murid.tambah-murid-files', [
-                'title' => 'Unggah File CSV/XLSX - ' . $sekolah->nama,
+                'title' => 'Tambah Guru dengan File - ' . $sekolah->nama,
                 'sekolah' => $sekolah,
                 'uploadedFiles' => $uploadedFiles,
             ]);
