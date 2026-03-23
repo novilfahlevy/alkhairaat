@@ -300,7 +300,7 @@ trait GuruSekolahTrait
         // Get alamat records indexed by jenis
         $alamatRecords = Alamat::where('id_guru', $guru->id)->get()->keyBy('jenis');
 
-        return view('pages.sekolah.guru.detail', [
+        return view('pages.sekolah.guru.show', [
             'title' => 'Detail Guru - ' . $guru->nama,
             'sekolah' => $sekolah,
             'guru' => $guru,

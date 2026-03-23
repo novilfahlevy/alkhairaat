@@ -363,7 +363,7 @@ trait MuridSekolahTrait
         // Get alamat records indexed by jenis
         $alamatRecords = Alamat::where('id_murid', $murid->id)->get()->keyBy('jenis');
 
-        return view('pages.sekolah.murid.detail', [
+        return view('pages.sekolah.murid.show', [
             'title' => 'Detail Murid - ' . $murid->nama,
             'sekolah' => $sekolah,
             'murid' => $murid,

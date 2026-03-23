@@ -248,7 +248,7 @@ class SekolahController extends Controller
             $murid = $muridQuery->paginate($perPage);
         }
 
-        return view('pages.sekolah.murid.murid', [
+        return view('pages.sekolah.murid.index', [
             'title' => 'Daftar Murid - ' . $sekolah->nama,
             'sekolah' => $sekolah,
             'murid' => $murid,
@@ -301,7 +301,7 @@ class SekolahController extends Controller
             $guru = $guruQuery->paginate($perPage);
         }
 
-        return view('pages.sekolah.guru.guru', [
+        return view('pages.sekolah.guru.index', [
             'title' => 'Daftar Guru - ' . $sekolah->nama,
             'sekolah' => $sekolah,
             'guru' => $guru,

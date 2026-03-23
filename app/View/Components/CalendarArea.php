@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class CalenderArea extends Component
+class CalendarArea extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class CalenderArea extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.calender-area');
+        return view('components.calendar-area');
     }
 }

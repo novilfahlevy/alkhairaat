@@ -55,14 +55,14 @@ Route::middleware('auth')->group(function () {
 
     // Profile
     Route::get('/profile', function () {
-        return view('pages.profile', ['title' => 'Profile']);
+        return view('pages.profile.show', ['title' => 'Profile']);
     })->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Calendar
     Route::get('/calendar', function () {
-        return view('pages.calender', ['title' => 'Calendar']);
+        return view('pages.calendar', ['title' => 'Calendar']);
     })->name('calendar');
 
     // Form Elements
