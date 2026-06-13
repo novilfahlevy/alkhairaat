@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Imports\MuridImport;
 use App\Models\TambahMuridBulkFile;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -12,9 +13,11 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
-class ProcessMuridBulkFile implements ShouldQueue
+class ProcessMuridBulkFile implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public int $uniqueFor = 3600;
 
     /**
      * The number of times the job may be attempted.
@@ -36,6 +39,11 @@ class ProcessMuridBulkFile implements ShouldQueue
     public function __construct(private TambahMuridBulkFile $bulkFile)
     {
         //
+    }
+
+    public function uniqueId(): string
+    {
+        return 'murid-bulk-'.$this->bulkFile->id;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +13,13 @@ class StoreBulkFileRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()->hasRole(['superuser', 'pengurus_besar', 'sekolah']);
+        return Auth::user()->hasRole([
+            User::ROLE_SUPERUSER,
+            User::ROLE_PENGURUS_BESAR,
+            User::ROLE_KOMISARIAT_WILAYAH,
+            User::ROLE_KOMISARIAT_DAERAH,
+            User::ROLE_SEKOLAH,
+        ]);
     }
 
     /**

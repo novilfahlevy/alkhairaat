@@ -13,7 +13,9 @@ class StoreSekolahRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->hasRole(['superuser', 'pengurus_besar', 'komisariat_wilayah']);
+        $user = auth()->user();
+
+        return $user && ! $user->isSekolah();
     }
 
     /**

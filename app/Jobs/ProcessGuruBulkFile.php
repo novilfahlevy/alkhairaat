@@ -4,15 +4,21 @@ namespace App\Jobs;
 
 use App\Models\TambahGuruBulkFile;
 use App\Imports\GuruImport;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
-class ProcessGuruBulkFile implements ShouldQueue
+class ProcessGuruBulkFile implements ShouldBeUnique, ShouldQueue
 {
-    use Queueable;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public int $uniqueFor = 3600;
 
     public int $timeout = 3600;
     public int $backoff = 60;
@@ -21,6 +27,11 @@ class ProcessGuruBulkFile implements ShouldQueue
     public function __construct(
         private TambahGuruBulkFile $bulkFile
     ) {}
+
+    public function uniqueId(): string
+    {
+        return 'guru-bulk-'.$this->bulkFile->id;
+    }
 
     public function handle(): void
     {
