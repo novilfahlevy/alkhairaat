@@ -32,20 +32,6 @@ class SekolahController extends Controller
     {
         $query = Sekolah::query()->with(['kabupaten.provinsi']);
 
-        if ($query->count() == 1) {
-            // Ke halaman detail jika hanya ada satu sekolah
-            $sekolah = $query->first();
-            return view('pages.sekolah.show', [
-                'title' => 'Detail Sekolah',
-                'sekolah' => $sekolah,
-                'jenisSekolahOptions' => Sekolah::JENIS_SEKOLAH_OPTIONS,
-                'statusOptions' => Sekolah::STATUS_LABELS,
-            ]);
-        }
-
-        // Apply filters based on user role
-        $user = Auth::user();
-
         // Apply search filter
         if ($request->filled('search')) {
             $search = $request->input('search');
