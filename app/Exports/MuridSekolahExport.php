@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -16,12 +17,15 @@ use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-class MuridSekolahExport implements FromQuery, WithHeadings, WithMapping, WithStyles, WithColumnWidths, WithEvents
+class MuridSekolahExport extends DefaultValueBinder implements FromQuery, WithHeadings, WithMapping, WithStyles, WithColumnWidths, WithEvents, WithCustomValueBinder
 {
     private Sekolah $sekolah;
     private ?Request $request;
@@ -36,6 +40,31 @@ class MuridSekolahExport implements FromQuery, WithHeadings, WithMapping, WithSt
     {
         $this->sekolah = $sekolah;
         $this->request = $request;
+    }
+
+    /**
+     * Keep long numeric identifiers as text so Excel does not lose precision.
+     */
+    public function bindValue(Cell $cell, $value)
+    {
+        if ($this->shouldBindAsString($value)) {
+            $cell->setValueExplicit((string) $value, DataType::TYPE_STRING);
+
+            return true;
+        }
+
+        return parent::bindValue($cell, $value);
+    }
+
+    private function shouldBindAsString($value): bool
+    {
+        if (! is_scalar($value) || $value === '' || $value === null) {
+            return false;
+        }
+
+        $stringValue = (string) $value;
+
+        return ctype_digit($stringValue) && strlen($stringValue) >= 10;
     }
 
     /**
@@ -254,6 +283,16 @@ class MuridSekolahExport implements FromQuery, WithHeadings, WithMapping, WithSt
 
                 // Apply all styles after row insertion
                 $this->applyStyles($sheet);
+
+                // Force text format for identifier columns (NISN, NIK, phone numbers, kode pos)
+                $textColumns = ['A', 'D', 'G', 'T', 'V', 'AD', 'AO', 'AZ', 'BK'];
+                $lastRow = $this->rowCount + 2;
+
+                foreach ($textColumns as $column) {
+                    $sheet->getStyle("{$column}3:{$column}{$lastRow}")
+                        ->getNumberFormat()
+                        ->setFormatCode('@');
+                }
             },
         ];
     }

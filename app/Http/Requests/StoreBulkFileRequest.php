@@ -26,7 +26,7 @@ class StoreBulkFileRequest extends FormRequest
             'file' => [
                 'required',
                 'file',
-                'mimes:xlsx,xls,csv',
+                // 'mimes:xlsx,xls,csv',
                 'max:5120', // 5MB in kilobytes
             ],
         ];

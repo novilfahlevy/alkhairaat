@@ -286,10 +286,10 @@ trait GuruSekolahTrait
     public function showDetailGuru(Sekolah $sekolah, Guru $guru): View
     {
         $sekolah->load(['kabupaten.provinsi']);
-        $guru->load(['jabatanGuru.sekolah']);
+        $guru->load(['jabatanGurus.sekolah']);
 
         // Get all JabatanGuru records for this specific sekolah
-        $jabatanGuruList = $guru->jabatanGuru()
+        $jabatanGuruList = $guru->jabatanGurus()
             ->where('id_sekolah', $sekolah->id)
             ->get();
 
@@ -316,10 +316,10 @@ trait GuruSekolahTrait
     public function editGuru(Sekolah $sekolah, Guru $guru): View
     {
         $sekolah->load(['kabupaten.provinsi']);
-        $guru->load(['jabatanGuru']);
+        $guru->load(['jabatanGurus']);
 
         // Get all JabatanGuru records for this specific sekolah
-        $jabatanGuruList = $guru->jabatanGuru()
+        $jabatanGuruList = $guru->jabatanGurus()
             ->where('id_sekolah', $sekolah->id)
             ->get();
 
@@ -353,7 +353,7 @@ trait GuruSekolahTrait
 
         try {
             // Verify that guru exists in this sekolah
-            $jabatanGuru = $guru->jabatanGuru()
+            $jabatanGuru = $guru->jabatanGurus()
                 ->where('id_sekolah', $sekolah->id)
                 ->first();
 
@@ -570,7 +570,7 @@ trait GuruSekolahTrait
                     ->with('error', 'Jabatan tidak ditemukan di sekolah ini.');
             }
 
-            if ($jabatanGuru->guru->jabatanGuru()->count() <= 1) {
+            if ($jabatanGuru->guru->jabatanGurus()->count() <= 1) {
                 return redirect()->back()
                     ->with('error', 'Guru harus memiliki minimal satu jabatan di sekolah ini.');
             }

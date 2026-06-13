@@ -213,7 +213,7 @@ class GuruImport implements ToCollection, WithStartRow, WithChunkReading
                 }
 
                 // Validate status
-                if (!in_array($status, ['aktif', 'tidak'])) {
+                if (!in_array(strtolower($status), ['aktif', 'tidak'])) {
                     $this->errors->push([
                         'row' => $rowNumber,
                         'nik' => $nik,
