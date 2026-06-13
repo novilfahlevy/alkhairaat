@@ -13,6 +13,7 @@ use App\Models\Scopes\MuridNauanganScope;
 use App\Models\Scopes\NauanganSekolahScope;
 use App\Models\Sekolah;
 use App\Models\TambahMuridBulkFile;
+use App\Support\MuridSekolahQueryFilters;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -537,35 +538,8 @@ trait MuridSekolahTrait
         // Fetch murid with sekolah_murid relationship
         $muridQuery = $sekolah->murid();
 
-        // Apply search filter
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $muridQuery->where(function ($q) use ($search) {
-                $q->where('murid.nama', 'like', "%{$search}%")
-                    ->orWhere('murid.nisn', 'like', "%{$search}%")
-                    ->orWhere('murid.nik', 'like', "%{$search}%");
-            });
-        }
-
-        // Apply jenis kelamin filter
-        if ($request->filled('jenis_kelamin')) {
-            $muridQuery->where('murid.jenis_kelamin', $request->input('jenis_kelamin'));
-        }
-
-        // Apply status kelulusan filter
-        if ($request->filled('status_kelulusan')) {
-            $status = $request->input('status_kelulusan');
-            if ($status === 'belum') {
-                $muridQuery->whereNull('sekolah_murid.status_kelulusan');
-            } else {
-                $muridQuery->where('sekolah_murid.status_kelulusan', $status);
-            }
-        }
-
-        // Apply tahun masuk filter
-        if ($request->filled('tahun_masuk')) {
-            $muridQuery->where('sekolah_murid.tahun_masuk', $request->input('tahun_masuk'));
-        }
+        MuridSekolahQueryFilters::applySearch($muridQuery, $request->input('search'));
+        MuridSekolahQueryFilters::applyFilters($muridQuery, $request);
 
         // Get tahun masuk options for filter dropdown
         $tahunMasukOptions = $sekolah->murid()

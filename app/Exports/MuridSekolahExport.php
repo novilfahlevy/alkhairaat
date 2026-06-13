@@ -5,6 +5,7 @@ namespace App\Exports;
 use App\Models\Sekolah;
 use App\Models\Alamat;
 use App\Models\Murid;
+use App\Support\MuridSekolahQueryFilters;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -87,37 +88,9 @@ class MuridSekolahExport extends DefaultValueBinder implements FromQuery, WithHe
                 'sekolah_murid.alasan_mutasi_keluar'
             );
 
-        // Apply filters if request is provided
         if ($this->request) {
-            // Apply search filter
-            if ($this->request->filled('search')) {
-                $search = $this->request->input('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('murid.nama', 'like', "%{$search}%")
-                      ->orWhere('murid.nisn', 'like', "%{$search}%")
-                      ->orWhere('murid.nik', 'like', "%{$search}%");
-                });
-            }
-
-            // Apply jenis kelamin filter
-            if ($this->request->filled('jenis_kelamin')) {
-                $query->where('murid.jenis_kelamin', $this->request->input('jenis_kelamin'));
-            }
-
-            // Apply status kelulusan filter
-            if ($this->request->filled('status_kelulusan')) {
-                $status = $this->request->input('status_kelulusan');
-                if ($status === 'belum') {
-                    $query->whereNull('sekolah_murid.status_kelulusan');
-                } else {
-                    $query->where('sekolah_murid.status_kelulusan', $status);
-                }
-            }
-
-            // Apply tahun masuk filter
-            if ($this->request->filled('tahun_masuk')) {
-                $query->where('sekolah_murid.tahun_masuk', $this->request->input('tahun_masuk'));
-            }
+            MuridSekolahQueryFilters::applySearch($query, $this->request->input('search'));
+            MuridSekolahQueryFilters::applyFilters($query, $this->request);
         }
 
         // Count rows for styling (use a separate count query to avoid memory issues)

@@ -44,7 +44,7 @@
                 <!-- Search Input -->
                 <div class="flex flex-col gap-2 sm:flex-row">
                     <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="Cari nama, NISN, atau NIK murid..."
+                        placeholder="Cari nama, NISN, NIK, kelas, jenis kelamin, tahun masuk, atau status kelulusan..."
                         class="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
                     <button type="submit"
                         class="bg-brand-500 hover:bg-brand-600 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition sm:px-6">
@@ -111,30 +111,14 @@
             <!-- Export and Action Buttons -->
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
                 @if ($murid->count() > 0)
-                    <form method="GET" action="{{ route('sekolah.export-murid', $sekolah) }}"
-                        class="w-full sm:w-auto">
-                        <!-- Pass all current filter parameters to export -->
-                        @if (request('search'))
-                            <input type="hidden" name="search" value="{{ request('search') }}">
-                        @endif
-                        @if (request('jenis_kelamin'))
-                            <input type="hidden" name="jenis_kelamin" value="{{ request('jenis_kelamin') }}">
-                        @endif
-                        @if (request('status_kelulusan'))
-                            <input type="hidden" name="status_kelulusan" value="{{ request('status_kelulusan') }}">
-                        @endif
-                        @if (request('tahun_masuk'))
-                            <input type="hidden" name="tahun_masuk" value="{{ request('tahun_masuk') }}">
-                        @endif
-                        <button type="submit"
-                            class="flex w-full items-center justify-center rounded-lg bg-green-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-green-600 transition sm:w-auto">
-                            <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                            </svg>
-                            Ekspor ke XLSX
-                        </button>
-                    </form>
+                    <a href="{{ route('sekolah.export-murid', array_merge(['sekolah' => $sekolah], request()->only(['search', 'jenis_kelamin', 'status_kelulusan', 'tahun_masuk']))) }}"
+                        class="flex w-full items-center justify-center rounded-lg bg-green-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-green-600 transition sm:w-auto">
+                        <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Ekspor ke XLSX
+                    </a>
                 @endif
             </div>
         </div>
