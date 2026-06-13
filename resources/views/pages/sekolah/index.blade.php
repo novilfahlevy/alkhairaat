@@ -11,6 +11,7 @@
                 Kelola data sekolah pendidikan Alkhairaat
             </p>
         </div>
+        @unless(auth()->user()->isSekolah())
         <div>
             <a href="{{ route('sekolah.create') }}"
                 class="bg-brand-500 hover:bg-brand-600 flex items-center rounded-lg px-4 py-2.5 text-sm font-medium text-white transition">
@@ -20,6 +21,7 @@
                 Tambah Sekolah
             </a>
         </div>
+        @endunless
     </div>
 
     <!-- Filters Card -->

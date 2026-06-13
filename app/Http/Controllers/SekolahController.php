@@ -7,6 +7,7 @@ use App\Http\Controllers\Traits\MuridSekolahTrait;
 use App\Http\Controllers\Traits\GuruSekolahTrait;
 use App\Http\Requests\StoreSekolahRequest;
 use App\Http\Requests\UpdateSekolahRequest;
+use App\Models\EditorList;
 use App\Models\Sekolah;
 use App\Models\Alamat;
 use App\Models\GaleriSekolah;
@@ -66,6 +67,10 @@ class SekolahController extends Controller
      */
     public function create(): View
     {
+        if (Auth::user()->isSekolah()) {
+            abort(403);
+        }
+
         $provinsi = Provinsi::orderBy('nama_provinsi')->get();
 
         return view('pages.sekolah.create', [
@@ -117,6 +122,14 @@ class SekolahController extends Controller
 
         // Create sekolah
         $sekolah = Sekolah::create($validated);
+
+        $user = Auth::user();
+        if ($user && ($user->isKomisariatDaerah() || $user->isKomisariatWilayah())) {
+            EditorList::firstOrCreate([
+                'id_user' => $user->id,
+                'id_sekolah' => $sekolah->id,
+            ]);
+        }
 
         // Create alamat record if any alamat data is provided
         if (array_filter($alamatData)) {
