@@ -388,6 +388,10 @@
                             <td>Tidak Lulus</td>
                             <td class="table-number">{{ number_format($murid_guru['murid']['tidak_lulus']) }}</td>
                         </tr>
+                        <tr>
+                            <td>Belum Terdaftar Sekolah</td>
+                            <td class="table-number">{{ number_format($murid_guru['murid']['belum_terdaftar_sekolah']) }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

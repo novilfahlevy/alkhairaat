@@ -5,24 +5,24 @@
             <h2 class="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100">Statistik Murid</h2>
         </x-slot>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
-            <!-- Total Murid -->
-            <div
-                class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-blue-200 dark:border-blue-700 md:col-span-3">
-                <div class="flex items-center justify-between gap-2">
-                    <div class="min-w-0">
-                        <p
-                            class="text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-300 uppercase tracking-wide truncate">
-                            Total
-                            Murid
-                        </p>
-                        <p class="text-2xl sm:text-3xl font-bold text-blue-800 dark:text-blue-100 mt-1">
-                            {{ number_format($counts['murid']['total']) }}</p>
-                    </div>
-                    <i class="fas fa-users text-3xl sm:text-4xl text-blue-300 dark:text-blue-600 flex-shrink-0"></i>
+        {{-- Baris 1: Total --}}
+        <div
+            class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-blue-200 dark:border-blue-700">
+            <div class="flex items-center justify-between gap-2">
+                <div class="min-w-0">
+                    <p
+                        class="text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-300 uppercase tracking-wide truncate">
+                        Total Murid
+                    </p>
+                    <p class="text-2xl sm:text-3xl font-bold text-blue-800 dark:text-blue-100 mt-1">
+                        {{ number_format($counts['murid']['total']) }}</p>
                 </div>
+                <i class="fas fa-users text-3xl sm:text-4xl text-blue-300 dark:text-blue-600 flex-shrink-0"></i>
             </div>
+        </div>
 
+        {{-- Baris 2: Lulusan, Aktif, Tidak Lulus (3 kolom) --}}
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4 mt-2 sm:mt-3 lg:mt-4">
             <!-- Murid Lulus -->
             <div
                 class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-green-200 dark:border-green-700">
@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <!-- Murid Belum Lulus -->
+            <!-- Murid Aktif -->
             <div
                 class="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900 dark:to-yellow-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-yellow-200 dark:border-yellow-700">
                 <div class="flex items-center justify-between gap-2">
@@ -73,7 +73,23 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 mt-2 sm:mt-3 lg:mt-4">
+        {{-- Baris 3: Belum Terdaftar Sekolah (full width) --}}
+        <div
+            class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-slate-200 dark:border-slate-700 mt-2 sm:mt-3 lg:mt-4">
+            <div class="flex items-center justify-between gap-2">
+                <div class="min-w-0">
+                    <p
+                        class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 uppercase tracking-wide truncate">
+                        Belum Terdaftar Sekolah</p>
+                    <p class="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 mt-1">
+                        {{ number_format($counts['murid']['belum_terdaftar_sekolah']) }}</p>
+                </div>
+                <i class="fas fa-school text-3xl sm:text-4xl text-slate-300 dark:text-slate-600 flex-shrink-0"></i>
+            </div>
+        </div>
+
+        {{-- Baris 4: Jenis kelamin --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 mt-2 sm:mt-3 lg:mt-4">
             <!-- Murid Laki-laki -->
             <div
                 class="bg-gradient-to-br from-cyan-50 to-cyan-100 dark:from-cyan-900 dark:to-cyan-800 rounded-lg p-3 sm:p-4 lg:p-6 border border-cyan-200 dark:border-cyan-700">

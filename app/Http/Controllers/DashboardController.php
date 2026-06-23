@@ -143,6 +143,8 @@ class DashboardController extends Controller
             ->whereNull('status_kelulusan')
             ->count();
 
+        $muridBelumTerdaftarSekolah = Murid::doesntHave('sekolahMurid')->count();
+
         $totalGuru = Guru::count();
         $guruAktif = Guru::aktif()->count();
         $guruNonAktif = Guru::tidakAktif()->count();
@@ -167,6 +169,7 @@ class DashboardController extends Controller
                 'lulus' => $muridLulus,
                 'tidak_lulus' => $muridTidakLulus,
                 'belum_lulus' => $muridBelumLulus,
+                'belum_terdaftar_sekolah' => $muridBelumTerdaftarSekolah,
             ],
             'guru' => [
                 'total' => $totalGuru,
